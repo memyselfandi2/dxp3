@@ -1,0 +1,30 @@
+
+
+How to identify all 404's on a particular website:
+- set filterStatusCodes to 404
+- set external
+- By default a spider will follow redirects and index the current host and any directly linked hosts current path.
+The latter ensures any dead links to external sites will be identified.
+
+How to download all images on a particular page of a particular website
+- only crawl the current page by setting followRedirects to true, followExternalLinks to false and followInternalLinks to false
+- set filterContentTypes to image
+- set the downloadFolder to the directory the images should be saved to
+
+How to identify all the hosts a particular website links to:
+- only crawl the current website by setting followRedirects to true, followExternalLinks to false and followInternalLinks to true
+- set filterHosts to true
+
+How to download all images a page of a particular website
+
+-host .           -followRedirects true -
+-host *           -followRedirects true -
+-host example.com -followRedirects true -
+
+// Download all images from the current host from pages with a portfolio path.
+node HTTPSpider -queue example.com/portfolio/2010/ -filterContentTypes image -downloadFolder C:\temp\ -followHost . /portfolio/* 
+
+node HTTPSpider -queue example.com/portfolio/2010/ -filterContentTypes image -filterPath *flower* -downloadFolder C:\temp\ -followHost . /portfolio/* 
+
+node HTTPSpider -queue example.com/portfolio/2010/ -filterStatusCodes 404 -followHost . * -followHost * *
+

@@ -1,0 +1,73 @@
+// const HTMLSymbol = require('./HTMLSymbol');
+// const HTMLTag = require('./HTMLTag');
+// const HTMLTagType = require('./HTMLTagType');
+
+// console.log('quot: ' + HTMLSymbol.getHTMLSymbol('&#quot;'));
+// console.log('34: ' + HTMLSymbol.getHTMLSymbol('&#34;'));
+
+const HTMLReader = require('./HTMLReader');
+const HTMLTokenizer = require('./HTMLTokenizer');
+
+let htmlText = '' +
+'<!DOCTYPE html>' +
+'<html><head>' +
+'    <meta charset="utf-8">' +
+'    <meta http-equiv="X-UA-Compatible" content="IE=edge">' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+'    <!-- The current page title -->' +
+'    <title id="application-title"></title>' +
+'    <!-- This hook is required to refresh the application its stylesheet by' +
+'         the javascript engine -->' +
+'    <link rel="stylesheet" id="application-link-stylesheet"/>' +
+'    <!-- This hook is required to refresh the page its stylesheet by' +
+'         the javascript engine -->' +
+'    <link rel="stylesheet" id="application-page-link-stylesheet"/>' +
+'  </head>' +
+'  <body>' +
+'    <input id="token" type="hidden" value=""/>' +
+'    <!-- The current application. Each application has an unique UUID. -->' +
+'    <input type="hidden" id="application-uuid" value=""/>' +
+'    <!-- The current page or feature. Each page / feature has an unique UUID. -->' +
+'    <input type="hidden" id="application-page-uuid" value=""/>' +
+'    <input type="hidden" id="application-feature-uuid" value=""/>' +
+'    <!-- The current locale -->' +
+'    <input type="hidden" id="application-locale" value=""/>' +
+'    <input type="hidden" id="application-debug" value="false"/>' +
+'    <!-- It is possible that the current page/feature is to be compiled or compiling.' +
+'         If that is the case we will ask for regular compilation status updates and' +
+'         wait -->' +
+'    <input type="hidden" id="application-compilation" value=""/>' +
+'    <!-- Every application is wrapped inside our application-wrapper div -->' +
+'    <div id="application-wrapper">' +
+'        <!-- In case you want to center the application page all content' +
+'             is wrapped in an application-center div.' +
+'             You can simply set margin-left and margin-right to auto and' +
+'             apply a width to center the div -->' +
+'        <div id="application-center">' +
+'            <!-- the javascript engine will dynamically update the' +
+'                 application-page-content div -->' +
+'            <div id="application-page-content">' +
+'              here we are. Throw in some HTML symbols: &quot; and &copy;...' +
+'            </div>' +
+'        </div>' +
+'    </div>' +
+'    <script type="text/javascript" src="/web/preview/boot.js"></script>' +
+'  </body>' +
+'</html>';
+let htmlTokenizer = new HTMLTokenizer();
+htmlTokenizer.load(htmlText);
+let processHTMLElement = function(htmlElement) {
+	if(htmlElement === null) {
+		return;
+	}
+	console.log('ELEMENT: ' + htmlElement.toString());
+	htmlTokenizer.nextHTMLElement(processHTMLElement);
+}
+htmlTokenizer.nextHTMLElement(processHTMLElement);
+
+// lets try the HTML reader
+let htmlReader = new HTMLReader();
+htmlReader.read(htmlText, function(domDocument) {
+	console.log('finished');
+	console.log(domDocument.toString());
+});

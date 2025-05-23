@@ -1,0 +1,3 @@
+The main purpose of the DatabaseAdmin class is to create, rename, delete and 
+retrieve a list of available databases. It maintains a collection of in-memory and
+file system backed databases. Each database must have an unique name.

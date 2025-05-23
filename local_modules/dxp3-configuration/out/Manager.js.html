@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Manager.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Manager.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-configuration
+ *
+ * NAME
+ * Manager
+ */
+const packageName = 'dxp3-configuration';
+const moduleName = 'Manager';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * The Manager class provides all the necessary functionality to register
+ * get and set configuration keys and their respective values.
+ *
+ * @example
+ * // Get a reference to our configuration code.
+ * const configuration = require('dxp3-configuration');
+ * // It is suggested to use a separate object to define all possible
+ * // configuration keys.
+ * let categories = require('./ConfigurationCategories');
+ * let keys = require('./ConfigurationKeys');
+ * configuration.Manager.set(categories.MAIN_APP, keys.PROTOCOL, "some value");
+ * configuration.Manager.set(keys.PORT, 1234);
+ * // To retrieve a value use the get method and supply an optional category and
+ * // a required key.
+ * let protocol = configuration.Manager.get(categories.MAIN_APP, keys.PROTOCOL);
+ * let port = configuration.Manager.get(keys.PORT);
+ *
+ * @module dxp3-configuration/Manager
+ */
+const logging = require('dxp3-logging');
+const util = require('dxp3-util');
+// Now that all modules are defined and loaded we create 
+// our logger.
+const logger = logging.getLogger(canonicalName);
+// We default to 'development' if the NODE_ENV envrionment variable is not set.
+const environment = process.env.NODE_ENV || 'development';
+
+/**
+ * &lt;p>A singleton Manager class has methods to set and get common/global configuration properties.
+ * Values can be grouped by category. This allows to easily set properties for different parts of your application.
+ * Categories and keys are case sensitive and trimmed. This means for example 'MYKey' and 'mykey' are treated as
+ * different keys, but ' mykey  ' and 'mykey' are deemed equal.
+ * Make sure this local module is defined as a dependency in your package.json.
+ * Typically the dependency is defined by a file reference using a relative path.
+ * Obviously that relative path may be different for different modules.&lt;br/>
+ * Here is an example of such a dependency in a package.json:&lt;br/>
+ * "dependencies": {&lt;br/>
+ *   "dxp3-configuration": "file:../../../local_modules/dxp3-configuration"&lt;br/>
+ * }&lt;br/>
+ * &lt;/p>
+ */
+class Manager {
+	/**
+	 * As all methods are static, we don't really need a constructor.
+	 */
+	 constructor() {
+	 }
+	/**
+	 * Retrieve the value of a specific key and optional category.
+	 *
+	 * @param {String} [_category]
+	 * The category this key belongs to. May be null or undefined.
+	 *
+	 * @param {String} _key
+	 * The key. May be null or undefined.
+	 *
+	 * @returns {Object}
+	 * Returns null if no value was found.
+	 */
+	static get(_category, _key) {
+		logger.trace('get(...): start.');
+		if(arguments.length &lt;= 0) {
+			// Calling get(...) without any arguments could be
+			// a programming error. Lets log a warning.
+			logger.warn('get(...): Missing arguments.');
+			logger.trace('get(...): end.');
+			return null;
+		}
+		if(arguments.length === 1) {
+			_key = arguments[0];
+			_category = '';
+		}
+		if(_category === undefined || _category === null) {
+			_category = '';
+		}
+		_category = _category.trim();
+		if(_key === undefined || _key === null) {
+			_key = '';
+		}
+		_key = _key.trim();
+		let keyMap = Manager._categoryMap[_category];
+		if(keyMap === undefined || keyMap === null) {
+			logger.debug('get(...): get(' + _category + ', ' + _key + ') could not find any keys.');
+			logger.trace('get(...): end.');
+			return null;
+		}
+		let value = keyMap[_key];
+		if(value === undefined || value === null) {
+			logger.debug('get(...): get(' + _category + ', ' + _key + ') could not find a value.');
+			logger.trace('get(...): end.');
+			return null;
+		}
+		logger.debug('get(...): get(' + _category + ', ' + _key + '): ' + value);
+		logger.trace('get(...): end.');
+		return value;
+	}
+
+	/**
+	 * Set the value of a specific key and optional category.
+	 *
+	 * @param {String} [_category]
+	 * The category this key belongs to. May be null or undefined.
+	 *
+	 * @param {String} _key
+	 * The key. May be null or undefined.
+	 *
+	 * @param {Object} _value
+	 * The value to store.
+	 *
+	 * @returns {Object}
+	 * Returns null if only one arguments is supplied. Returns the supplied value otherwise.
+	 */
+	static set(_category, _key, _value) {
+		logger.trace('set(...): start.');
+		if(arguments.length &lt;= 1) {
+			// Calling set(...) without any arguments could be
+			// a programming error. Lets log a warning.
+			logger.warn('set(...): Missing arguments.');
+			logger.trace('set(...): end.');
+			return null;
+		}
+		if(arguments.length === 2) {
+			_key = arguments[0];
+			_value = arguments[1];
+			_category = '';
+		}
+		if(_category === undefined || _category === null) {
+			_category = '';
+		}
+		_category = _category.trim();
+		if(_key === undefined || _key === null) {
+			_key = '';
+		}
+		_key = _key.trim();
+		let keyMap = Manager._categoryMap[_category];
+		if(keyMap === undefined || keyMap === null) {
+			keyMap = {};
+			Manager._categoryMap[_category] = keyMap;
+		}
+		logger.debug('set(...): set(' + _category + ', ' + _key + ', ' + _value + ').');
+		keyMap[_key] = _value;
+		logger.trace('set(...): end.');
+		return _value;
+	}
+}
+// The private categoryMap property will hold all the categories and their associated
+// key, value pairs.
+Manager._categoryMap = {};
+// Check if someone tried to run/execute this file.
+if(util.Assert.isFileToExecute(canonicalName)) {
+   util.Help.print(Manager);
+   return;
+}
+module.exports = Manager;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-configuration.html">dxp3-configuration</a></li><li><a href="module-dxp3-configuration_Manager.html">dxp3-configuration/Manager</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-configuration_Manager-Manager.html">Manager</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Sep 20 2023 20:50:44 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

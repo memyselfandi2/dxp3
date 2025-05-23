@@ -1,0 +1,36 @@
+***************************************************************
+* DXP3 - Digital Experience Platform 3                        *
+*                                                             *
+* MODULE: dxp3-net-http/HTTPServer                            *
+***************************************************************
+
+A lightweight HTTP server that can serve one or multiple domains.
+Each domain can be configured with an optional static folder/directory to
+serve static files (css, html, js, png, etc.).
+
+***************************************************************
+* CODE EXAMPLES                                               *
+***************************************************************
+
+const http = require('dxp3-net-http');
+// Set our host, port and timeout
+let options = {};
+options.host = '127.0.0.1';
+options.port = 8080;
+options.timeout = 10000;
+// A HTTPServer may host multiple domains.
+// Each domain will have its own routes.
+options.domains = 'www.example.com, something.domain.org';
+options.roots = '/var/www/example.com, /var/www/domain.org';
+// Create a new HTTPServer
+let httpServer = new http.HTTPServer(options);
+httpServer.on(http.HTTPServerEvent.ERROR, (_error) => {
+    console.log('HTTPServer error: ' + _err);
+});
+httpServer.on(http.HTTPServerEvent.RUNNING, (_address, _port) => {
+    console.log('HTTPServer is running at ' + _address + ':' + _port);
+});
+// We can also add domains like so:
+httpServer.addDomain('www.blaat.org', '/var/www/blaat.org/');
+// Start the server
+httpServer.start();

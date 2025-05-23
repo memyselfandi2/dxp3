@@ -1,0 +1,58 @@
+*****************************************
+* DXP3 - Digital Experience Platform 3  *
+*                                       *
+* MODULE: dxp3-management-dao/ImageDAO *
+*****************************************
+An ImageDAO implementation allows a consumer to create, read, update and delete images.
+
+*****************************************
+* OPTIONS                               *
+*****************************************
+
+node ImageDAO.js -help -implementation -loglevel <String> -timeout <Number>
+
+-help                        - A flag, which, when present, will print this help content.                         
+                               Aliases: faq, info, information.
+-implementation              - Aliases: impl.
+-loglevel <String> <String>  - Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+                               Aliases: log, logging.
+
+*****************************************
+* EXAMPLES - CODE                       *
+*****************************************
+
+const rest = require('dxp3-microservice-rest');
+let imageDAO = new rest.RestClient({name: 'image consumer test', consumes: 'dxp3-management-dao-imageDAO'});
+imageDAO.start();
+imageDAO.execute('create', accountUUID, loggedInUserUUID, ownerUUID, imageName, fileName, description, )
+*****************************************
+* EXAMPLES - COMMAND LINE               *
+*****************************************
+
+node ImageDAO -impl mock -log * info -timeout 10000
+
+/**********************************
+ * CREATE
+ *********************************/
+Object create(String accountUUID, String loggedInUserUUID, String ownerUUID, String imageName, String fileName, String description, File imageStream);
+
+/**********************************
+ * READ
+ *********************************/
+File get(String accountUUID, String loggedInUserUUID, String ownerUUID, String imageUUID);
+
+Object list(String accountUUID, String loggedInUserUUID, String ownerUUID, Number startIndex, Number maximumNumberOfResults, String categorizedAs, Object filterBy, Object sortBy);
+
+/**********************************
+ * UPDATE
+ *********************************/
+Boolean categorize(String accountUUID, String loggedInUserUUID, String imageUUID, String categoryUUID)
+
+Boolean decategorize(String accountUUID, String loggedInUserUUID, String imageUUID, String categoryUUID)
+
+Object update(String accountUUID, String loggedInUserUUID, String ownerUUID, String imageUUID, String imageName, String description, File imageStream);
+
+/**********************************
+ * DELETE
+ *********************************/
+Object delete(String accountUUID, String loggedInUserUUID, String ownerUUID, String imageUUID);

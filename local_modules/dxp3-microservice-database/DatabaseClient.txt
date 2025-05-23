@@ -1,0 +1,66 @@
+***************************************************************
+* DXP3 - Digital Experience Platform 3                        *
+*                                                             *
+* MODULE: dxp3-microservice-database/DatabaseClient           *
+***************************************************************
+
+A DatabaseClient allows one to interact with a DatabaseServer.
+
+*****************************************************
+* COMMANDLINE OPTIONS                               *
+*****************************************************
+
+N/A
+
+*****************************************************
+* EXAMPLES - CODE                                   *
+*****************************************************
+
+const database = require('dxp3-microservice-database');
+let dbClient = new database.DatabaseClient({name:'db client name',consumes:'dxp3-db'});
+dbClient.on(DatabaseClientEvent.CONNECTED, function() {
+	console.log('Connected...');
+	dbClient.commands(function(err, data) {
+		console.log('Available commands: ' + data);
+	});
+});
+dbClient.on(DatabaseClientEvent.CLOSED, function(err) {
+	console.log('Closed...');
+});
+dbClient.on(DatabaseClientEvent.STOPPED, function(err) {
+	console.log('Stopped...');
+});
+dbClient.on(DatabaseClientEvent.STOPPING, function(err) {
+	console.log('Stopping...');
+});
+dbClient.on(DatabaseClientEvent.STARTING, function(err) {
+	console.log('Starting...');
+});
+dbClient.on(DatabaseClientEvent.RUNNING, function(err) {
+	console.log('Running...');
+});
+dbClient.start();
+
+dbClient.deleteFrom('users', null, (_error, _data) => {
+});
+
+dbClient.insertInto('users', values, (_error, _data) => {
+});
+
+dbClient.nextValue('ids', (_error, _data) => {
+});
+
+dbClient.query('select * from users;', (_error, _data) => {
+});
+
+dbClient.select('users', 'firstName="Henk"', (_error, _data) => {
+});
+
+dbClient.update('users', values, (_error, _data) => {
+});
+
+*****************************************************
+* EXAMPLES - COMMAND LINE                           *
+*****************************************************
+
+N/A

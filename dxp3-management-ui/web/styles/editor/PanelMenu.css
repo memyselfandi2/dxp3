@@ -1,0 +1,63 @@
+.panel-menu {
+    width: 45px;
+    transition-duration: 0.5s;
+    background-color: white;
+    /* Add a border and some shadow */
+    border-top:1px solid #1E90FF;
+    border-left:1px solid #1E90FF;
+    border-right:2px solid #1E90FF;
+    border-bottom:2px solid #1E90FF;
+    box-shadow: 2px 2px 2px rgba(0,0,0,.5);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.panel-menu a {
+    padding: 5px 5px 5px 6px;
+    font-size: 25px;
+    display: block;
+    transition: 0.2s;
+    text-decoration: none;
+    color:lightgrey;
+}
+.panel-menu a:visited {
+    color:lightgrey;
+}
+.panel-menu a:hover {
+    color:black;
+}
+.panel-menu a i {
+    padding-right:10px;
+    width: 30px;
+    text-align: center;
+}
+.panel-menu > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.panel-menu > ul > li {
+    margin:0px;
+    padding:0px;
+    font-size:32px;
+}
+.panel-menu.maximized {
+    transition-property:width;
+    width:250px;
+}
+.panel-menu:hover a {
+    color:darkgrey;
+}
+.panel-menu:hover a:hover {
+    color:black;
+}
+.panel-menu li.selected {
+    color:black;
+}
+.panel-menu li.selected i {
+    opacity: 1;
+    color:inherit;
+}
+.panel-menu li.selected a {
+    opacity: 1;
+    color:inherit;
+}

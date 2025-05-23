@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Assert.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Assert.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-util
+ *
+ * NAME
+ * Assert
+ */
+const packageName = 'dxp3-util';
+const moduleName = 'Assert';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * @module dxp3-util/Assert
+ */
+class Assert {
+	static isFileToExecute(canonicalName) {
+		let fileToExecute = process.argv[1];
+		return (fileToExecute.endsWith(canonicalName) ||
+   		   		fileToExecute.endsWith(canonicalName + '.js'));
+	}
+
+	static isUndefinedOrNull(_value) {
+		if(_value === undefined || _value === null) {
+			return true;
+		}
+		return false;
+	}
+
+	static isUndefinedOrNullOrEmptyArray(_array) {
+		if(_array === undefined || _array === null) {
+			return true;
+		}
+		if(_array.length &lt;= 0) {
+			return true;
+		}
+		return false;
+	}
+
+	static isUndefinedOrNullOrEmptyString(_string) {
+		if(_string === undefined || _string === null) {
+			return true;
+		}
+		if(_string.length &lt;= 0) {
+			return true;
+		}
+		return false;
+	}
+
+	static isUndefinedOrNullOrNotANumber(_number) {
+		if(_number === undefined || _number === null) {
+			return true;
+		}
+		if(typeof _number != 'number') {
+			return true;
+		}
+		return false;
+	}
+
+	static isUndefinedOrNullOrNotAStringOrEmpty(_string) {
+		if(_string === undefined || _string === null) {
+			return true;
+		}
+		if(typeof _string != 'string') {
+			return true;
+		}
+		_string = _string.trim();
+		return _string.length &lt;= 0;
+	}
+}
+// Check if someone tried to run/execute this file.
+if(Assert.isFileToExecute(canonicalName)) {
+	console.log('Assert does not have a main(). Unable to execute.');
+	return;
+}
+
+module.exports = Assert;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-util.html">dxp3-util</a></li><li><a href="module-dxp3-util_Assert.html">dxp3-util/Assert</a></li><li><a href="module-dxp3-util_CommandLineBooleanArrayOption.html">dxp3-util/CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption.html">dxp3-util/CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption.html">dxp3-util/CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError.html">dxp3-util/CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption.html">dxp3-util/CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberArrayOption.html">dxp3-util/CommandLineNumberArrayOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption.html">dxp3-util/CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineObjectArrayOption.html">dxp3-util/CommandLineObjectArrayOption</a></li><li><a href="module-dxp3-util_CommandLineObjectOption.html">dxp3-util/CommandLineObjectOption</a></li><li><a href="module-dxp3-util_CommandLineOption.html">dxp3-util/CommandLineOption</a></li><li><a href="module-dxp3-util_CommandLineOptions.html">dxp3-util/CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineStringArrayOption.html">dxp3-util/CommandLineStringArrayOption</a></li><li><a href="module-dxp3-util_CommandLineStringOption.html">dxp3-util/CommandLineStringOption</a></li><li><a href="module-dxp3-util_Help.html">dxp3-util/Help</a></li><li><a href="module-dxp3-util_Options.html">dxp3-util/Options</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-util_CommandLineBooleanArrayOption-CommandLineBooleanArrayOption.html">CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption-CommandLineBooleanOption.html">CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption-CommandLineEnumerationOption.html">CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError-CommandLineError.html">CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption-CommandLineFlagOption.html">CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption-CommandLineNumberOption.html">CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineOptions-CommandLineOptions.html">CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineOption-CommandLineOption.html">CommandLineOption</a></li><li><a href="module-dxp3-util_Help-Help.html">Help</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 24 2023 20:28:11 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

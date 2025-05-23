@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Manager.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Manager.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-cleanup
+ *
+ * NAME
+ * Manager
+ */
+const packageName = 'dxp3-cleanup';
+const moduleName = 'Manager';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * The Manager class provides all the necessary functionality to register
+ * functions to be called when the process is interrupted or exits.
+ * 
+ * @example
+ * // Get a reference to our cleanup code.
+ * const cleanup = require('dxp3-cleanup');
+ * // Make sure to initialize our cleanup manager.
+ * // We may opt to omit this call, because the first function that registers will
+ * // automagically initialize our cleanup manager. 
+ * cleanup.Manager.init();
+ * // Next we are ready to register listeners.
+ * cleanup.Manager.addFinishListener(()) => {
+ *   // listener code here...
+ *   // This listener is executed when the exit code of the process exit event is 0.
+ *   // It indicates a normal termination. The program has reached its end.
+ *   console.log('The application has finished.');
+ *   console.log('Maybe there is some cleanup to do before we completely exit.');
+ * });
+ * cleanup.Manager.addInterruptListener(() => {
+ *     // listener code here...
+ *     console.log('The application has been interrupted.');
+ *     console.log('Lets do some cleanup before we completely exit.');
+ *     // One could choose to kill the process when interrupted.
+ * 	 process.exit(10);
+ * });
+ * cleanup.Manager.addKillListener(() => {
+ *     // kill code here...
+ *     console.log('The application has been killed.');
+ *     console.log('Lets attempt to do some cleanup before we completely exit.');
+ * });
+ *
+ * @module dxp3-cleanup/Manager
+ */
+// It's important to at least log warnings and errors.
+const logging = require('dxp3-logging');
+// We use the util.Help class to print out help information and
+// to validate (assert) input values.
+const util = require('dxp3-util');
+// Now that all modules have been defined and loaded,
+// we create our logger.
+const logger = logging.getLogger(canonicalName);
+/**
+ * &lt;p>A singleton Manager class listens for SIGINT and exit events fired by the node process.
+ * When it intercepts those events it will call any previously registered cleanup function.
+ * The exit code will be forwarded to the cleanup function.&lt;/p>
+ * 
+ * &lt;p>Node.js will normally exit with a 0 status code when no more async operations are pending.
+ * The following status codes are used in other cases:&lt;br/>
+ * 1    Uncaught Fatal Exception: There was an uncaught exception, and&lt;br/>
+ *      it was not handled by a domain or an 'uncaughtException' event handler.&lt;br/>
+ * 2    Unused (reserved by Bash for builtin misuse)&lt;br/>
+ * 3    Internal JavaScript Parse Error: The JavaScript source code internal in the Node.js&lt;br/>
+ *      bootstrapping process caused a parse error. This is extremely rare, and&lt;br/>
+ *      generally can only happen during development of Node.js itself.&lt;br/>
+ * 4    Internal JavaScript Evaluation Failure: The JavaScript source code internal in the Node.js&lt;br/>
+ *      bootstrapping process failed to return a function value when evaluated.&lt;br/>
+ *      This is extremely rare, and generally can only happen during development of Node.js itself.&lt;br/>
+ * 5    Fatal Error: There was a fatal unrecoverable error in V8.&lt;br/>
+ *      Typically a message will be printed to stderr with the prefix FATAL ERROR.&lt;br/>
+ * 6    Non-function Internal Exception Handler: There was an uncaught exception, but the internal&lt;br/>
+ *      fatal exception handler function was somehow set to a non-function, and could not be called.&lt;br/>
+ * 7    Internal Exception Handler Run-Time Failure: There was an uncaught exception, and the internal&lt;br/>
+ *      fatal exception handler function itself threw an error while attempting to handle it.&lt;br/>
+ *      This can happen, for example, if an 'uncaughtException' or domain.on('error') handler throws an error.&lt;br/>
+ * 8    Unused. In previous versions of Node.js, exit code 8 sometimes indicated an uncaught exception.&lt;br/>
+ * 9    Invalid Argument: Either an unknown option was specified, or an option requiring a value was&lt;br/>
+ *      provided without a value.&lt;br/>
+ * 10   Internal JavaScript Run-Time Failure: The JavaScript source code internal in the Node.js&lt;br/>
+ *      bootstrapping process threw an error when the bootstrapping function was called.&lt;br/>
+ *      This is extremely rare, and generally can only happen during development of Node.js itself.&lt;br/>
+ * 12   Invalid Debug Argument: The --inspect and/or --inspect-brk options were set, but the port number&lt;br/>
+ *      chosen was invalid or unavailable.&lt;br/>
+ * 13   Unfinished Top-Level Await: await was used outside of a function in the top-level code, but&lt;br/>
+ *      the passed Promise never resolved.&lt;br/>
+ * >128 Signal Exits: If Node.js receives a fatal signal such as SIGKILL or SIGHUP, then its exit code&lt;br/>
+ *      will be 128 plus the value of the signal code. This is a standard POSIX practice,&lt;br/>
+ *      since exit codes are defined to be 7-bit integers, and signal exits set the high-order bit, and&lt;br/>
+ *      then contain the value of the signal code. For example, signal SIGABRT has value 6, so&lt;br/>
+ *      the expected exit code will be 128 + 6, or 134.&lt;br/>
+ * &lt;/p>d
+ */
+class Manager {
+    /*********************************************
+     * CONSTRUCTOR
+     ********************************************/
+
+	/**
+	 * A Manager constructor.
+	 * Not really necessary as all our methods are static.
+	 */
+	 constructor() {
+	 }
+
+	/*********************************************
+	 * PUBLIC METHODS
+	 ********************************************/
+
+	/**
+	 * Call this static init method to register your callbacks to the process exit event emitter.
+	 * This init method MUST be called/executed before the process exits.
+	 */
+	static init() {
+		logger.trace('init(): start.');
+		// Perform any application specific cleanup before exiting.
+		// Any cleanup function to be executed must have been registered by calling
+		// our addKillListener method. These cleanup methods will be called when we
+		// fire a 'kill' event using the process.emit() function.
+		// NOTE: The cleanup code MUST only perform synchronous operations.
+		process.on('exit', (_exitCode) => {
+			if(_exitCode === 0) {
+				logger.debug('init(): process.on(\'exit\', ...): Normal termination.');
+				process.emit('finish');
+				return;
+			}
+			logger.debug('init(): process.on(\'exit\', ...): Firing kill event.');
+			process.emit('kill', _exitCode);
+		});
+		// Catch SIGTERM interrupts and emit them.
+		// The SIGTERM signal is a generic signal used to cause program termination.
+		// Unlike SIGKILL, this signal can be blocked, handled, and ignored.
+		// It is the normal way to politely ask a program to terminate.		
+		process.on('SIGTERM', () => {
+			logger.debug('init(): process.on(\'SIGTERM\', ...): Firing interrupt event.');
+			process.emit('interrupt');
+		});
+		// Catch the Ctrl+c event and inform any interrupt listeners.
+		// The SIGINT (“program interrupt”) signal is sent when the user types
+		// the INTR character (normally Ctrl+c)
+		process.on('SIGINT', () => {
+			logger.debug('init(): process.on(\'SIGINT\', ...): Firing interrupt event.');
+			process.emit('interrupt');
+		});
+		// Catch Ctrl+\ event and inform any interrupt listeners.
+		// The SIGQUIT signal is similar to SIGINT, except that it’s controlled by
+		// a different key—the QUIT character, usually Ctrl+\ and may produce a core dump
+		// when it terminates the process, just like a program error signal.
+		// You can think of this as a program error condition “detected” by the user.
+		process.on('SIGQUIT', () => {
+			logger.debug('init(): process.on(\'SIGQUIT\', ...): Firing interrupt event.');
+			process.emit('interrupt');
+		});
+		// Catch any and all unhandled promise rejections.
+		// We log the exception to the console just before we exit.
+		process.on('unhandledRejection', (_reason, _promise) => {
+			logger.fatal('init(): process.on(\'unhandledRejection\', ...): Caught an, up until now, unhandled promise rejection.');
+			logger.fatal(_reason.stack || _reason);
+			// Exit code = 1.
+			// Uncaught Fatal Exception: There was an uncaught exception, and
+         // it was not handled by a domain or an 'uncaughtException' event handler.
+			process.exit(1);
+		});
+		// Catch any and all uncaught exceptions.
+		// We log the exception to the console just before we exit.
+		process.on('uncaughtException', (_exception) => {
+			logger.fatal('init(): process.on(\'uncaughtException\', ...): Caught an, up until now, uncaught exception.');
+			logger.fatal(_exception.stack);
+			// Exit code = 1.
+			// Uncaught Fatal Exception: There was an uncaught exception, and
+         // it was not handled by a domain or an 'uncaughtException' event handler.
+			process.exit(1);
+		});
+		Manager._initialized = true;
+		logger.trace('init(): end.');
+	}
+
+	/**
+	 * Register a function to be called when the process finishes/terminates normally.
+	 * If the supplied function is undefined or null, we will log a warning and
+	 * simply return.
+	 * @param {Function} _callback
+	 * The function that will handle the cleanup event.
+	 */
+	static addFinishListener(_callback) {
+		logger.trace('addFinishListener(...): start.');
+		// Defensive programming...check input...
+		if(util.Assert.isUndefinedOrNull(_callback)) {
+			// No point in registering an undefined or null function. 
+			// This could be a programming error.
+			logger.warn('addFinishListener(...): Attempting to add an undefined or null function.')
+			logger.trace('addFinishListener(...): end.');
+			return;
+		}
+		// Check if the Manager.init(...) function was already called.
+		// If it had been called Manager._initialized would be true.
+		// If it was not we call it here.
+		if(!Manager._initialized) {
+			logger.debug('addFinishListener(...): Not yet initialized. Calling Manager.init(...).');
+			Manager.init();
+		}
+		// Attach this application's callback function to the process event emitter
+		process.on('finish', _callback);
+		logger.debug('addFinishListener(...): Finished listener added.');
+		logger.trace('addFinishListener(...): end.');
+	}
+	/**
+	 * Register a function to be called when the process is interrupted.
+	 * If the supplied function is undefined or null, we will log a warning and
+	 * simply return.
+	 * @param {Function} _callback
+	 * The function that will handle the cleanup event.
+	 */
+	static addInterruptListener(_callback) {
+		logger.trace('addInterruptListener(...): start.');
+		// Defensive programming...check input...
+		if(util.Assert.isUndefinedOrNull(_callback)) {
+			// No point in registering an undefined or null function. 
+			// This could be a programming error.
+			logger.warn('addInterruptListener(...): Attempting to add an undefined or null function.')
+			logger.trace('addInterruptListener(...): end.');
+			return;
+		}
+		// Check if the Manager.init(...) function was already called.
+		// If it had been called Manager._initialized would be true.
+		// If it was not we call it here.
+		if(!Manager._initialized) {
+			logger.debug('addInterruptListener(...): Not yet initialized. Calling Manager.init(...).');
+			Manager.init();
+		}
+		// Attach this application's callback function to the process event emitter
+		process.on('interrupt', _callback);
+		logger.debug('addInterruptListener(...): Interrupt listener added.');
+		logger.trace('addInterruptListener(...): end.');
+	}
+
+	/**
+	 * Register a function to be called just before the process exits.
+	 * If the supplied function is undefined or null, we will log a warning and
+	 * simply return.
+	 * @param {Function} _callback
+	 * The function that will handle the cleanup event.
+	 */
+	static addKillListener(_callback) {
+		logger.trace('addKillListener(...): start.');
+		// Defensive programming...check input...
+		if(util.Assert.isUndefinedOrNull(_callback)) {
+			// No point in registering an undefined or null function. 
+			// This could be a programming error.
+			logger.warn('addKillListener(...): Attempting to add an undefined or null function.')
+			logger.trace('addKillListener(...): end.');
+			return;
+		}
+		// Check if the Manager.init(...) function was already called.
+		// If it had been called Manager._initialized would be true.
+		// If it was not we call it here.
+		if(!Manager._initialized) {
+			logger.debug('addKillListener(...): Not yet initialized. Calling Manager.init(...).');
+			Manager.init();
+		}
+		// Attach this application's callback function to the process event emitter
+		process.on('kill', _callback);
+		logger.debug('addKillListener(...): Kill listener added.');
+		logger.trace('addKillListener(...): end.');
+	}
+
+	static isInitialized() {
+		return Manager._initialized;
+	}
+}
+// The private initialized property will be set to true after the Manager.init(...) function is called.
+Manager._initialized = false;
+// Check if someone tried to run/execute this file.
+if(util.Assert.isFileToExecute(canonicalName)) {
+   util.Help.print(Manager);
+   return;
+}
+module.exports = Manager;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-cleanup.html">dxp3-cleanup</a></li><li><a href="module-dxp3-cleanup_Manager.html">dxp3-cleanup/Manager</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-cleanup_Manager-Manager.html">Manager</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Sep 20 2023 20:46:38 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: dxp3-net-udp/UDPMode</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: dxp3-net-udp/UDPMode</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">A collection of modes an UDP client or server can operate in.<br/>For example, an UDP message may be send to:<br/><ul><li>everyone on a network (limited broadcast),</li><li>to a subset of nodes (directed broadcast),</li><li>to a group nodes have subscribed to (multicast),</li><li>to a specific set of nodes (unicast)</li></ul></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UDPMode.js.html">UDPMode.js</a>, <a href="UDPMode.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="~DIRECTED_BROADCAST"><span class="type-signature">(inner) </span>DIRECTED_BROADCAST<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    With directed broadcast, all recipients are always within the target network.A combination of the number of the target network and the setting of all host bits to 1produces the broadcast address in this case. If the destination is not locatedin its own (sub-)network, a router forwards the data packet.Host bits are the part of an IP address identifying a specific host in a subnet.The subnet mask determines what proportion of the address is used for network bits andfor host bits. For example, an IPv4 address 192.168.0.64/26 has a 6-bit host part, because26 of 32 bits are reserved for the network part.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UDPMode.js.html">UDPMode.js</a>, <a href="UDPMode.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~LIMITED_BROADCAST"><span class="type-signature">(inner) </span>LIMITED_BROADCAST<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    With limited broadcast the destination IP address is always 255.255.255.255.Technically, this broadcast should be sent to all the IP addresses that exist.However, it actually serves as an address for the broadcast within the network.This destination is always in its own network and can therefore be implemented inan ethernet broadcast. A router does not forward such a packet.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UDPMode.js.html">UDPMode.js</a>, <a href="UDPMode.js.html#line42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~MULTICAST"><span class="type-signature">(inner) </span>MULTICAST<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    IPv4 Multicast addresses use the reserved class D address range:224.0.0.0 through 239.255.255.255The addresses range between 224.0.0.0 and 224.0.0.255 is reserved for use by routing andmaintenance protocols inside a network. See table below:IP multicast address range			Description					Routable224.000.000.000 to 224.000.000.255	Local subnetwork			No224.000.001.000 to 224.000.001.255	Internetwork control		Yes224.000.002.000 to 224.000.255.255	AD-HOC block 1				Yes224.003.000.000 to 224.004.255.255	AD-HOC block 2				Yes232.000.000.000 to 232.255.255.255	Source-specific Multicast 	Yes233.000.000.000 to 233.251.255.255	GLOP addressing				Yes233.252.000.000 to 233.255.255.255	AD-HOC block 3				Yes234.000.000.000 to 234.255.255.255	Unicast-prefix-based		Yes239.000.000.000 to 239.255.255.255	Administratively scoped		Yes
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UDPMode.js.html">UDPMode.js</a>, <a href="UDPMode.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~UNICAST"><span class="type-signature">(inner) </span>UNICAST<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    Unicast represents a peer to peer UDP connection.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UDPMode.js.html">UDPMode.js</a>, <a href="UDPMode.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~parse"><span class="type-signature">(inner) </span>parse<span class="signature">(udpModeAsString)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>udpModeAsString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A String to be parsed/transformed to an UDPMode value.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UDPMode.js.html">UDPMode.js</a>, <a href="UDPMode.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        When the supplied parameter is undefined, null, not a string or empty or is not a valid UDPMode value.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="module-dxp3-net-udp_UDPError-UDPError.html">module:dxp3-net-udp/UDPError~UDPError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A String representing a UDPMode.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-net-udp.html">dxp3-net-udp</a></li><li><a href="module-dxp3-net-udp_UDPAddress.html">dxp3-net-udp/UDPAddress</a></li><li><a href="module-dxp3-net-udp_UDPBridge.html">dxp3-net-udp/UDPBridge</a></li><li><a href="module-dxp3-net-udp_UDPBridgeDefaults.html">dxp3-net-udp/UDPBridgeDefaults</a></li><li><a href="module-dxp3-net-udp_UDPBridgeEvent.html">dxp3-net-udp/UDPBridgeEvent</a></li><li><a href="module-dxp3-net-udp_UDPBridgeOptions.html">dxp3-net-udp/UDPBridgeOptions</a></li><li><a href="module-dxp3-net-udp_UDPBridgeState.html">dxp3-net-udp/UDPBridgeState</a></li><li><a href="module-dxp3-net-udp_UDPClient.html">dxp3-net-udp/UDPClient</a></li><li><a href="module-dxp3-net-udp_UDPClientCLI.html">dxp3-net-udp/UDPClientCLI</a></li><li><a href="module-dxp3-net-udp_UDPClientDefaults.html">dxp3-net-udp/UDPClientDefaults</a></li><li><a href="module-dxp3-net-udp_UDPClientEvent.html">dxp3-net-udp/UDPClientEvent</a></li><li><a href="module-dxp3-net-udp_UDPClientOptions.html">dxp3-net-udp/UDPClientOptions</a></li><li><a href="module-dxp3-net-udp_UDPError.html">dxp3-net-udp/UDPError</a></li><li><a href="module-dxp3-net-udp_UDPMode.html">dxp3-net-udp/UDPMode</a></li><li><a href="module-dxp3-net-udp_UDPServer.html">dxp3-net-udp/UDPServer</a></li><li><a href="module-dxp3-net-udp_UDPServerCLI.html">dxp3-net-udp/UDPServerCLI</a></li><li><a href="module-dxp3-net-udp_UDPServerDefaults.html">dxp3-net-udp/UDPServerDefaults</a></li><li><a href="module-dxp3-net-udp_UDPServerEvent.html">dxp3-net-udp/UDPServerEvent</a></li><li><a href="module-dxp3-net-udp_UDPServerEventMode.html">dxp3-net-udp/UDPServerEventMode</a></li><li><a href="module-dxp3-net-udp_UDPServerOptions.html">dxp3-net-udp/UDPServerOptions</a></li><li><a href="module-dxp3-net-udp_UDPServerState.html">dxp3-net-udp/UDPServerState</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-net-udp_UDPBridgeOptions-UDPBridgeOptions.html">UDPBridgeOptions</a></li><li><a href="module-dxp3-net-udp_UDPBridge-UDPBridge.html">UDPBridge</a></li><li><a href="module-dxp3-net-udp_UDPClientCLI-UDPClientCLI.html">UDPClientCLI</a></li><li><a href="module-dxp3-net-udp_UDPClientOptions-UDPClientOptions.html">UDPClientOptions</a></li><li><a href="module-dxp3-net-udp_UDPClient-UDPClient.html">UDPClient</a></li><li><a href="module-dxp3-net-udp_UDPError-UDPError.html">UDPError</a></li><li><a href="module-dxp3-net-udp_UDPServerCLI-UDPServerCLI.html">UDPServerCLI</a></li><li><a href="module-dxp3-net-udp_UDPServerOptions-UDPServerOptions.html">UDPServerOptions</a></li><li><a href="module-dxp3-net-udp_UDPServer-UDPServer.html">UDPServer</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 17 2023 09:23:39 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

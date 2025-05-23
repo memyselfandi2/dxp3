@@ -1,0 +1,66 @@
+****************************************
+* DXP3 - Digital Experience Platform 3 *
+*                                      *
+* MODULE: dxp3-net-udp/UDPServer       *
+****************************************
+
+A broadcast address is a network address at which all devices connected to
+a multiple-access communications network are enabled to receive datagrams.
+A message sent to a broadcast address may be received by all network-attached hosts.
+In contrast, a multicast address is used to address a specific group of devices and
+an unicast address is used to address a single device.
+Setting all the bits of an IP address to one, or 255.255.255.255, forms the limited broadcast address.
+Sending a UDP datagram to this address delivers the message to any host on the local network segment.
+Because routers never forward messages sent to this address, only hosts on the network segment
+receive the broadcast message.
+Broadcasts can be directed to specific portions of a network by setting all bits of the host identifier.
+For example, to send a broadcast to all hosts on the network identified by IP addresses starting
+with 192.168.1, use the address 192.168.1.255.
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+
+node UDPServer -address <String> -destinations <Array> -encryption <String> -help
+               -ignoreParent <Boolean> -ignoreOurselves <Boolean> -loglevel <String> <String>
+               -mode <String> -port <Number> -reuseAddr <Boolean>
+
+-address         <String>          - The optional address to listen on.
+                                     When ommitted the operating system will attempt to listen on all addresses.
+                                     Aliases: host.
+-destinations    <Array>           - The comma separated list of destinations. Each mode will have a default set.
+                                     Therefor this is optional.
+-encryption      <String>          - The encryption key/password to use.
+-help                              - Show this help content.
+-ignoreParent    <Boolean>         - Set this to true to ignore messages send by other UDP clients or
+                                     UDP servers running under the same process.
+-ignoreOurselves <Boolean>         - Set this to true to ignore messages send by ourselves.
+-loglevel        <String> <String> - A regular expression followed by one of trace, debug, info, warn, error, fatal.
+-mode            <String>          - One of directed-broadcast, limited-broadcast, multicast or unicast
+                                     The different modes will send messages to:
+                                     - everyone on a network (limited broadcast),
+                                     - a subset of nodes (directed broadcast),
+                                     - a group nodes have subscribed to (multicast), or
+                                     - a specific set of nodes (unicast).
+-port            <Number>            - The port the UDP server will listen on.
+-reuseAddr       <Boolean>           - Set this to true if you need multiple UDP servers listening on the same port.
+
+****************************************
+* COMMAND LINE EXAMPLES                *
+****************************************
+
+Typically one would use the UDPServerCLI to receive/send UDP messages from the command line.
+However if you need to perform a quick test, you can run the UDPServer from the command line. On the sending end you'd probably run an UDPClient.
+
+node UDPServer -loglevel * info -port 10123 -mode multicast -destinations 239.128.1.1 -ignoreParent false -ignoreOurselves true
+
+****************************************
+* CODE EXAMPLES                        *
+****************************************
+
+const udp = require('dxp3-net-udp');
+let udpServer = new UDPServer();
+udpServer.on('test', function(_data, _remoteAddressInformation) {
+    
+});
+udpServer.start();

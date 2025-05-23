@@ -1,0 +1,86 @@
+<html>
+	<head>
+        <script type="text/javascript" src="/libraries/jquery/3.4.1/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="/web/securityManager.js"></script>
+        <script type="text/javascript" src="/web/test-application.js"></script>
+        <link rel="stylesheet" href="/libraries/font-awesome/4.6.3/css/font-awesome.min.css">
+		<title>Test applications</title>
+	</head>
+    <style>
+        ul.content li {
+            width:100%;
+        }
+        ul.content li a {
+            display:inline-block;
+            width:200px;
+        }
+    </style>
+	<body>
+        CREATE<br/>
+		<div id="create-application-panel">
+            <input type="text" id="create-application-parent-uuid" placeholder="Parent UUID"/><br/>
+            <input type="text" id="create-application-name" placeholder="Name"/><br/>
+            <input type="text" id="create-application-shortname" placeholder="Short name"/>
+            <div class="input-field border">
+                <span>Is this a template?</span>
+                <input id="create-application-is-template-yes" type="radio" name="isTemplate" value="true">Yes
+                <input id="create-application-is-template-no" type="radio" name="isTemplate" value="false" checked="checked">No
+            </div>
+            <textarea type="text" id="create-application-description" placeholder="Description"></textarea><br/>
+			<button id="action-create">Create</button>
+		</div>
+        <br/>
+        RANDOM GENERATOR<br/>
+        <div id="create-random-application-panel">
+            <input id="number-of-random" placeholder="Amount of applications" value="10"/><br/>
+            <button id="action-create-random">Create Random</button>
+        </div>
+        <br/>
+        UPDATE<br/>
+        <div id="update-application-panel">
+            UUID: <span id="update-application-uuid"></span><br/>
+            Parent: <input type="text" id="update-application-parent-uuid" placeholder="Parent UUID"/><span id="update-application-parent-name">&nbsp;</span><br/>
+            <input type="text" id="update-application-name" placeholder="Name"/><br/>
+            <input type="text" id="update-application-shortname" placeholder="Short name"/>
+            <div class="input-field border">
+                <span>Is this a template?</span>
+                <input id="update-application-is-template-yes" type="radio" name="isTemplate" value="true">Yes
+                <input id="update-application-is-template-no" type="radio" name="isTemplate" value="false" checked="checked">No
+            </div>
+            <textarea type="text" id="update-application-description" placeholder="Description"></textarea><br/>
+            <button id="action-update">Update</button>
+        </div>
+        <br/>
+        LIST<br/>
+        <div id="list-applications-panel">
+            Children of:&nbsp;<input id="list-parent-uuid" placeholder="Parent UUID"/><br/>
+            Start index:&nbsp;<input id="start-index" placeholder="Start index" value="0"/><br/>
+            Number of results:&nbsp;<input id="number-of-results" placeholder="Maximum number of results" value="10"/><br/>
+            <button id="action-refresh">Refresh</button>
+            <input id="application-name-input" class="select-application" type="text" name="search" placeholder="Category name"/>
+            <div class="filter-panel">
+                <form>
+                    <fieldset>
+                        <legend>Filter</legend>
+                        <input id="application-type-all" class="filter-radio-button" type="radio" name="filter-application-type" value="all" checked="checked"/>
+                        <label for="application-type-all">Include all</label><br/>
+                        <input id="application-type-global-only" class="filter-radio-button" type="radio" name="filter-application-type" value="globalonly"/>
+                        <label for="application-type-global-only">Global only</label><br/>
+                        <input id="application-type-application-only" class="filter-radio-button" type="radio" name="filter-application-type" value="applicationonly"/>
+                        <label for="application-type-application-only">Application specific only</label><br/>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="message-panel">
+                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+            </div>
+            <div class="list">
+                <ul class="header">
+                    <li><a class="action-list-item sort-by-name">Name&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item sort-by-shortname">Short name&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item sort-by-parent">Parent&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small sort-by-template">Template&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small">&nbsp;</a></li>
+                </ul>
+                <ul class="content">
+                </ul>
+            </div>
+        </div>
+	</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="-1"/>
+        <script type="text/javascript" src="/libraries/jquery/3.4.1/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="/web/register.js"></script>
+        <link rel="stylesheet" href="/web/index.css"/>
+        <link rel="stylesheet" href="/web/register.css"/>
+        <title>Register</title>
+    </head>
+    <body>
+    	<nav class="top persistent">navigation</nav>
+    	<header>header</header>
+		<!-- main page content -->
+    	<main role="main" id="main-content">
+    		<div class="card center">
+    			<h1>Registration</h1>
+                <div class="input-container">
+                    <input name="email" type="email" spellcheck="false" placeholder="name@example.com" id="register-email"/>
+                </div>
+	    		<div class="button-container">
+	    			<button class="btn disabled" id="button-register"><span>Register</span></button>
+	    		</div>
+    		</div>
+            <div class="card center">
+                <h1>Check your email</h1>
+                <div class="confirmation_code split_input small_bottom_margin" data-multi-input-code="true" data-qa="confirmation_code_input">
+                    <div class="confirmation_code_group">
+                        <div class="split_input_item input_wrapper"><input type="text" class="inline_input" maxlength="1" id="activation_code_1"></div>
+                        <div class="split_input_item input_wrapper"><input type="text" class="inline_input" maxlength="1" id="activation_code_2"></div>
+                        <div class="split_input_item input_wrapper"><input type="text" class="inline_input" maxlength="1" id="activation_code_3"></div>
+                    </div>
+
+                    <div class="confirmation_code_span_cell">—</div>
+
+                    <div class="confirmation_code_group">
+                        <div class="split_input_item input_wrapper"><input type="text" class="inline_input" maxlength="1" id="activation_code_4"></div>
+                        <div class="split_input_item input_wrapper"><input type="text" class="inline_input" maxlength="1" id="activation_code_5"></div>
+                        <div class="split_input_item input_wrapper"><input type="text" class="inline_input" maxlength="1" id="activation_code_6"></div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="btn disabled" id="button-activate"><span>Activate</span></button>
+                </div>
+            </div>
+            <div class="card center">
+                <h1>Current organizations</h1>
+                <ul id="organization_list">
+                </ul>
+            </div>
+            <div class="card center">
+                <h1>Create an organization</h1>
+                <div class="input-container">
+                    <input name="account" type="text" spellcheck="false" placeholder="My Organization" id="account-name"/>
+                </div>
+                <div class="button-container">
+                    <button class="btn disabled" id="button-create-account"><span>Create</span></button>
+                </div>
+            </div>
+            <div class="card center">
+                <h1>Profile</h1>
+                <div class="input-container">
+                    <input name="username" type="text" spellcheck="false" placeholder="User name" id="profile_user_name"/>
+                </div>
+                <div class="input-container">
+                    <input name="firstname" type="text" spellcheck="false" placeholder="First name" id="profile_first_name"/>
+                </div>
+                <div class="input-container">
+                    <input name="lastname" type="text" spellcheck="false" placeholder="Last name" id="profile_last_name"/>
+                </div>
+                <div class="input-container">
+                    <input name="password" type="password" spellcheck="false" placeholder="Password" id="password"/>
+                </div>
+                <div class="input-container">
+                    <input name="password2" type="password" spellcheck="false" placeholder="Retype password" id="password2"/>
+                </div>
+                <div class="button-container">
+                    <button class="btn disabled" id="button-user"><span>Submit</span></button>
+                </div>
+            </div>
+		</main>
+    	<footer class="footer">footer</footer>
+    </body>
+</html>

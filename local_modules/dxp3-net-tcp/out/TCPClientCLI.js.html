@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: TCPClientCLI.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: TCPClientCLI.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-net-tcp
+ *
+ * NAME
+ * TCPClientCLI
+ */
+const packageName = 'dxp3-net-tcp';
+const moduleName = 'TCPClientCLI';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * @module dxp3-net-tcp/TCPClientCLI
+ */
+const logging = require('dxp3-logging');
+const readline = require('readline');
+const TCPClient = require('./TCPClient');
+const TCPClientOptions = require('./TCPClientOptions');
+const TCPClientEvent = require('./TCPClientEvent');
+const util = require('dxp3-util');
+/**
+ * A TCPClient command line interface program.
+ */
+class TCPClientCLI {
+    /*********************************************
+     * CONSTRUCTOR
+     ********************************************/
+
+	/**
+	 * @param {module:dxp3-net-tcp/TCPClient~TCPClient} _tcpClient
+	 */
+	constructor(_tcpClient) {
+		this.tcpClient = _tcpClient;
+		this.rl = null;
+	}
+
+	start() {
+		this.rl = readline.createInterface({
+			input: process.stdin,
+			output: process.stdout,
+			prompt: 'DXP3> '
+		});
+		this.rl.on('close', () => {
+			this._parseExit();
+		});
+		this.tcpClient.on(TCPClientEvent.CLOSED, () => {
+			console.log('TCPClient closed.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.CLOSING, () => {
+			console.log('TCPClient closing...');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.CONNECTED, () => {
+			console.log('TCPClient Connected.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.CONNECTING, () => {
+			console.log('TCPClient connecting.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.SOCKET_CONNECTED, (socketPoolID, socketID, remoteAddress, remotePort) => {
+			console.log('TCPSocketPool ' + socketPoolID + ' connected TCPSocket ' + socketID + ' to ' + remoteAddress + ':' + remotePort + '.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.SOCKET_CLOSED, (socketPoolID, socketID) => {
+			console.log('TCPSocketPool ' + socketPoolID + ' closed TCPSocket ' + socketID + '.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.SOCKET_POOL_CLOSED, (socketPoolID) => {
+			console.log('TCPSocketPool ' + socketPoolID + ' closed.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.SOCKET_POOL_CONNECTED, (socketPoolID, remoteAddress, remotePort) => {
+			console.log('TCPSocketPool ' + socketPoolID + ' connected to ' + remoteAddress + ':' + remotePort + '.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.SOCKET_TIMEOUT, (socketPoolID, socketID) => {
+			console.log('TCPSocketPool ' + socketPoolID + ' timed out TCPSocket ' + socketID + '.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.ERROR, (_error) => {
+			console.log('TCPClient error: ' + _error + '.');
+			this.rl.prompt();
+		});
+		this.tcpClient.on(TCPClientEvent.QUEUING, () => {
+			console.log('TCPClient queuing...');
+			this.rl.prompt();
+		});
+		console.log('');
+		console.log('Use this interface to control an TCP client.');
+		console.log('Type help for a list of available commands.');
+		this.rl.prompt();
+		this._parse();
+	}
+
+    /*********************************************
+     * PRIVATE METHODS
+     ********************************************/
+
+	_parse() {
+		let self = this;
+		let state = 'PARSE';
+		this.rl.prompt();
+		this.rl.on('line', (line) => {
+			line = line.trim();
+			let parts = line.split(' ');
+			let command = parts[0];
+			let commandArguments = '';
+			for(let i=1;i &lt; parts.length;i++) {
+				commandArguments += parts[i] + ' ';
+			}
+			commandArguments = commandArguments.trim();
+			switch(state) {
+				case 'PARSE_FILE':
+					let filePath = line.trim();
+					self.tcpClient.sendFile(filePath, function(error, socket) {
+						if(error) {
+							console.log(error.message);
+							if(socket) {
+								socket.destroy();
+							}
+						} else {
+							socket.release();
+						}
+						self.rl.prompt();
+					});
+					state = 'PARSE_CMD';
+					break;
+				case 'PARSE_SEND':
+					self._parseSend(line);
+					state = 'PARSE_CMD';
+					break;
+				case 'PARSE_CONNECT':
+					self._parseConnect(line);
+					state = 'PARSE';
+					break;
+				case 'PARSE_DISCONNECT':
+					self._parseDisconnect(line);
+					state = 'PARSE';
+					break;
+				case 'PARSE_LOGGING':
+					self._parseLogging(line);
+					state = 'PARSE';
+					break;
+				case 'PARSE_TIMEOUT':
+					self._parseTimeout(line);
+					state = 'PARSE';
+					break;
+				default:
+					switch(command) {
+						case 'close':
+						case 'stop':
+							self._parseClose();
+							break;
+						case 'connect':
+							if(commandArguments.length > 0) {
+								self._parseConnect(commandArguments);
+							} else {
+								console.log('Specify the address and port separated by a :');
+								state = 'PARSE_CONNECT';
+							}
+							break;
+						case 'disconnect':
+						case 'destroy':
+							if(commandArguments.length > 0) {
+								self._parseDisconnect(commandArguments);
+							} else {
+								console.log('Specify the address and port separated by a :');
+								state = 'PARSE_DISCONNECT';
+							}
+							break;
+						case 'list':
+						case 'connections':
+							break;
+						case 'send':
+						case 'msg':
+						case 'message':
+						case 'write':
+							if(commandArguments.length > 0) {
+								self._parseSend(commandArguments);
+							} else {
+								console.log('Specify the message (or tcp string) to send.');
+								state = 'PARSE_SEND';
+							}
+							break;
+						case 'sendfile':
+						case 'writefile':
+						case 'file':
+							console.log('Specify which file to send.');
+							state = 'PARSE_FILE';
+							break;
+						case 'config':
+						case 'configuration':
+						case 'prefs':
+						case 'preferences':
+						case 'settings':
+						case 'status':
+						case 'state':
+					        console.log('Maximum number of sockets: ' + this.tcpClient.maximumNumberOfSockets);
+					        console.log('Minimum number of sockets: ' + this.tcpClient.minimumNumberOfSockets);
+							console.log('Timeout                  : ' + this.tcpClient.getTimeout() + 'ms');
+							console.log('State                    : ' + this.tcpClient.getState());
+							break;
+						case 'log':
+						case 'logger':
+						case 'logging':
+						case 'loglevel':
+							if(commandArguments.length > 0) {
+								self._parseLogging(commandArguments);
+							} else {
+								console.log('What should the log level be?');
+								console.log('Type trace,debug,info,warning,error,fatal or off.');
+								console.log('Type cancel, exit, quit or stop to cancel.');
+								state = 'PARSE_LOGGING';
+							}
+							break;
+						case 'exit':
+						case 'quit':
+							self._parseExit();
+							break;
+						case 'faq':
+						case 'help':
+						case 'info':
+						case 'information':
+							self._parseHelp();
+							break;
+						case 'timeout':
+						case 'settimeout':
+							if(commandArguments.length > 0) {
+								self._parseTimeout(commandArguments);
+							} else {
+								console.log('Please specify the timeout in milliseconds.');
+								console.log('Type cancel, exit, quit or stop to cancel.');
+								state = 'PARSE_TIMEOUT';
+							}
+							break;
+						default:
+							console.log('Unknown command. Type help to get an overview of known commands.');
+							break;
+					}
+					break;
+			}
+			self.rl.prompt();
+		});
+	}
+
+	_parseClose() {
+		if(this.tcpClient.isClosed()) {
+			console.log('The TCP client is already closed.');
+			this.rl.prompt();
+			return;
+		}
+		try {
+			this.tcpClient.close();
+		} catch(_exception) {
+			console.log(_exception);
+		}
+	}
+
+	_parseConnect(line) {
+		let self = this;
+		let addressPort = line.split(':');
+		let address = addressPort[0];
+		let port = addressPort[1];
+		this.tcpClient.connect(address, port, function(_error, socketPoolID) {
+			if(_error) {
+				console.log('Unable to connect to \'' + address + ':' + port + '\'.');
+				console.log('Error: ' + _error + '.');
+			} else {
+				console.log('Connected to socket pool \'' + socketPoolID + '\'.');
+			}
+			self.rl.prompt();
+		});		
+	}
+
+	_parseDisconnect(line) {
+		let addressPort = line.split(':');
+		let address = addressPort[0];
+		let port = addressPort[1];
+		try {
+			this.tcpClient.disconnect(address, port);
+			console.log('Disconnecting from ' + address + ':' + port + '.');
+		} catch(_exception) {
+			console.log('Error: ' + _exception);
+		}
+		this.rl.prompt();
+	}
+
+	_parseExit() {
+		console.log('Goodbye.');
+		process.exit(1);
+	}
+
+	_parseHelp() {
+		// Clear the scroll buffer.
+		process.stdout.write('\u001b[3J\u001b[1J');
+		// Clear the window.
+		console.clear();
+		console.log('');
+		console.log('ACTIONS: core methods that provide our TCP client capabilities.');
+		console.log('');
+		console.log('COMMAND -----------------------------+ ALIASES -------------+ DESCRIPTION -----------------------------------+');
+		console.log('send                &lt;data>           + message,msg,write    + Send a message.                                |');
+		console.log('                                     |                      | This can either be a string or a JSON object.  |');
+		console.log('sendfile            &lt;path>           + file,writefile       + Send a file to a TCP server.                   |');
+		console.log('                                     |                      | The path must include the folder and filename. |');
+		console.log('-------------------------------------+----------------------+------------------------------------------------+');
+		console.log('');
+		console.log('CONFIGURATION / PREFERENCES: Commands to control the TCP client.');
+		console.log('');
+		console.log('COMMAND -----------------------------+ ALIASES -------------+ DESCRIPTION -----------------------------------+');
+		console.log('maximum             &lt;number>         +                      + Maximum number of sockets per pool.            |');
+		console.log('minimum             &lt;number>         +                      + Minimum number of sockets per pool.            |');
+		console.log('status                               + config,              + Get the current state of the TCP client.       |');
+		console.log('                                     | configuration,       |                                                |');
+		console.log('                                     | prefs, preferences,  |                                                |');
+		console.log('                                     | settings, state      |                                                |');
+		console.log('timeout             &lt;number>         + settimeout           + Connection timeout.                            |');
+		console.log('-------------------------------------+----------------------+------------------------------------------------+');
+		console.log('');
+		console.log('PROCESS FLOW: Commands to connect and disconnect the TCP client.');
+		console.log('');
+		console.log('COMMAND -----------------------------+ ALIASES -------------+ DESCRIPTION -----------------------------------+');
+		console.log('close                                + stop                 + Close the TCP client.                          |');
+		console.log('connect             &lt;address>:&lt;port> + start                + Connect to a TCP Server at &lt;address>:&lt;port>.   |');
+		console.log('disconnect          &lt;address>:&lt;port> + destroy              + Disconnect from a TCP server at                |');
+		console.log('                                     |                      | &lt;address>:&lt;port>.                              |');
+		console.log('-------------------------------------+----------------------+------------------------------------------------+');
+		console.log('');
+		console.log('PROGRAM FLOW: Commands to control this command line interface program.');
+		console.log('');
+		console.log('COMMAND -----------------------------+ ALIASES -------------+ DESCRIPTION -----------------------------------+');
+		console.log('exit                                 + quit                 + Exit this program.                             |');
+		console.log('help                                 + faq, info,           + Show this help screen.                         |');
+		console.log('                                     + information          +                                                |');
+		console.log('loglevel            &lt;level>          + log, logger, logging + Set the log level.                             |');
+		console.log('                                     |                      | One of trace, debug, info, warning, error,     |');
+		console.log('                                     |                      | fatal or off.                                  |');
+		console.log('-------------------------------------+----------------------+------------------------------------------------+');
+		console.log('');
+	}
+
+	_parseLogging(line) {
+		let lineLowerCase = line.toLowerCase();
+		if(lineLowerCase === 'cancel'  || lineLowerCase === 'exit' ||
+		   lineLowerCase === 'quit'    || lineLowerCase === 'stop') {
+		   	console.log('Cancelled.');
+			this.rl.prompt();
+			return;
+		}
+		logging.setLevel(line);
+		console.log('Logging set to \'' + logging.Level.toString(logging.getLevel()) + '\'.');
+		this.rl.prompt();
+	}
+
+	_parseSend(line) {
+		let msg = line.trim();
+		if(msg.startsWith('{') &amp;&amp; msg.endsWith('}')) {
+			try {
+				msg = JSON.parse(msg);
+			} catch(exception) {
+				console.log('Unfortunately this seems to be malformed JSON.')
+				return;
+			}
+		}
+		let self = this;
+		this.tcpClient.send(msg, function(_error, socket) {
+			if(_error) {
+				console.log(_error.message);
+				socket.destroy();
+				self.rl.prompt();
+				return;
+			}
+			if(typeof msg === 'object') {
+				socket.readJSON().then(
+					// Resolve
+					(json) => {
+						console.log('reply: ' + JSON.stringify(json));
+						socket.release();
+						self.rl.prompt();
+					},
+					(error) => {
+						console.log('error: ' + error);
+						socket.release();
+						self.rl.prompt();
+					}
+				);
+			} else {
+				socket.readString().then(
+					// Resolve
+					(str) => {
+						console.log('reply: ' + str);
+						socket.release();
+						self.rl.prompt();
+					},
+					(error) => {
+						console.log('error: ' + error);
+						socket.release();
+						self.rl.prompt();
+					}
+				);
+			}
+		});
+	}
+
+	_parseTimeout(line) {
+		let lineLowerCase = line.toLowerCase();
+		if(lineLowerCase === 'cancel'  || lineLowerCase === 'exit' ||
+		   lineLowerCase === 'quit'    || lineLowerCase === 'stop') {
+		   	console.log('Cancelled.');
+			this.rl.prompt();
+			return;
+		}
+		try {
+			this.tcpClient.setTimeout(line);
+			console.log('Timeout set to ' + this.tcpClient.getTimeout());
+		} catch(_exception) {
+			if(_exception.code === TCPError.ILLEGAL_ARGUMENT.code) {
+				console.log('The supplied timeout is not a number. Unable to update the timeout.')
+			} else {
+				console.log('Error: ' + _exception.toString());
+			}
+		}
+		this.rl.prompt();
+	}
+
+	static main() {
+		try {
+	        let tcpClientOptions = TCPClientOptions.parseCommandLine();
+	        logging.setLevel(tcpClientOptions.logLevel);
+	        if(tcpClientOptions.help) {
+	            util.Help.print(this);
+	            return;
+	        }
+			let tcpClient = new TCPClient(tcpClientOptions);
+			let tcpClientCLI = new TCPClientCLI(tcpClient);
+			tcpClientCLI.start();
+		} catch(exception) {
+			console.log(exception.message);
+		}
+	}
+}
+// Check if someone tried to run/execute this file.
+if(util.Assert.isFileToExecute(canonicalName)) {
+	TCPClientCLI.main();
+	return;
+}
+
+module.exports = TCPClientCLI;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-net-json_TCPSocketPoolDefaults.html">dxp3-net-json/TCPSocketPoolDefaults</a></li><li><a href="module-dxp3-net-tcp.html">dxp3-net-tcp</a></li><li><a href="module-dxp3-net-tcp_SocketPoolState.html">dxp3-net-tcp/SocketPoolState</a></li><li><a href="module-dxp3-net-tcp_TCPClient.html">dxp3-net-tcp/TCPClient</a></li><li><a href="module-dxp3-net-tcp_TCPClientCLI.html">dxp3-net-tcp/TCPClientCLI</a></li><li><a href="module-dxp3-net-tcp_TCPClientDefaults.html">dxp3-net-tcp/TCPClientDefaults</a></li><li><a href="module-dxp3-net-tcp_TCPClientEvent.html">dxp3-net-tcp/TCPClientEvent</a></li><li><a href="module-dxp3-net-tcp_TCPClientOptions.html">dxp3-net-tcp/TCPClientOptions</a></li><li><a href="module-dxp3-net-tcp_TCPClientState.html">dxp3-net-tcp/TCPClientState</a></li><li><a href="module-dxp3-net-tcp_TCPError.html">dxp3-net-tcp/TCPError</a></li><li><a href="module-dxp3-net-tcp_TCPServer.html">dxp3-net-tcp/TCPServer</a></li><li><a href="module-dxp3-net-tcp_TCPServerCLI.html">dxp3-net-tcp/TCPServerCLI</a></li><li><a href="module-dxp3-net-tcp_TCPServerDefaults.html">dxp3-net-tcp/TCPServerDefaults</a></li><li><a href="module-dxp3-net-tcp_TCPServerEvent.html">dxp3-net-tcp/TCPServerEvent</a></li><li><a href="module-dxp3-net-tcp_TCPServerOptions.html">dxp3-net-tcp/TCPServerOptions</a></li><li><a href="module-dxp3-net-tcp_TCPServerPort.html">dxp3-net-tcp/TCPServerPort</a></li><li><a href="module-dxp3-net-tcp_TCPServerState.html">dxp3-net-tcp/TCPServerState</a></li><li><a href="module-dxp3-net-tcp_TCPSocketPool.html">dxp3-net-tcp/TCPSocketPool</a></li><li><a href="module-dxp3-net-tcp_TCPSocketPoolEvent.html">dxp3-net-tcp/TCPSocketPoolEvent</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-net-tcp_TCPClientCLI-TCPClientCLI.html">TCPClientCLI</a></li><li><a href="module-dxp3-net-tcp_TCPClientOptions-TCPClientOptions.html">TCPClientOptions</a></li><li><a href="module-dxp3-net-tcp_TCPClient-TCPClient.html">TCPClient</a></li><li><a href="module-dxp3-net-tcp_TCPError-TCPError.html">TCPError</a></li><li><a href="module-dxp3-net-tcp_TCPServerCLI-TCPServerCLI.html">TCPServerCLI</a></li><li><a href="module-dxp3-net-tcp_TCPServerOptions-TCPServerOptions.html">TCPServerOptions</a></li><li><a href="module-dxp3-net-tcp_TCPServer-TCPServer.html">TCPServer</a></li><li><a href="module-dxp3-net-tcp_TCPSocketPool-TCPSocketPool.html">TCPSocketPool</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 17 2023 09:31:29 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

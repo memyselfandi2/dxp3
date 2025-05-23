@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Options.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Options.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-util
+ *
+ * NAME
+ * Options
+ */
+const packageName = 'dxp3-util';
+const moduleName = 'Options';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * @module dxp3-util/Options
+ */
+const Assert = require('./Assert');
+const Help = require('./Help');
+
+class Options {
+
+	constructor() {
+		this._aliases = new Map();
+	}
+
+	setAlias(_aliases, _property) {
+		this.addAlias(_aliases, _property);
+	}
+
+	setAliases(_aliases, _property) {
+		this.addAlias(_aliases, _property);
+	}
+
+	setAliasProperty(_aliases, _property) {
+		this.addAlias(_aliases, _property);
+	}
+
+	addAliases(_aliases, _property) {
+		this.addAlias(_aliases, _property);
+	}
+
+	addAliasProperty(_aliases, _property) {
+		this.addAlias(_aliases, _property);
+	}
+
+	addAlias(_aliases, _property) {
+		// Defensive programming...check input...
+		if(_aliases === undefined || _aliases === null) {
+			return;
+		}
+		if(_property === undefined || _property === null) {
+			return;
+		}
+		if(typeof _aliases === 'string') {
+			_aliases = _aliases.trim().split(',');
+		}
+		if(!Array.isArray(_aliases)) {
+			return;
+		}
+		for(let i=0;i &lt; _aliases.length;i++) {
+			let alias = _aliases[i];
+			if(alias === undefined || alias === null) {
+				continue;
+			}
+			alias = alias.trim();
+			alias = alias.replace(/[_-\s]/g, '');
+			if(alias.length &lt;= 0) {
+				continue;
+			}
+			alias = alias.toLowerCase();
+			if(this._aliases.has(alias)) {
+				delete Object[alias];
+			}
+			Object.defineProperty(this, alias, {
+			    get: function() {
+			        return this[_property];
+			    },
+			    set: function(value) {
+			    	this[_property] = value;
+			    },
+			    configurable: true
+			});
+			this._aliases.set(alias, _property);
+		}
+	}
+
+	hasAlias(_alias) {
+		return this.hasAliasProperty(_alias);
+	}
+
+	hasAliasProperty(_alias) {
+		if(_alias === undefined || _alias === null) {
+			return false;
+		}
+		_alias = _alias.trim();
+		_alias = _alias.replace(/[_-\s]/g, '');
+		if(_alias.length &lt;= 0) {
+			return false;
+		}
+		_alias = _alias.toLowerCase();
+		return this._aliases.has(_alias);
+	}
+
+	getAliasedProperty(_alias) {
+		if(_alias === undefined || _alias === null) {
+			return null;
+		}
+		_alias = _alias.trim();
+		_alias = _alias.replace(/[_-\s]/g, '');
+		if(_alias.length &lt;= 0) {
+			return null;
+		}
+		_alias = _alias.toLowerCase();
+		return this._aliases.get(_alias);
+	}
+
+	getPropertyAlias(_property) {
+		let result = [];
+		if(_property === undefined || _property === null) {
+			return result;
+		}
+		for(let [alias, property] of this._aliases) {
+			if(property === _property) {
+				result.push(alias);
+			}
+		}
+		return result;
+	}
+
+	getPropertyAliases(_property) {
+		return this.getPropertyAlias(_property);
+	}
+
+	static new(_args) {
+		return this.assign(_args);
+	}
+
+	static create(_args) {
+		return this.assign(_args);
+	}
+
+	static concat(_args) {
+		return this.assign(_args);
+	}
+
+	static instance(_args) {
+		return this.assign(_args);
+	}
+
+	static merge(_args) {
+		return this.assign(_args);
+	}
+
+	static newInstance(_args) {
+		return this.assign(_args);
+	}
+
+	static parse(_args) {
+		return this.assign(_args);
+	}
+
+	static assign(_sourceInstance) {
+		let targetClass = this.name;
+		// Defensive programming...check input...
+		if(targetClass === undefined || targetClass === null) {
+			return null;
+		}
+		let targetInstance = new this();
+		if(!(targetInstance instanceof Options)) {
+			return null;
+		}
+		if(_sourceInstance === undefined || _sourceInstance === null) {
+			return targetInstance;
+		}
+		for (let property in _sourceInstance) {
+			// ignore the aliases property...
+			if(property === '_aliases') {
+				continue;
+			}
+			let foundProperty = targetInstance.hasOwnProperty(property);
+			if(!foundProperty) {
+				foundProperty = targetInstance.hasAliasProperty(property);
+				if(!foundProperty) {
+					continue;
+				}
+				property = targetInstance.getAliasedProperty(property);
+			}
+			let sourceInstancePropertyValue = _sourceInstance[property];
+			let argumentType = typeof sourceInstancePropertyValue;
+			let targetInstanceType = typeof targetInstance[property];
+			if(argumentType === targetInstanceType) {
+				targetInstance[property] = sourceInstancePropertyValue;
+				continue;
+			}
+			let targetInstanceIsArray = Array.isArray(targetInstance[property]);
+			let argumentIsArray = Array.isArray(sourceInstancePropertyValue);
+			if(targetInstanceIsArray &amp;&amp; argumentIsArray) {
+				targetInstance[property] = sourceInstancePropertyValue;
+				continue;
+			} else if(targetInstanceIsArray &amp;&amp; argumentType === 'string') {
+				targetInstance[property] = sourceInstancePropertyValue.split(',');
+				continue;
+			} else if(targetInstanceType === 'object' &amp;&amp; argumentIsArray) {
+				let value = targetInstance[property];
+				if(value === null) {
+					targetInstance[property] = sourceInstancePropertyValue;
+					continue;
+				}
+			}
+			if(argumentType === 'string' &amp;&amp; targetInstanceType === 'number') {
+				let value = parseInt(sourceInstancePropertyValue);
+				if(isNaN(value)) {
+					continue;
+				}
+				targetInstance[property] = value;
+				continue;
+			}
+			if(argumentType === 'string' &amp;&amp; targetInstanceType === 'boolean') {
+				let value = sourceInstancePropertyValue;
+				value = value.trim.toLowerCase();
+				if(value === 'true' || value === 'on' || value === 'yes') {
+					targetInstance[property] = true;
+				} else {
+					targetInstance[proprty] = false;
+				}
+				continue;
+			}
+			if(argumentType === 'string' &amp;&amp; targetInstanceType === 'object') {
+				let value = targetInstance[property];
+				if(value === null) {
+					targetInstance[property] = sourceInstancePropertyValue;
+				}
+				continue;
+			}
+		}
+		return targetInstance;
+	}
+}
+// Check if someone tried to run/execute this file.
+if(Assert.isFileToExecute(canonicalName)) {
+	Help.print(Options);
+	return;
+}
+module.exports = Options;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-util.html">dxp3-util</a></li><li><a href="module-dxp3-util_Assert.html">dxp3-util/Assert</a></li><li><a href="module-dxp3-util_CommandLineBooleanArrayOption.html">dxp3-util/CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption.html">dxp3-util/CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption.html">dxp3-util/CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError.html">dxp3-util/CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption.html">dxp3-util/CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberArrayOption.html">dxp3-util/CommandLineNumberArrayOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption.html">dxp3-util/CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineObjectArrayOption.html">dxp3-util/CommandLineObjectArrayOption</a></li><li><a href="module-dxp3-util_CommandLineObjectOption.html">dxp3-util/CommandLineObjectOption</a></li><li><a href="module-dxp3-util_CommandLineOption.html">dxp3-util/CommandLineOption</a></li><li><a href="module-dxp3-util_CommandLineOptions.html">dxp3-util/CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineStringArrayOption.html">dxp3-util/CommandLineStringArrayOption</a></li><li><a href="module-dxp3-util_CommandLineStringOption.html">dxp3-util/CommandLineStringOption</a></li><li><a href="module-dxp3-util_Help.html">dxp3-util/Help</a></li><li><a href="module-dxp3-util_Options.html">dxp3-util/Options</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-util_CommandLineBooleanArrayOption-CommandLineBooleanArrayOption.html">CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption-CommandLineBooleanOption.html">CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption-CommandLineEnumerationOption.html">CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError-CommandLineError.html">CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption-CommandLineFlagOption.html">CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption-CommandLineNumberOption.html">CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineOptions-CommandLineOptions.html">CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineOption-CommandLineOption.html">CommandLineOption</a></li><li><a href="module-dxp3-util_Help-Help.html">Help</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 24 2023 20:28:11 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

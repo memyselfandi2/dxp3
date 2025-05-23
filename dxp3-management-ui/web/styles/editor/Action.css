@@ -1,0 +1,39 @@
+div.action {
+	display:inline-block;
+	position:relative;
+}
+div.action > a > i {
+    margin-right:5px;
+}
+div.action > a.action-confirm,
+div.action > a.action-save {
+    color: #008000;
+}
+div.action > a.action-cancel {
+    color: #CE0000;
+}
+div.action > a.action-message {
+    color:#CE0000;
+}
+div.action > a.action-help {
+    color: #1E90FF;
+}
+
+div.action > a.action-delete:hover {
+	color:#CE0000;
+}
+div.action.disabled > a,
+div.action.disabled:hover,
+div.action.disabled > a.action-delete:hover {
+    color: lightgray;
+    cursor:default;
+}
+a.action-list-item {
+    width: 100%;
+    display: inline-block;
+}
+a.action-list-item-delete {
+    position:absolute;
+    right:0px;
+    margin-right:5px;
+}

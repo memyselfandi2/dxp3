@@ -1,0 +1,26 @@
+****************************************
+* DXP3 - Digital Experience Platform 3 *
+*                                      *
+* MODULE: dxp3-net-json                *
+****************************************
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+
+****************************************
+* COMMANDLINE EXAMPLES                 *
+****************************************
+
+node JSONServer -help -host <String> -loglevel <String> <String> -port <Number> -timeout <Number>
+
+-address  <String>          - Alias: host.
+-help                       - Show this content.
+-loglevel <String> <String> - One of debug, info, warn, error, fatal.
+-port     <Number>          - The port the JSON server should listen on.
+-timeout  <Number>          - The number of milliseconds until we close the client connection
+                              after no data has been received.
+
+****************************************
+* CODE EXAMPLES                        *
+****************************************

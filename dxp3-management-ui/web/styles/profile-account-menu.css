@@ -1,0 +1,74 @@
+#account-menu {
+    /* Always on the top right side */
+    position:fixed;
+    top:0px;
+    right:0px;
+    /* Always on top */
+    z-index: 10000;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-top:10px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 2px rgba(0,0,0,.1);
+    border-bottom-left-radius: 10px;
+}
+#account-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#account-menu ul li {
+    float:left;
+    margin-right:20px;
+}
+
+#account-menu ul li:last-child {
+    margin-right:0px;
+}
+
+#account-menu>ul>li.search {
+    position:relative;
+}
+#account-menu input.search {
+    border: 1px solid #bbc0c4;
+    border-radius:3px;
+    color:#1d1c1d;
+    padding:5px;
+    margin-top:-5px;
+    font-size:1rem;
+    width:200px;
+    padding-left:24px;
+}
+#account-menu input.search:focus {
+    border-color:#66bfff;
+    box-shadow: 0 0 0 4px rgba(0, 149, 255, 0.15);
+}
+#account-menu .icon-search {
+    position:absolute;
+    left:4px;
+    top:2px;
+    color:#bbc0c4;
+}
+#account-menu a {
+    color:lightgrey;
+    display:block;
+    margin-bottom:5px;
+}
+#account-menu a:visited {
+    color:lightgrey;    
+}
+#account-menu a:hover {
+    color:black;
+}
+
+#account-menu .popup {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+    z-index:10000;   
+    padding:10px;
+    margin-top: 5px;
+    border:1px solid grey;
+    min-width:10px;
+}

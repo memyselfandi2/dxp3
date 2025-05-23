@@ -1,0 +1,162 @@
+/* POPUPS */
+.popup {
+    position: absolute;
+    background-color: white;
+    min-width: 420px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+    z-index:10000;   
+}
+
+.popup.center {
+    position: fixed;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+}
+
+.popup.align-left {
+    right:0px;
+}
+
+.popup.align-right {
+    left:0px;
+}
+
+.popup > .menu {
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: right;
+    background: rgb(225,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(225,255,255,1) 0%, rgba(225,255,255,1) 7%, rgba(225,255,255,1) 12%, rgba(253,255,255,1) 12%, rgba(230,248,253,1) 30%, rgba(200,238,251,1) 54%, rgba(190,228,248,1) 75%, rgba(177,216,245,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(225,255,255,1) 0%,rgba(225,255,255,1) 7%,rgba(225,255,255,1) 12%,rgba(253,255,255,1) 12%,rgba(230,248,253,1) 30%,rgba(200,238,251,1) 54%,rgba(190,228,248,1) 75%,rgba(177,216,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(225,255,255,1) 0%,rgba(225,255,255,1) 7%,rgba(225,255,255,1) 12%,rgba(253,255,255,1) 12%,rgba(230,248,253,1) 30%,rgba(200,238,251,1) 54%,rgba(190,228,248,1) 75%,rgba(177,216,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e1ffff', endColorstr='#b1d8f5',GradientType=0 ); /* IE6-9 */
+}
+.popup > .menu > .menu-icon {
+    padding-right:5px;
+}
+.popup > .menu a {
+    color:inherit;
+}
+.popup > .menu a:visited {
+    color:inherit;
+}
+.popup > .menu a:hover {
+    color:black;
+}
+.popup > .menu > .loading {
+    display: inline-block;
+    height:20px;
+}
+/* Hide our loading icon on load... */
+.popup > .menu > .loading > img.icon-loading {
+    display:none;
+    height:20px;
+}
+.popup > .menu > .loading > img.icon-loading.hide {
+    display:none;
+}
+.popup > .menu > .loading > img.icon-loading.show {
+    display:initial;
+}
+.popup ul {
+    list-style:none;
+    padding:8px;
+    margin:0px;
+}
+.popup ul li {
+    padding-top:0px;
+    padding-bottom:0px;
+    padding-right:0px;
+    margin:0px;
+    border-top:1px solid white;
+}
+.popup ul li[draggable="true"] {
+    cursor:move;
+}
+.popup ul li[draggable="true"]:first-child a.action-move-up {
+    visibility: hidden;
+}
+.popup ul li[draggable="true"]:last-child a.action-move-down {
+    visibility: hidden;
+}
+
+.popup ul li a {
+    width:initial;
+    margin-left:5px;
+}
+.popup ul li a.invisible {
+    visibility: hidden;
+}
+.popup ul li.over {
+    border-top:1px dashed black;
+}
+.popup ul.content li:hover {
+    background-color:grey;
+}
+
+.popup .filter-panel fieldset {
+    border-left:none;
+    border-right:none;
+    font-size:20px;
+}
+
+.popup.large {
+    min-width: 820px;
+}
+
+.popup .form-panel {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.popup .form-panel input[type='radio'],
+.popup .form-panel label {
+    margin:5px;
+}
+
+.popup .form-panel input[type='radio'] {
+    vertical-align:baseline;
+}
+
+.popup .form-panel .input-field {
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+.popup .form-panel .buttons {
+    text-align: right;
+    padding-bottom: 10px;
+}
+
+.popup .form-panel .buttons a {
+    margin-right: 5px;
+}
+.popup .form-panel .buttons a i {
+    margin-right: 5px;
+}
+.popup .form-panel .buttons a:visited {
+    color:#616061;
+}
+
+.popup .message-panel {
+    position: absolute;
+    background: white;
+    margin: 0px 10px 0px 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
+    opacity: 1;
+    border: 1px solid #868686;
+    border-radius:4px;
+    box-shadow: 0 10px 25px #ddd;
+    z-index: 100;
+    color:#1d1d1d;
+    top: 10px;
+}
+
+.popup .message-panel i {
+    margin-right: 5px;
+}

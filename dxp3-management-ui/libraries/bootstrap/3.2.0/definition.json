@@ -1,0 +1,12 @@
+{
+   "cdn": {
+      "css": ["//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css",
+              "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"],
+      "script" : ["//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"]
+   },
+   "local": {
+      "css": ["/libraries/bootstrap/3.2.0/css/bootstrap.min.css",
+              "/libraries/bootstrap/3.2.0/css/bootstrap-theme.min.css"],
+      "script" : ["/libraries/bootstrap/3.2.0/js/bootstrap.min.js"]
+   }
+}

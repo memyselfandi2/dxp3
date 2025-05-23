@@ -1,0 +1,22 @@
+{
+  "name": "dxp3-management-ui",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - Management - UI",
+  "main": "index.js",
+  "scripts": {
+    "help": "node help.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-cleanup": "file:../local_modules/dxp3-cleanup",
+    "dxp3-configuration": "file:../local_modules/dxp3-configuration",
+    "dxp3-lang-html": "file:../local_modules/dxp3-lang-html",
+    "dxp3-logging": "file:../local_modules/dxp3-logging",
+    "dxp3-microservice-rest": "file:../local_modules/dxp3-microservice-rest",
+    "dxp3-microservice-web": "file:../local_modules/dxp3-microservice-web",
+    "dxp3-util": "file:../local_modules/dxp3-util"
+  }
+}

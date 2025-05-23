@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: dxp3-net-http</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: dxp3-net-http</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>This module contains everything one needs to run a HTTP server/client,a HTTP Reverse Proxy or a HTTP Spider. Make sure this local moduleis defined as a dependency in your package.json. Typicallythe dependency is defined by a file reference using a relative path.Obviously that relative path may be different for different modules.<br/>Here is an example of such a dependency in a package.json:<br/>"dependencies": {<br/>    "dxp3-net-http": "file:../../../local_modules/dxp3-net-http"<br/>}<br/></p></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const http = require('dxp3-net-http');// Set our host, port and timeoutlet httpServerOptions = {};// Typically one would listen on all available interfaces.// However we can bind to a specific interface by specifying// the IP address. To bind on all interfaces use the // 0.0.0.0 IP address.httpServerOptions.address = '127.0.0.1';httpServerOptions.port = 8080;httpServerOptions.timeout = 10000;// A HTTPServer may host multiple domains.// Each domain will have its own routes.httpServerOptions.domains = 'www.example.com, something.domain.org';httpServerOptions.roots = '/var/www/example.com, /var/www/domain.org';// Create a new HTTPServerlet httpServer = new http.HTTPServer(httpServerOptions);httpServer.on(http.HTTPServerEvent.ERROR, (_error) => {    console.log('HTTPServer errror: ' + _error);});httpServer.on(http.HTTPServerEvent.RUNNING, (_address, _port) {    console.log('HTTPServer is running at ' + _address + ':' + _port);});// We can also add domains like so:httpServer.addDomain('www.blaat.org', '/var/www/blaat.org/');// Start the serverhttpServer.start();</code></pre>
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="~HTTPClient"><span class="type-signature">(inner) </span>HTTPClient<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPClient.html">module:dxp3-net-http/HTTPClient</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPClient.html">module:dxp3-net-http/HTTPClient</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPClientDefaults"><span class="type-signature">(inner) </span>HTTPClientDefaults<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPClientDefaults.html">module:dxp3-net-http/HTTPClientDefaults</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPClientDefaults.html">module:dxp3-net-http/HTTPClientDefaults</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPClientError"><span class="type-signature">(inner) </span>HTTPClientError<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPClientError.html">module:dxp3-net-http/HTTPClientError</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPClientError.html">module:dxp3-net-http/HTTPClientError</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line65">line 65</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPClientOptions"><span class="type-signature">(inner) </span>HTTPClientOptions<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPClientOptions.html">module:dxp3-net-http/HTTPClientOptions</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPClientOptions.html">module:dxp3-net-http/HTTPClientOptions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line67">line 67</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPError"><span class="type-signature">(inner) </span>HTTPError<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPError.html">module:dxp3-net-http/HTTPError</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPError.html">module:dxp3-net-http/HTTPError</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPForm"><span class="type-signature">(inner) </span>HTTPForm<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPForm.html">module:dxp3-net-http/HTTPForm</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPForm.html">module:dxp3-net-http/HTTPForm</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line71">line 71</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPFormOptions"><span class="type-signature">(inner) </span>HTTPFormOptions<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPFormOptions.html">module:dxp3-net-http/HTTPFormOptions</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPFormOptions.html">module:dxp3-net-http/HTTPFormOptions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPReverseProxy"><span class="type-signature">(inner) </span>HTTPReverseProxy<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPReverseProxy.html">module:dxp3-net-http/HTTPReverseProxy</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPReverseProxy.html">module:dxp3-net-http/HTTPReverseProxy</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPReverseProxyDefaults"><span class="type-signature">(inner) </span>HTTPReverseProxyDefaults<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPReverseProxyDefaults.html">module:dxp3-net-http/HTTPReverseProxyDefaults</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPReverseProxyDefaults.html">module:dxp3-net-http/HTTPReverseProxyDefaults</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line77">line 77</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPReverseProxyEvent"><span class="type-signature">(inner) </span>HTTPReverseProxyEvent<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPReverseProxyEvent.html">module:dxp3-net-http/HTTPReverseProxyEvent</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPReverseProxyEvent.html">module:dxp3-net-http/HTTPReverseProxyEvent</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line79">line 79</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPReverseProxyOptions"><span class="type-signature">(inner) </span>HTTPReverseProxyOptions<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPReverseProxyOptions.html">module:dxp3-net-http/HTTPReverseProxyOptions</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPReverseProxyOptions.html">module:dxp3-net-http/HTTPReverseProxyOptions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPReverseProxyState"><span class="type-signature">(inner) </span>HTTPReverseProxyState<span class="type-signature"> :module:dxp3-net-http/HTTPReverseProxyState</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">module:dxp3-net-http/HTTPReverseProxyState</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPServer"><span class="type-signature">(inner) </span>HTTPServer<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPServer.html">module:dxp3-net-http/HTTPServer</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPServer.html">module:dxp3-net-http/HTTPServer</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line85">line 85</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPServerDefaults"><span class="type-signature">(inner) </span>HTTPServerDefaults<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPServerDefaults.html">module:dxp3-net-http/HTTPServerDefaults</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPServerDefaults.html">module:dxp3-net-http/HTTPServerDefaults</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPServerEvent"><span class="type-signature">(inner) </span>HTTPServerEvent<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPServerEvent.html">module:dxp3-net-http/HTTPServerEvent</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPServerEvent.html">module:dxp3-net-http/HTTPServerEvent</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPServerOptions"><span class="type-signature">(inner) </span>HTTPServerOptions<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPServerOptions.html">module:dxp3-net-http/HTTPServerOptions</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPServerOptions.html">module:dxp3-net-http/HTTPServerOptions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~HTTPServerState"><span class="type-signature">(inner) </span>HTTPServerState<span class="type-signature"> :<a href="module-dxp3-net-http_HTTPServerState.html">module:dxp3-net-http/HTTPServerState</a></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="module-dxp3-net-http_HTTPServerState.html">module:dxp3-net-http/HTTPServerState</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-net-http.html">dxp3-net-http</a></li><li><a href="module-dxp3-net-http_HTTPClient.html">dxp3-net-http/HTTPClient</a></li><li><a href="module-dxp3-net-http_HTTPClientCLI.html">dxp3-net-http/HTTPClientCLI</a></li><li><a href="module-dxp3-net-http_HTTPClientDefaults.html">dxp3-net-http/HTTPClientDefaults</a></li><li><a href="module-dxp3-net-http_HTTPClientError.html">dxp3-net-http/HTTPClientError</a></li><li><a href="module-dxp3-net-http_HTTPClientOptions.html">dxp3-net-http/HTTPClientOptions</a></li><li><a href="module-dxp3-net-http_HTTPCookie.html">dxp3-net-http/HTTPCookie</a></li><li><a href="module-dxp3-net-http_HTTPDownloader.html">dxp3-net-http/HTTPDownloader</a></li><li><a href="module-dxp3-net-http_HTTPDownloaderCLI.html">dxp3-net-http/HTTPDownloaderCLI</a></li><li><a href="module-dxp3-net-http_HTTPDownloaderDefaults.html">dxp3-net-http/HTTPDownloaderDefaults</a></li><li><a href="module-dxp3-net-http_HTTPDownloaderOptions.html">dxp3-net-http/HTTPDownloaderOptions</a></li><li><a href="module-dxp3-net-http_HTTPError.html">dxp3-net-http/HTTPError</a></li><li><a href="module-dxp3-net-http_HTTPForm.html">dxp3-net-http/HTTPForm</a></li><li><a href="module-dxp3-net-http_HTTPFormOptions.html">dxp3-net-http/HTTPFormOptions</a></li><li><a href="module-dxp3-net-http_HTTPRequest.html">dxp3-net-http/HTTPRequest</a></li><li><a href="module-dxp3-net-http_HTTPRequestMethods.html">dxp3-net-http/HTTPRequestMethods</a></li><li><a href="module-dxp3-net-http_HTTPRequestQuery.html">dxp3-net-http/HTTPRequestQuery</a></li><li><a href="module-dxp3-net-http_HTTPResponse.html">dxp3-net-http/HTTPResponse</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxy.html">dxp3-net-http/HTTPReverseProxy</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyCLI.html">dxp3-net-http/HTTPReverseProxyCLI</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyDefaults.html">dxp3-net-http/HTTPReverseProxyDefaults</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyDomain.html">dxp3-net-http/HTTPReverseProxyDomain</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyEvent.html">dxp3-net-http/HTTPReverseProxyEvent</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyOptions.html">dxp3-net-http/HTTPReverseProxyOptions</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyStates.html">dxp3-net-http/HTTPReverseProxyStates</a></li><li><a href="module-dxp3-net-http_HTTPRoute.html">dxp3-net-http/HTTPRoute</a></li><li><a href="module-dxp3-net-http_HTTPRouteRegexp.html">dxp3-net-http/HTTPRouteRegexp</a></li><li><a href="module-dxp3-net-http_HTTPServer.html">dxp3-net-http/HTTPServer</a></li><li><a href="module-dxp3-net-http_HTTPServerCLI.html">dxp3-net-http/HTTPServerCLI</a></li><li><a href="module-dxp3-net-http_HTTPServerDefaults.html">dxp3-net-http/HTTPServerDefaults</a></li><li><a href="module-dxp3-net-http_HTTPServerDomain.html">dxp3-net-http/HTTPServerDomain</a></li><li><a href="module-dxp3-net-http_HTTPServerEvent.html">dxp3-net-http/HTTPServerEvent</a></li><li><a href="module-dxp3-net-http_HTTPServerOptions.html">dxp3-net-http/HTTPServerOptions</a></li><li><a href="module-dxp3-net-http_HTTPServerState.html">dxp3-net-http/HTTPServerState</a></li><li><a href="module-dxp3-net-http_HTTPSpider.html">dxp3-net-http/HTTPSpider</a></li><li><a href="module-dxp3-net-http_HTTPSpiderDefaults.html">dxp3-net-http/HTTPSpiderDefaults</a></li><li><a href="module-dxp3-net-http_HTTPSpiderEvent.html">dxp3-net-http/HTTPSpiderEvent</a></li><li><a href="module-dxp3-net-http_HTTPSpiderHost.html">dxp3-net-http/HTTPSpiderHost</a></li><li><a href="module-dxp3-net-http_HTTPSpiderJob.html">dxp3-net-http/HTTPSpiderJob</a></li><li><a href="module-dxp3-net-http_HTTPSpiderLink.html">dxp3-net-http/HTTPSpiderLink</a></li><li><a href="module-dxp3-net-http_HTTPSpiderOptions.html">dxp3-net-http/HTTPSpiderOptions</a></li><li><a href="module-dxp3-net-http_HTTPSpiderRepository.html">dxp3-net-http/HTTPSpiderRepository</a></li><li><a href="module-dxp3-net-http_HTTPSpiderRule.html">dxp3-net-http/HTTPSpiderRule</a></li><li><a href="module-dxp3-net-http_HTTPSpiderState.html">dxp3-net-http/HTTPSpiderState</a></li></ul><h3>Classes</h3><ul><li><a href="HTTPServerOptions.html">HTTPServerOptions</a></li><li><a href="module-dxp3-net-http_HTTPClientCLI-HTTPClientCLI.html">HTTPClientCLI</a></li><li><a href="module-dxp3-net-http_HTTPClientError-HTTPClientError.html">HTTPClientError</a></li><li><a href="module-dxp3-net-http_HTTPDownloaderCLI-HTTPDownloaderCLI.html">HTTPDownloaderCLI</a></li><li><a href="module-dxp3-net-http_HTTPError-HTTPError.html">HTTPError</a></li><li><a href="module-dxp3-net-http_HTTPRequestQuery-HTTPRequestQuery.html">HTTPRequestQuery</a></li><li><a href="module-dxp3-net-http_HTTPRequest-HTTPRequest.html">HTTPRequest</a></li><li><a href="module-dxp3-net-http_HTTPResponse-HTTPResponse.html">HTTPResponse</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyCLI-HTTPReverseProxyCLI.html">HTTPReverseProxyCLI</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyDomain-HTTPReverseProxyDomain.html">HTTPReverseProxyDomain</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxyOptions-HTTPReverseProxyOptions.html">HTTPReverseProxyOptions</a></li><li><a href="module-dxp3-net-http_HTTPReverseProxy-HTTPReverseProxy.html">HTTPReverseProxy</a></li><li><a href="module-dxp3-net-http_HTTPServerCLI-HTTPServerCLI.html">HTTPServerCLI</a></li><li><a href="module-dxp3-net-http_HTTPServerDomain-HTTPServerDomain.html">HTTPServerDomain</a></li><li><a href="module-dxp3-net-http_HTTPServer-HTTPServer.html">HTTPServer</a></li></ul><h3>Events</h3><ul><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:ADDED_CLIENT">ADDED_CLIENT</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:CLOSED_CLIENT">CLOSED_CLIENT</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:DATA">DATA</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:ERROR">ERROR</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:RUNNING">RUNNING</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:STARTING">STARTING</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:STOPPED">STOPPED</a></li><li><a href="module-dxp3-net_HTTPReverseProxyEvent.html#event:STOPPING">STOPPING</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:ADDED_CLIENT">ADDED_CLIENT</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:CLOSED_CLIENT">CLOSED_CLIENT</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:DATA">DATA</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:ERROR">ERROR</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:RUNNING">RUNNING</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:STARTING">STARTING</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:STOPPED">STOPPED</a></li><li><a href="module-dxp3-net_HTTPServerEvent.html#event:STOPPING">STOPPING</a></li></ul><h3>Global</h3><ul><li><a href="global.html#packageName">packageName</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Sep 27 2021 21:03:41 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

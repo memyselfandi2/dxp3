@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- No caching allowed -->
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="-1"/>
+		<link rel="stylesheet" href="/web/prev_editor.css"/>
+        <link rel="stylesheet" href="/libraries/font-awesome/4.6.3/css/font-awesome.min.css">
+	</head>
+    <body>
+        <!--
+        Global popups
+
+        A popup may have:
+            - a menu with
+                - a loading icon
+                - a help button
+                - a close button
+            - a filter panel to filter queries
+            - a message panel to show any info/warning/error messages
+            - a footer
+        <div id="search-application-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <div class="filter-panel">
+                <form>
+                    <fieldset>
+                        <legend>Filter</legend>
+                        <input id="application-type-all" class="filter-radio-button" type="radio" name="filter-application-type" value="all" checked="checked"/>
+                        <label for="application-type-all">Include all</label><br/>
+                        <input id="application-type-application-only" class="filter-radio-button" type="radio" name="filter-application-type" value="applicationonly"/>
+                        <label for="application-type-application-only">Application only</label><br/>
+                        <input id="application-type-template-only" class="filter-radio-button" type="radio" name="filter-application-type" value="templateonly"/>
+                        <label for="application-type-template-only">Template only</label><br/>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="message-panel">
+                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+            </div>
+            <div id="search-application-popup-list" class="list">
+                <ul>
+                </ul>
+            </div>
+        </div>
+        -->
+
+        <!-- Our security token is assigned on load -->
+        <input id="token" type="hidden" value=""/>
+        <!--
+        Top level navigation menu.
+        It allows us to navigate to any of our admin panels
+        -->
+    	<nav id="navigation-menu" class="menu">
+    		<a class="action-toggle-navigation" href="#"><i class="fa fa-bars"></i>&nbsp;Close</a>
+    		<ul>
+    			<li><a class="action-select-admin-panel" href="#applications-admin-panel" title="Applications"><i class="fa fa-sitemap"></i>&nbsp;Applications</a></li>
+    			<li><a class="action-select-admin-panel" href="#pages-admin-panel" title="Pages"><i class="fa fa-object-group"></i>&nbsp;Pages</a></li>
+                <li><a class="action-select-admin-panel" href="#features-admin-panel" title="Features"><i class="fa fa-file-code-o"></i>&nbsp;Features</a></li>
+                <li><a class="action-select-admin-panel" href="#categories-admin-panel" title="Categories"><i class="fa fa-tags"></i>&nbsp;Categories</a></li>
+                <li><a class="action-select-admin-panel" href="#content-types-admin-panel" title="Content types"><i class="fa fa-table"></i>&nbsp;Content types</a></li>
+                <li><a class="action-select-admin-panel" href="#content-admin-panel" title="Content"><i class="fa fa-file-text-o"></i>&nbsp;Content</a></li>
+    			<li><a class="action-select-admin-panel" href="#users-admin-panel" title="Users"><i class="fa fa-user"></i>&nbsp;Users</a></li>
+                <li><a class="action-select-admin-panel" href="#usergroups-admin-panel" title="Usergroups"><i class="fa fa-users"></i>&nbsp;Usergroups</a></li>
+                <li><a class="action-select-admin-panel" href="#locales-admin-panel" title="Locales"><i class="fa fa-flag"></i>&nbsp;Locales</a></li>
+                <li><a class="action-select-admin-panel" href="#servers-admin-panel" title="Servers"><i class="fa fa-server"></i>&nbsp;Servers</a></li>
+                <li><a class="action-select-admin-panel" href="#destinations-admin-panel" title="Destinations"><i class="fa fa-bullseye"></i>&nbsp;Destinations</a></li>
+    			<li><a class="action-select-admin-panel" href="#settings-admin-panel" title="Settings"><i class="fa fa-gears"></i>&nbsp;Settings</a></li>
+			</ul>
+    	</nav>
+        <!--
+        Top level account menu.
+        It allows us sign in, sign off, go to our account settings, etc.
+        -->
+        <nav id="account-menu" class="menu">
+            <ul>
+                <li><a id="action-sign-in" href="#" title="Sign in"><i class="fa fa-sign-in"></i>&nbsp;Sign in</a></li>
+                <li><a id="action-sign-out" href="#" title="Sign out"><i class="fa fa-sign-out"></i>&nbsp;Sign out</a></li>
+                <li><a id="action-account" href="#" title="Account"><i class="fa fa-user"></i>&nbsp;User</a></li>
+            </ul>
+        </nav>
+        <!--
+        There are 9 admin panels:
+        1) Applications
+        2) Pages
+        3) Features
+        4) Categories
+        5) Content
+        6) Content types
+        6) Users
+        7) Usergroups
+        8) Settings
+        -->
+    	<div id="applications-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column large">
+                    <div id="applications-admin-panel-select-application" class="input-field dropdown border">
+                        <input id="applications-admin-panel-select-application-input" class="select-application" type="text" name="search" placeholder="Select an application">
+                        <button class="clear-button" type="reset" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button class="search-button" type="submit" title="Search"><i class="fa fa-search"></i></button>
+                        <div id="applications-admin-panel-select-application-popup" class="popup large toplevel border">
+                            <div class="menu">
+                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                            </div>
+                            <div class="filter-panel">
+                                <form>
+                                    <fieldset>
+                                        <legend>Filter</legend>
+                                        <input id="application-type-all" class="filter-radio-button" type="radio" name="filter-application-type" value="all" checked="checked"/>
+                                        <label for="application-type-all">Include all</label><br/>
+                                        <input id="application-type-application-only" class="filter-radio-button" type="radio" name="filter-application-type" value="applicationonly"/>
+                                        <label for="application-type-application-only">Application only</label><br/>
+                                        <input id="application-type-template-only" class="filter-radio-button" type="radio" name="filter-application-type" value="templateonly"/>
+                                        <label for="application-type-template-only">Template only</label><br/>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div class="message-panel">
+                                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                            </div>
+                            <div id="applications-admin-panel-select-application-popup-list" class="list">
+                                <ul class="header">
+                                    <li><a class="action-list-item sort-by-name">Name&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item sort-by-parent">Parent&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small sort-by-template">Template&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small">&nbsp;</a></li>
+                                </ul>
+                                <ul class="content">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column medium"><h1>Application</h1></div>
+                <div class="column large">
+                    <div class="input-field dropdown border">
+                        <input id="create-application-name" type="text" name="name" placeholder="Create an application"/>
+                        <button class="clear-button" type="reset" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button class="create-button" type="submit" title="Create"><i class="fa fa-magic"></i></button>
+                        <div id="create-application-popup" class="popup toplevel border">
+                            <div class="menu">
+                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                            </div>
+                            <div class="input-field border">
+                                <span>Is this a template?</span>
+                                <input id="create-application-is-template-yes" type="radio" name="isTemplate" value="true"/>Yes
+                                <input id="create-application-is-template-no" type="radio" name="isTemplate" value="false" checked="checked"/>No
+                            </div>
+                            <div class="input-field dropdown border">
+                                <input id="create-application-parentUuids-hidden" type="hidden" name="parentUuids"/>
+                                <input id="create-application-parentUuids" type="text" name="parentUuids" placeholder="Based on application...">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                <div id="create-application-parentUuids-popup" class="popup border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div class="filter-panel">
+                                        <fieldset>
+                                            <legend>Filter</legend>
+                                            <input id="application-type-all2" class="filter-radio-button" type="radio" name="filter-application-type" value="all" checked="checked"/>
+                                            <label for="application-type-all2">Include all</label><br/>
+                                            <input id="application-type-application-only2" class="filter-radio-button" type="radio" name="filter-application-type" value="applicationonly"/>
+                                            <label for="application-type-application-only2">Application only</label><br/>
+                                            <input id="application-type-template-only2" class="filter-radio-button" type="radio" name="filter-application-type" value="templateonly"/>
+                                            <label for="application-type-template-only2">Template only</label><br/>
+                                            <div class="input-field border">
+                                                <input class="filter-by-name" type="text" placeholder="Filter by name">
+                                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="message-panel">
+                                        <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                                    </div>
+                                    <div class="list">
+                                        <ul>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-application-shortname" type="text" name="shortname" placeholder="Short name">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-application-homepage" type="text" name="homepage" placeholder="Home / Index / Landing page...">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                            </div>
+                            <div class="input-textarea border">
+                                <textarea id="create-application-description" name="description" placeholder="Description"></textarea>
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="message-panel">
+                                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                            </div>
+                            <div class="buttons">
+                                <a id="create-application-save-and-close" class="action-save" title="Save and close" href="#">
+                                    <i class="fa fa-save"></i>Save and close
+                                </a>
+                                <a id="create-application-save-and-new" class="action-save" title="Save and new" href="#">
+                                    <i class="fa fa-save"></i>Save and new
+                                </a>
+                                <a id="create-application-cancel" class="action-cancel" title="Cancel" href="#">
+                                    <i class="fa fa-remove"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="column large">
+                    <form class="update-application-form maskable" autocomplete="off" action="#">
+                        <div class="mask"></div>
+                        <div class="input-field border">
+                            <input id="update-application-name" type="text" name="name" placeholder="Update an application">
+                            <button class="update-button" type="submit" title="Update"><i class="fa fa-edit"></i></button>
+                        </div>
+                    </form>
+                </div>
+                -->
+                <div class="menu maskable" style="display: inline-block; margin-top: 12px;font-size:20px;">
+                    <div class="mask"></div>
+                    <!-- <div class="column smaller" style="display: inline-block;"><a id="action-copy-application" href="#" title="Copy"><i class="fa fa-copy"></i>&nbsp;Copy</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-paste-application" href="#" title="Paste"><i class="fa fa-paste"></i>&nbsp;Paste</a></div> -->
+                    <div class="column smaller" style="display: inline-block;"><a id="action-publish-application" href="#" title="Publish"><i class="fa fa-cloud-upload"></i>&nbsp;Publish</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-delete-application" href="#" title="Delete"><i class="fa fa-trash"></i>&nbsp;Delete</a></div>
+                </div>
+            </div>
+            <div class="main maskable">
+                <div class="mask"></div>
+                <div id="application-overview" class="section block border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Details</div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="table">
+                            <div class="row">
+                                <div class="column small">
+                                    <div class="label">Application</div>
+                                </div>
+                                <div class="column">
+                                    <div class="input-field border">
+                                        <input id="update-application-name" type="text" name="name" placeholder="Update name...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Is a template?</div>
+                                </div>
+                                <div class="column">
+                                    <div id="application-template">
+                                        <input id="update-application-is-template-yes" type="radio" name="isTemplate" value="true"/>Yes
+                                        <input id="update-application-is-template-no" type="radio" name="isTemplate" value="false" checked="checked"/>No
+                                    </div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Home page</div>
+                                </div>
+                                <div class="column">
+                                    <div class="input-field dropdown border">
+                                        <input id="update-application-homepage-hidden" type = "hidden" name="homepageUuid"/>
+                                        <input id="update-application-homepage" type="text" name="homepage" placeholder="Home / Index / Landing page...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                        <div id="update-application-homepage-popup" class="popup toplevel border">
+                                            <div class="menu">
+                                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                            </div>
+                                            <div class="filter-panel">
+                                                <fieldset>
+                                                    <legend>Filter</legend>
+                                                    <div id="update-application-homepage-filter-by-name" class="input-field border">
+                                                        <input class="filter-by-name" type="text" placeholder="Filter by name">
+                                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="message-panel">
+                                                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                                            </div>
+                                            <div class="list">
+                                                <ul>
+                                                </ul>
+                                            </div>
+                                            <div class="buttons">
+                                                <a id="update-application-create-page" class="action-create" title="Save" href="#">
+                                                    <i class="fa fa-magic"></i>Create a new page
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column small">
+                                    <div class="label">Short name</div>
+                                </div>
+                                <div class="column">
+                                    <div class="input-field border">
+                                        <input id="update-application-shortname" type="text" name="shortname" placeholder="Update short name...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Has parents?</div>
+                                </div>
+                                <div class="column">
+                                    <div class="input-field dropdown border">
+                                        <input id="update-application-parentUuids-hidden" type="hidden" name="parentUuids"/>
+                                        <input id="update-application-parentUuids" type="text" name="parentNames" placeholder="Based on application..."/>
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                        <div id="update-application-parentUuids-popup" class="popup toplevel border">
+                                            <div class="menu">
+                                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                            </div>
+                                            <div class="filter-panel">
+                                                <fieldset>
+                                                    <legend>Filter</legend>
+                                                    <input id="update-application-type-all" class="filter-radio-button" type="radio" name="filter-application-type" value="all" checked="checked"/>
+                                                    <label for="update-application-type-all">Include all</label><br/>
+                                                    <input id="update-application-type-application-only" class="filter-radio-button" type="radio" name="filter-application-type" value="applicationonly"/>
+                                                    <label for="update-application-type-application-only">Application only</label><br/>
+                                                    <input id="update-application-type-template-only" class="filter-radio-button" type="radio" name="filter-application-type" value="templateonly"/>
+                                                    <label for="update-application-type-template-only">Template only</label><br/>
+                                                    <div id="update-application-parentUuids-filter-by-name" class="input-field border">
+                                                        <input class="filter-by-name" type="text" placeholder="Filter by name">
+                                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="message-panel">
+                                                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                                            </div>
+                                            <div class="list">
+                                                <ul>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <a id="update-application-save" class="action-save" title="Save" href="#">
+                                <i class="fa fa-save"></i>Save
+                            </a>
+                            <a id="update-application-cancel" class="action-cancel" title="Cancel" href="#">
+                                <i class="fa fa-remove"></i>Cancel
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="table">
+                            <div class="row">
+                                <div class="column small"><div class="label">Description</div></div>
+                                <div class="column">
+                                    <div class="input-textarea border">
+                                        <textarea id="update-application-description" name="description" placeholder="Description"></textarea>
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column small"><div class="label">UUID</div></div>
+                                <div class="column">
+                                    <div id="application-uuid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="application-dashboard-section" class="section border">
+                    <div class="header">
+                        <a class="action-fullscreen" href="#" title="fullscreen" ><i class="fa fa-arrows-alt"></i></a>
+                        <a class="action-minimize" href="#" title="minimize" ><i class="fa fa-compress"></i></a>
+                        <div class="column small">Dashboard</div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <div class="dropdown">
+                                <a href="#" title="Images" class="action-images" id="action-application-images"><i class="fa fa-photo"></i>Images</a>
+                                <div id="application-images-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="application-images-list"><ul></ul></div>
+                                    <form id="application-images-popup-form" action="#" method="post" enctype="multipart/form-data">
+                                        <input id="application-images-select" name="thefile" type="file" />
+                                        <input type="submit" value="Save" />
+                                    </form>
+                                </div>
+                            </div>
+                            <a class="action-save-all action-save-application" href="#" title="Save all"><i class="fa fa-save"></i>Save all</a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="application-dashboard" class="dashboard">
+                        <form autocomplete="off" class="update-application-form" action="#">
+                            <label for="application-details-created-date">Creation date/time</label>
+                            <input id="application-details-creation-date" type="text" value="01/01/1970 00:00:00"/><br/>
+                            <label for="application-details-is-template">Is this a template?</label>
+                            <input id="application-details-is-template-yes" type="radio" name="isTemplate" value="true"/>
+                            <label for="application-details-is-template-yes">Yes</label>
+                            <input id="application-details-is-template-no" type="radio" name="isTemplate" value="false" checked="checked"/>
+                            <label for="application-details-is-template-no">No</label><br/>
+                            <label for="application-details-name">Name</label>
+                            <input id="application-details-name" type="text" value="blaat"/><br/>
+                            <label for="application-details-short-name">Short Name</label>
+                            <input id="application-details-short-name" type="text" value="shomething"/><br/>
+                            <label for="application-details-description">Description</label>
+                            <textarea id="application-details-description" type="textarea" value="vla vla vla"></textarea><br/>
+                            <label for="application-details-number-of-pages">Number of children</label>
+                            <input id="application-details-number-of-children" type="text" value="145"/><br/>
+                            <label for="application-details-number-of-pages">Number of pages</label>
+                            <input id="application-details-number-of-pages" type="text" value="1093"/><br/>
+                            <label for="application-details-number-of-pages">Number of features</label>
+                            <input id="application-details-number-of-features" type="text" value="2761"/><br/>
+                            <label for="application-details-number-of-pages">Destinations</label>
+                            <input id="application-details-number-of-features" type="text" value="shomething"/><br/>
+                        </form>
+                    </div>
+                </div>
+                <div id="application-controllers-section" class="section border">
+                    <div class="header">
+                        <a class="action-fullscreen" href="#" title="fullscreen" ><i class="fa fa-arrows-alt"></i></a>
+                        <a class="action-minimize" href="#" title="minimize" ><i class="fa fa-compress"></i></a>
+                        <div class="column small">Controllers</div>
+                        <div class="column medium">
+                            <div class="input-field border">
+                                <input id="select-application-controller" type="text" placeholder="Select controller" name="search">
+                                <button class="clear-button" title="Clear" type="reset"><i class="fa fa-remove"></i></button>
+                                <button class="search-button" title="Search" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="application-controller-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Libraries" class="action-libraries" id="action-application-libraries"><i class="fa fa-briefcase"></i>Libraries</a>
+                            <a id="action-save-application-controller" class="action-save" href="#" title="Save"><i class="fa fa-save"></i>Save</a>
+                            <a class="action-save-all action-save-application" href="#" title="Save all"><i class="fa fa-save"></i>Save all</a>
+                            <a id="action-cancel-application-controller" class="action-cancel" href="#" title="Cancel"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="application-controller-editor" class="editor">
+                    </div>
+                    <div id="application-select-controller-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div id="application-select-controller-list">
+                            <ul></ul>
+                        </div>
+                    </div>
+                    <div id="application-controller-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="application-libraries-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        Your application libraries
+                    </div>
+                </div>
+                <div id="application-styles-section" class="section border">
+                    <div class="header">
+                        <a class="action-fullscreen" href="#" title="fullscreen" ><i class="fa fa-arrows-alt"></i></a>
+                        <a class="action-minimize" href="#" title="minimize" ><i class="fa fa-compress"></i></a>
+                        <div class="column smallest">Styles</div>
+                        <div class="column medium">
+                            <div class="input-field border">
+                                <input id="select-application-style" type="text" placeholder="Select style" name="search">
+                                <button title="Clear" class="clear-button" type="reset"><i class="fa fa-remove"></i></button>
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="application-style-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Fonts" class="action-fonts" id="action-application-style-fonts"><i class="fa fa-font"></i>Fonts</a>
+                            <div class="dropdown">
+                                <a href="#" title="Images" class="action-images" id="action-application-style-images"><i class="fa fa-photo"></i>Images</a>
+                                <div id="application-style-images-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="application-style-images-list"><ul></ul></div>
+                                    <form id="application-style-images-popup-form" action="#" method="post" enctype="multipart/form-data">
+                                        <input id="application-style-images-select" name="thefile" type="file" />
+                                        <input type="submit" value="Save" />
+                                    </form>
+                                </div>
+                            </div>
+                            <a id="action-save-application-style" class="action-save" href="#" title="Save"><i class="fa fa-save"></i>Save</a>
+                            <a class="action-save-all action-save-application" href="#" title="Save all"><i class="fa fa-save"></i>Save all</a>
+                            <a id="action-cancel-application-style" class="action-cancel" href="#" title="Cancel"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="application-style-editor" class="editor">
+                    </div>
+                    <div id="application-select-style-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div id="application-select-style-list">
+                            <ul></ul>
+                        </div>
+                    </div>
+                    <div id="application-style-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="application-select-fonts-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <form autocomplete="off" class="create-application-font-form" action="#">
+                            <div class="input-field border">
+                                <input id="create-application-font-name" type="text" name="name" placeholder="Create a font">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-application-font-source" type="text" name="source" placeholder="Source URL">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-textarea border">
+                                <textarea id="create-application-font-description" name="description" placeholder="Description"></textarea>
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="bottom">
+                                <div class="buttons">
+                                    <a id="create-application-font-save" class="action-save" title="Save" href="#">
+                                        <i class="fa fa-save"></i>Save
+                                    </a>
+                                    <a id="create-application-font-cancel" class="action-cancel" title="Cancel" href="#">
+                                        <i class="fa fa-remove"></i>Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="application-select-fonts-list"><ul></ul></div>                        
+                    </div>
+                </div>
+                <div id="application-preview" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Preview</div>
+                        <div class="column large">
+                            <div id="select-application-preview-page" class="input-field dropdown border">
+                                <input id="select-application-preview-page-hidden" type = "hidden" name="pageUuid"/>
+                                <input id="select-application-preview-page-input" type="text" placeholder="Select page" name="search">
+                                <button class="clear-button" title="Clear" type="reset"><i class="fa fa-remove"></i></button>
+                                <button class="search-button" title="Search" type="submit"><i class="fa fa-chevron-down"></i></button>
+                                <div id="select-application-preview-page-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div class="filter-panel">
+                                        <fieldset>
+                                            <legend>Filter</legend>
+                                            <div id="select-application-preview-page-filter-by-name" class="input-field border">
+                                                <input class="filter-by-name" type="text" placeholder="Filter by name">
+                                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                                <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="message-panel">
+                                        <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                                    </div>
+                                    <div id="application-preview-page-list" class="list">
+                                        <ul></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column large">
+                            <div id="select-application-preview-locale" class="input-field dropdown border">
+                                <input id="select-application-preview-locale-input" type="text" placeholder="Select locale" name="search">
+                                <button class="clear-button" title="Clear" type="reset"><i class="fa fa-remove"></i></button>
+                                <button class="search-button" title="Search" type="submit"><i class="fa fa-chevron-down"></i></button>
+                                <div class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="application-preview-locale-list">
+                                        <ul></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Show mobile view" class="action-mobile" id="action-application-mobile-preview"><i class="fa fa-mobile"></i></a>
+                            <a href="#" title="Show tablet view" class="action-tablet" id="action-application-tablet-preview"><i class="fa fa-tablet"></i></a>
+                            <a href="#" title="Show desktop view" class="action-desktop" id="action-application-desktop-preview"><i class="fa fa-desktop"></i></a>
+                            <a href="#" title="Toggle debug mode" class="action-debug" id="action-application-toggle-debug"><i class="fa fa-bug"></i></a>
+                            <a href="#" title="Refresh" class="action-refresh" id="action-refresh-application-preview"><i class="fa fa-refresh"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <iframe id="application-preview-frame" class="editor preview" src="#"></iframe>
+                </div>
+            </div>
+    	</div>
+<!--        <div id="update-application-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <form autocomplete="off" class="update-application-form" action="#">
+                <div class="input-field border">
+                    <span>Is this a template?</span>
+                    <input id="update-application-is-template-yes" type="radio" name="isTemplate" value="true"/>Yes
+                    <input id="update-application-is-template-no" type="radio" name="isTemplate" value="false" checked="checked"/>No
+                </div>
+                <div class="input-field dropdown border">
+                    <input id="update-application-parentUuids-hidden" type="hidden" name="parentUuids"/>
+                    <input id="update-application-parentUuids" type="text" name="parentNames" placeholder="Based on application..."/>
+                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                    <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                    <div id="update-application-parentUuids-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div class="filter-panel">
+                            <fieldset>
+                                <legend>Filter</legend>
+                                <input id="application-type-all" class="filter-radio-button" type="radio" name="filter-application-type" value="all" checked="checked"/>
+                                <label for="application-type-all">Include all</label><br/>
+                                <input id="application-type-application-only" class="filter-radio-button" type="radio" name="filter-application-type" value="applicationonly"/>
+                                <label for="application-type-application-only">Application only</label><br/>
+                                <input id="application-type-template-only" class="filter-radio-button" type="radio" name="filter-application-type" value="templateonly"/>
+                                <label for="application-type-template-only">Template only</label><br/>
+                                <div class="input-field border">
+                                    <input class="filter-by-name" type="text" placeholder="Filter by name">
+                                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="message-panel">
+                            <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                        </div>
+                        <div class="list">
+                            <ul>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-field border">
+                    <input id="update-application-shortname" type="text" name="shortname" placeholder="Short name">
+                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                </div>
+                <div class="input-field border">
+                    <input id="update-application-homepage" type="text" name="homepage" placeholder="Home / Index / Landing page...">
+                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                    <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                </div>
+                <div class="input-textarea border">
+                    <textarea id="update-application-description" name="description" placeholder="Description"></textarea>
+                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                </div>
+                <div class="message-panel">
+                    <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                </div>
+                <div class="buttons">
+                    <a id="update-application-save-and-close" class="action-save" title="Save and close" href="#">
+                        <i class="fa fa-save"></i>Save and close
+                    </a>
+                    <a id="update-application-save" class="action-save" title="Save" href="#">
+                        <i class="fa fa-save"></i>Save
+                    </a>
+                    <a id="update-application-cancel" class="action-cancel" title="Cancel" href="#">
+                        <i class="fa fa-remove"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+        -->
+        <div id="publish-application-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <form>
+                <div id="publish-application-destination-list">
+                    <ul>
+                    </ul>
+                </div>
+                <div class="buttons">
+                    <a id="action-publish-application-confirm" class="action-save" title="Publish" href="#">
+                        <i class="fa fa-save"></i>Publish
+                    </a>
+                    <a id="action-cancel-publish-application" class="action-cancel" title="Cancel" href="#">
+                        <i class="fa fa-remove"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div id="pages-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+<!--                <div class="column medium">Application</div> -->
+                <div class="column large search-applications">
+                    <div class="input-field border">
+                        <input class="select-application" type="text" name="search" placeholder="Select an application">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
+                <div class="column large">
+                    <div id="pages-admin-panel-select-page" class="input-field dropdown border">
+                        <input id="pages-admin-panel-select-page-input" class="select-page" type="text" name="search" placeholder="Select a page">
+                        <button class="clear-button" type="reset" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button class="search-button" type="submit" title="Search"><i class="fa fa-search"></i></button>
+                        <div id="pages-admin-panel-select-page-popup" class="popup toplevel border">
+                            <div class="menu">
+                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                            </div>
+                            <div class="filter-panel">
+                                <form>
+                                    <fieldset>
+                                        <legend>Filter</legend>
+                                        <input id="page-type-all" class="filter-radio-button" type="radio" name="filter-page-type" value="all" checked="checked"/>
+                                        <label for="page-type-all">Include all</label><br/>
+                                        <input id="page-type-page-only" class="filter-radio-button" type="radio" name="filter-page-type" value="pageonly"/>
+                                        <label for="page-type-page-only">Application only</label><br/>
+                                        <input id="page-type-template-only" class="filter-radio-button" type="radio" name="filter-page-type" value="templateonly"/>
+                                        <label for="page-type-template-only">Template only</label><br/>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div class="message-panel">
+                                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                            </div>
+                            <div id="pages-admin-panel-select-page-popup-list" class="list">
+                                <ul>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column smaller"><h1>Page</h1></div>
+                <div class="column large">
+                    <div class="input-field dropdown border">
+                        <input id="create-page-name" type="text" name="name" placeholder="Create a page"/>
+                        <button class="clear-button" type="reset" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button class="create-button" type="submit" title="Create"><i class="fa fa-magic"></i></button>
+                        <div id="create-page-popup" class="popup toplevel border">
+                            <div class="menu">
+                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                            </div>
+                            <div class="input-field border">
+                                <span>Is this a template?</span>
+                                <input id="create-page-is-template-yes" type="radio" name="isTemplate" value="true"/>Yes
+                                <input id="create-page-is-template-no" type="radio" name="isTemplate" value="false" checked="checked"/>No
+                            </div>
+                            <div class="input-field dropdown border">
+                                <input id="create-page-parentUuids-hidden" type="hidden" name="parentUuids"/>
+                                <input id="create-page-parentUuids" type="text" name="parentUuids" placeholder="Based on page...">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                                <div id="create-page-parentUuids-popup" class="popup border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div class="filter-panel">
+                                        <fieldset>
+                                            <legend>Filter</legend>
+                                            <input id="page-type-all2" class="filter-radio-button" type="radio" name="filter-page-type" value="all" checked="checked"/>
+                                            <label for="page-type-all2">Include all</label><br/>
+                                            <input id="page-type-page-only2" class="filter-radio-button" type="radio" name="filter-page-type" value="pageonly"/>
+                                            <label for="page-type-page-only2">Page only</label><br/>
+                                            <input id="page-type-template-only2" class="filter-radio-button" type="radio" name="filter-page-type" value="templateonly"/>
+                                            <label for="page-type-template-only2">Template only</label><br/>
+                                            <div class="input-field border">
+                                                <input class="filter-by-name" type="text" placeholder="Filter by name">
+                                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="message-panel">
+                                        <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                                    </div>
+                                    <div class="list">
+                                        <ul>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-page-title" type="text" name="name" placeholder="Title...">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-page-url" type="text" name="name" placeholder="URL...">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-textarea border">
+                                <textarea id="create-page-description" name="description" placeholder="Description"></textarea>
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="message-panel">
+                                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+                            </div>
+                            <div class="buttons">
+                                <a id="create-page-save-and-close" class="action-save" title="Save and close" href="#">
+                                    <i class="fa fa-save"></i>Save and close
+                                </a>
+                                <a id="create-page-save-and-new" class="action-save" title="Save and new" href="#">
+                                    <i class="fa fa-save"></i>Save and new
+                                </a>
+                                <a id="create-page-cancel" class="action-cancel" title="Cancel" href="#">
+                                    <i class="fa fa-remove"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu maskable" style="display: inline-block; margin-top: 12px;font-size:20px;">
+                    <div class="mask"></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-copy-page" href="#" title="Copy"><i class="fa fa-copy"></i>&nbsp;Copy</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-paste-page" href="#" title="Paste"><i class="fa fa-paste"></i>&nbsp;Paste</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-publish-page" href="#" title="Publish"><i class="fa fa-cloud-upload"></i>&nbsp;Publish</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-delete-page" title="Delete"><i class="fa fa-trash"></i>&nbsp;Delete</a></div>
+                </div>
+            </div>
+            <div class="main maskable">
+                <div class="mask"></div>
+                <div id="page-overview" class="section block border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Details</div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="table">
+                            <div class="row">
+                                <div class="column small">
+                                    <div class="label">Page</div>
+                                </div>
+                                <div class="column">
+                                    <div class="input-field border">
+                                        <input id="update-page-name" type="text" name="name" placeholder="Update name...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Is a template?</div>
+                                </div>
+                                <div class="column">
+                                    <div id="page-template"></div>
+                                </div>
+                                <div class="column small"><div class="label">Title(s)</div></div>
+                                <div class="column">
+                                    <div class="input-field border">
+                                        <input id="update-page-title" type="text" name="name" placeholder="Update title...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </div>
+                                <div class="column small"><div class="label">URL(s)</div></div>
+                                <div class="column">
+                                    <div class="input-field border">
+                                        <input id="update-page-url" type="text" name="name" placeholder="Update url...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column small">
+                                    <div class="label">Application</div>
+                                </div>
+                                <div class="column">
+                                    <div id="page-application-name"></div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Has parents?</div>
+                                </div>
+                                <div class="column">
+                                    <div>
+                                        <input id="update-page-parentUuids" type="hidden" val=""/>
+                                        <div id="page-parents"></div>
+                                        <ul id="page-parents-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <a id="update-page-save" class="action-save" title="Save" href="#">
+                                <i class="fa fa-save"></i>Save
+                            </a>
+                            <a id="update-page-cancel" class="action-cancel" title="Cancel" href="#">
+                                <i class="fa fa-remove"></i>Cancel
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="table">
+                            <div class="row">
+                                <div class="column small"><div class="label">Description</div></div>
+                                <div class="column">
+                                    <div class="input-textarea border">
+                                        <textarea id="update-page-description" name="description" placeholder="Description"></textarea>
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column small"><div class="label">UUID</div></div>
+                                <div class="column">
+                                    <div id="page-uuid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="page-layout" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Layout</div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="page-layout-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Locale" class="action-locale" id="action-page-locale"><i class="fa fa-flag"></i>Locale</a>
+                            <div class="dropdown">
+                                <a href="#" title="Images" class="action-images" id="action-page-images"><i class="fa fa-photo"></i>Images</a>
+                                <div id="page-images-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="page-images-list"><ul></ul></div>
+                                    <form id="page-images-popup-form" action="#" method="post" enctype="multipart/form-data">
+                                        <input id="page-images-select" name="thefile" type="file" />
+                                        <input type="submit" value="Save" />
+                                    </form>
+                                </div>
+                            </div>                            
+                            <a href="#" title="Save" class="action-save" id="action-save-page-layout"><i class="fa fa-save"></i>Save</a>
+                            <a href="#" title="Save all" class="action-save-all action-save-page"><i class="fa fa-save"></i>Save all</a>
+                            <a href="#" title="Cancel" class="action-cancel" id="action-cancel-page-layout"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="page-layout-editor" class="editor">
+                    </div>
+                    <div id="page-layout-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="page-locale-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="page-controller" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column small">Controllers</div>
+                        <div class="column medium">
+                            <div class="input-field border">
+                                <input id="select-page-controller" type="text" placeholder="Select controller" name="search">
+                                <button title="Clear" class="clear-button" type="reset"><i class="fa fa-remove"></i></button>
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="page-controller-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                            </div>
+                        <div class="menu">
+                            <a href="#" title="Libraries" class="action-libraries" id="action-page-libraries"><i class="fa fa-briefcase"></i>Libraries</a>
+                            <a href="#" title="Save" class="action-save" id="action-save-page-controller"><i class="fa fa-save"></i>Save</a>
+                            <a href="#" title="Save all" class="action-save-all action-save-page"><i class="fa fa-save"></i>Save all</a>
+                            <a href="#" title="Cancel" class="action-cancel" id="action-cancel-page-controller"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="page-controller-editor" class="editor">
+                    </div>
+                    <div id="page-select-controller-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div id="page-select-controller-list"><ul></ul></div>
+                    </div>
+                    <div id="page-controller-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="page-libraries-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        Your page libraries
+                    </div>
+                </div>
+                <div id="page-style" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smallest">Styles</div>
+                        <div class="column medium">
+                            <div class="input-field border">
+                                <input id="select-page-style" type="text" placeholder="Select style" name="search">
+                                <button title="Clear" class="clear-button" type="reset"><i class="fa fa-remove"></i></button>
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="page-style-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Fonts" class="action-fonts" id="action-page-style-fonts"><i class="fa fa-font"></i>Fonts</a>
+                            <div class="dropdown">
+                                <a href="#" title="Images" class="action-images" id="action-page-style-images"><i class="fa fa-photo"></i>Images</a>
+                                <div id="page-style-images-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="page-style-images-list"><ul></ul></div>
+                                    <form id="page-style-images-popup-form" action="#" method="post" enctype="multipart/form-data">
+                                        <input id="page-style-images-select" name="thefile" type="file" />
+                                        <input type="submit" value="Save" />
+                                    </form>
+                                </div>
+                            </div>
+                            <a href="#" title="Save" class="action-save" id="action-save-page-style"><i class="fa fa-save"></i>Save</a>
+                            <a href="#" title="Save all" class="action-save-all action-save-page"><i class="fa fa-save"></i>Save all</a>
+                            <a href="#" title="Cancel" class="action-cancel" id="action-cancel-page-style"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="page-style-editor" class="editor">
+                    </div>
+                    <div id="page-select-style-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div id="page-select-style-list"><ul></ul></div>
+                    </div>
+                    <div id="page-style-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="page-select-fonts-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <form autocomplete="off" class="create-page-font-form" action="#">
+                            <div class="input-field border">
+                                <input id="create-page-font-name" type="text" name="name" placeholder="Create a font">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-page-font-source" type="text" name="source" placeholder="Source URL">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-textarea border">
+                                <textarea id="create-page-font-description" name="description" placeholder="Description"></textarea>
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="bottom">
+                                <div class="buttons">
+                                    <a id="create-page-font-save" class="action-save" title="Save" href="#">
+                                        <i class="fa fa-save"></i>Save
+                                    </a>
+                                    <a id="create-page-font-cancel" class="action-cancel" title="Cancel" href="#">
+                                        <i class="fa fa-remove"></i>Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="page-select-fonts-list"><ul></ul></div>
+                    </div>
+                </div>
+                <div id="page-preview" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Preview</div>
+                        <div class="column large">
+                            <div class="input-field border">
+                                <input id="select-page-preview-locale" type="text" placeholder="Select locale" name="search"/>
+                                <button class="clear-button" title="Clear" type="reset"><i class="fa fa-remove"></i></button>
+                                <button class="search-button" title="Search" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column large" id="page-preview-title">
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Show mobile view" class="action-mobile" id="action-page-mobile-preview"><i class="fa fa-mobile"></i></a>
+                            <a href="#" title="Show tablet view" class="action-tablet" id="action-page-tablet-preview"><i class="fa fa-tablet"></i></a>
+                            <a href="#" title="Show desktop view" class="action-desktop" id="action-page-desktop-preview"><i class="fa fa-desktop"></i></a>
+                            <a href="#" title="Toggle debug mode" class="action-debug" id="action-page-toggle-debug"><i class="fa fa-bug"></i></a>
+                            <a href="#" title="Refresh" class="action-refresh" id="action-refresh-page-preview"><i class="fa fa-refresh"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <iframe id="page-preview-frame" class="editor preview" src="#"></iframe>
+                </div>
+            </div>
+        </div>
+        <div id="publish-page-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <form>
+                <div id="publish-page-destination-list">
+                    <ul>
+                    </ul>
+                </div>
+                <div class="buttons">
+                    <a id="action-publish-page-confirm" class="action-save" title="Publish" href="#">
+                        <i class="fa fa-save"></i>Publish
+                    </a>
+                    <a id="action-cancel-publish-page" class="action-cancel" title="Cancel" href="#">
+                        <i class="fa fa-remove"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    	<div id="features-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+<!--                <div class="column medium">Application</div> -->
+                <div class="column large search-applications">
+                    <div class="input-field border">
+                        <input class="select-application" type="text" name="search" placeholder="Select an application">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
+                <div id="search-features" class="column large">
+                    <div class="input-field border">
+                        <input id="search-features-input" type="text" name="search" placeholder="Search for a feature">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="column small"><h1>Feature</h1></div>
+                <div class="column large">
+                    <form autocomplete="off" class="create-feature-form" action="#">
+                        <div class="input-field border">
+                            <input id="create-feature-name" type="text" name="name" placeholder="Create a feature">
+                            <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            <button type="submit" class="create-button" title="Create"><i class="fa fa-magic"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="menu maskable" style="display: inline-block; margin-top: 12px;font-size:20px;">
+                    <div class="mask"></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-copy-feature" href="#" title="Copy"><i class="fa fa-copy"></i>&nbsp;Copy</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-paste-feature" href="#" title="Paste"><i class="fa fa-paste"></i>&nbsp;Paste</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-publish-feature" href="#" title="Publish"><i class="fa fa-cloud-upload"></i>&nbsp;Publish</a></div>
+                    <div class="column smaller" style="display: inline-block;"><a id="action-delete-feature" href="#" title="Delete"><i class="fa fa-trash"></i>&nbsp;Delete</a></div>
+                </div>
+            </div>
+            <div class="main maskable">
+                <div class="mask"></div>
+                <div id="feature-overview" class="section block border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Details</div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="table">
+                            <div class="row">
+                                <div class="column small">
+                                    <div class="label">Feature</div>
+                                </div>
+                                <div class="column">
+                                    <div class="input-field border">
+                                        <input id="update-feature-name" type="text" name="name" placeholder="Update name...">
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Is a template?</div>
+                                </div>
+                                <div class="column">
+                                    <div id="feature-template"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column small">
+                                    <div class="label">Application</div>
+                                </div>
+                                <div class="column">
+                                    <div id="feature-application-name"></div>
+                                </div>
+                                <div class="column small">
+                                    <div class="label">Has parents?</div>
+                                </div>
+                                <div class="column">
+                                    <div>
+                                        <input id="update-feature-parentUuids" type="hidden" val=""/>
+                                        <div id="feature-parents"></div>
+                                        <ul id="feature-parents-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <a id="update-feature-save" class="action-save" title="Save" href="#">
+                                <i class="fa fa-save"></i>Save
+                            </a>
+                            <a id="update-feature-cancel" class="action-cancel" title="Cancel" href="#">
+                                <i class="fa fa-remove"></i>Cancel
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="table">
+                            <div class="row">
+                                <div class="column small"><div class="label">Description</div></div>
+                                <div class="column">
+                                    <div class="input-textarea border">
+                                        <textarea id="update-feature-description" name="description" placeholder="Description"></textarea>
+                                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column small"><div class="label">UUID</div></div>
+                                <div class="column">
+                                    <div id="feature-uuid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="feature-layout" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Layout</div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="feature-layout-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                        <div class="menu">
+                            <a href="#" title="Locale" class="action-locale" id="action-feature-locale"><i class="fa fa-flag"></i>Locale</a>
+                            <div class="dropdown">
+                                <a href="#" title="Images" class="action-images" id="action-feature-images"><i class="fa fa-photo"></i>Images</a>
+                                <div id="feature-images-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="feature-images-list"><ul></ul></div>
+                                    <form id="feature-images-popup-form" action="#" method="post" enctype="multipart/form-data">
+                                        <input id="feature-images-select" name="thefile" type="file" />
+                                        <input type="submit" value="Save" />
+                                    </form>
+                                </div>
+                            </div>
+                            <a href="#" title="Save" class="action-save" id="action-save-feature-layout"><i class="fa fa-save"></i>Save</a>
+                            <a href="#" title="Save all" class="action-save-all action-save-feature"><i class="fa fa-save"></i>Save all</a>
+                            <a href="#" title="Cancel" class="action-cancel" id="action-cancel-feature-layout"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="feature-layout-editor" class="editor">
+                    </div>
+                    <div id="feature-layout-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="feature-locale-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <form autocomplete="off" class="feature-locale-form" action="#">
+                            <div class="row">
+                                <div class="column_x2">
+                                </div>
+                                <div class="column_x2">
+                                    <div id="select-feature-locale" class="input-field dropdown border">
+                                        <input id="select-feature-locale-input" type="text" name="name" placeholder="Select locale"/>
+                                        <button class="clear-button" title="Clear" type="reset"><i class="fa fa-remove"></i></button>
+                                        <button class="search-button" title="Search" type="submit"><i class="fa fa-chevron-down"></i></button>
+                                        <div class="popup toplevel border">
+                                            <div class="menu">
+                                                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                            </div>
+                                            <div id="feature-select-locale-list">
+                                                <ul></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="feature-locale-labels">
+                            </div>
+                            <div class="bottom">
+                                <div class="buttons">
+                                    <a id="feature-locale-save" class="action-save" title="Save" href="#">
+                                        <i class="fa fa-save"></i>Save
+                                    </a>
+                                    <a id="feature-locale-cancel" class="action-cancel" title="Cancel" href="#">
+                                        <i class="fa fa-remove"></i>Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="feature-controller" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column small">Controllers</div>
+                        <div class="column medium">
+                            <div class="input-field border">
+                                <input id="select-feature-controller" type="text" placeholder="Select controller" name="search">
+                                <button title="Clear" class="clear-button" type="reset"><i class="fa fa-remove"></i></button>
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="feature-controller-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Libraries" class="action-libraries" id="action-feature-libraries"><i class="fa fa-briefcase"></i>Libraries</a>
+                            <a href="#" title="Save" class="action-save" id="action-save-feature-controller"><i class="fa fa-save"></i>Save</a>
+                            <a href="#" title="Save all" class="action-save-all action-save-feature"><i class="fa fa-save"></i>Save all</a>
+                            <a href="#" title="Cancel" class="action-cancel" id="action-cancel-feature-controller"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+        			<div id="feature-controller-editor" class="editor">
+        			</div>
+                    <div id="feature-controller-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="feature-select-controller-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div id="feature-select-controller-list"><ul></ul></div>
+                    </div>
+                    <div id="feature-libraries-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        Your libraries
+                    </div>
+                </div>
+    			<div id="feature-style" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smallest">Styles</div>
+                        <div class="column medium">
+                            <div class="input-field border">
+                                <input id="select-feature-style" type="text" placeholder="Select style" name="search">
+                                <button title="Clear" class="clear-button" type="reset"><i class="fa fa-remove"></i></button>
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="column smallest">
+                            <div class="input-field border">
+                                <input id="feature-style-version" type="text" placeholder="" name="version">
+                                <button title="Search" class="search-button" type="submit"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Fonts" class="action-fonts" id="action-feature-style-fonts"><i class="fa fa-font"></i>Fonts</a>
+                            <div class="dropdown">
+                                <a href="#" title="Images" class="action-images" id="action-feature-style-images"><i class="fa fa-photo"></i>Images</a>
+                                <div id="feature-style-images-popup" class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="feature-style-images-list"><ul></ul></div>
+                                    <form id="feature-style-images-popup-form" action="#" method="post" enctype="multipart/form-data">
+                                        <input id="feature-style-images-select" name="thefile" type="file" />
+                                        <input type="submit" value="Save" />
+                                    </form>
+                                </div>
+                            </div>
+                            <a href="#" title="Save" class="action-save" id="action-save-feature-style"><i class="fa fa-save"></i>Save</a>
+                            <a href="#" title="Save all" class="action-save-all action-save-feature"><i class="fa fa-save"></i>Save all</a>
+                            <a href="#" title="Cancel" class="action-cancel" id="action-cancel-feature-style"><i class="fa fa-remove"></i>Cancel</a>
+                            <a class="action-message" href="#" title="Message"><i class="fa fa-bullhorn"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div id="feature-style-editor" class="editor">
+                    </div>
+                    <div id="feature-style-version-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
+                    <div id="feature-select-style-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <div id="feature-select-style-list"><ul></ul></div>
+                    </div>
+                    <div id="feature-select-fonts-popup" class="popup toplevel border">
+                        <div class="menu">
+                            <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                            <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                        </div>
+                        <form autocomplete="off" class="create-feature-font-form" action="#">
+                            <div class="input-field border">
+                                <input id="create-feature-font-name" type="text" name="name" placeholder="Create a font">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-field border">
+                                <input id="create-feature-font-source" type="text" name="source" placeholder="Source URL">
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="input-textarea border">
+                                <textarea id="create-feature-font-description" name="description" placeholder="Description"></textarea>
+                                <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="bottom">
+                                <div class="buttons">
+                                    <a id="create-feature-font-save" class="action-save" title="Save" href="#">
+                                        <i class="fa fa-save"></i>Save
+                                    </a>
+                                    <a id="create-feature-font-cancel" class="action-cancel" title="Cancel" href="#">
+                                        <i class="fa fa-remove"></i>Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="feature-select-fonts-list"><ul></ul></div>
+                    </div>
+                </div>
+    			<div id="feature-preview" class="section border">
+                    <div class="header">
+                        <a href="#" title="fullscreen" class="action-fullscreen"><i class="fa fa-arrows-alt"></i></a>
+                        <a href="#" title="minimize" class="action-minimize"><i class="fa fa-compress"></i></a>
+                        <div class="column smaller">Preview</div>
+                        <div class="column large">
+                            <div id="select-feature-preview-locale" class="input-field dropdown border">
+                                <input id="select-feature-preview-locale-input" type="text" placeholder="Select locale" name="search">
+                                <button class="clear-button" title="Clear" type="reset"><i class="fa fa-remove"></i></button>
+                                <button class="search-button" title="Search" type="submit"><i class="fa fa-chevron-down"></i></button>
+                                <div class="popup toplevel border">
+                                    <div class="menu">
+                                        <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                                        <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                                        <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+                                    </div>
+                                    <div id="feature-preview-locale-list">
+                                        <ul></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="loading">
+                            <img class="icon-loading" src="/web/loading-spinner.gif"/>
+                        </div>
+                        <div class="menu">
+                            <a href="#" title="Show mobile view" class="action-mobile" id="action-feature-mobile-preview"><i class="fa fa-mobile"></i></a>
+                            <a href="#" title="Show tablet view" class="action-tablet" id="action-feature-tablet-preview"><i class="fa fa-tablet"></i></a>
+                            <a href="#" title="Show desktop view" class="action-desktop" id="action-feature-desktop-preview"><i class="fa fa-desktop"></i></a>
+                            <a href="#" title="Toggle debug mode" class="action-debug" id="action-feature-toggle-debug"><i class="fa fa-bug"></i></a>
+                            <a href="#" title="Refresh" class="action-refresh" id="action-refresh-feature-preview"><i class="fa fa-refresh"></i></a>
+                            <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <iframe id="feature-preview-frame" class="editor preview" src="#"></iframe>
+    			</div>
+    		</div>
+    	</div>
+        <div id="search-features-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <div class="filter-panel">
+                <form>
+                    <fieldset>
+                        <legend>Filter</legend>
+                        <input id="feature-type-all" class="filter-radio-button" type="radio" name="filter-feature-type" value="all" checked="checked"/>
+                        <label for="feature-type-all">Include all</label><br/>
+                        <input id="feature-type-feature-only" class="filter-radio-button" type="radio" name="filter-feature-type" value="featureonly"/>
+                        <label for="feature-type-feature-only">Application only</label><br/>
+                        <input id="feature-type-template-only" class="filter-radio-button" type="radio" name="filter-feature-type" value="templateonly"/>
+                        <label for="feature-type-template-only">Template only</label><br/>
+                    </fieldset>
+                </form>
+            </div>
+            <div id="search-features-popup-list">
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div id="create-feature-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <form autocomplete="off" class="create-feature-form" action="#">
+                <div class="input-textarea border">
+                    <textarea id="create-feature-description" name="description" placeholder="Description"></textarea>
+                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                </div>
+                <div class="buttons">
+                    <a id="create-feature-save-and-close" class="action-save" title="Save and close" href="#">
+                        <i class="fa fa-save"></i>Save and close
+                    </a>
+                    <a id="create-feature-save-and-new" class="action-save" title="Save and new" href="#">
+                        <i class="fa fa-save"></i>Save and new
+                    </a>
+                    <a id="create-feature-cancel" class="action-cancel" title="Close" href="#">
+                        <i class="fa fa-remove"></i>Close
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div id="update-feature-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <form autocomplete="off" class="update-feature-form" action="#">
+                <div class="input-textarea border">
+                    <textarea id="update-feature-description" name="description" placeholder="Description"></textarea>
+                    <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                </div>
+                <div class="buttons">
+                    <a id="update-feature-save-and-close" class="action-save" title="Save and close" href="#">
+                        <i class="fa fa-save"></i>Save and close
+                    </a>
+                    <a id="update-feature-save" class="action-save" title="Save" href="#">
+                        <i class="fa fa-save"></i>Save
+                    </a>
+                    <a id="update-feature-cancel" class="action-cancel" title="Cancel" href="#">
+                        <i class="fa fa-remove"></i>Close
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div id="publish-feature-popup" class="popup toplevel border">
+            <div class="menu">
+                <div class="loading"><img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <a class="action-help" href="#" title="Help"><i class="fa fa-question"></i></a>
+                <a class="action-close" href="#" title="Close" ><i class="fa fa-remove"></i></a>
+            </div>
+            <form>
+                <div id="publish-feature-destination-list">
+                    <ul>
+                    </ul>
+                </div>
+                <div class="buttons">
+                    <a id="action-publish-feature-confirm" class="action-save" title="Publish" href="#">
+                        <i class="fa fa-save"></i>Publish
+                    </a>
+                    <a id="action-cancel-publish-feature" class="action-cancel" title="Cancel" href="#">
+                        <i class="fa fa-remove"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div id="categories-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+<!--                <div class="column medium">Application</div> -->
+                <div class="column large search-applications">
+                    <div class="input-field border">
+                        <input class="select-application" type="text" name="search" placeholder="Select an application">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
+                <div id="search-categories" class="column large">
+                    <div class="input-field border">
+                        <input type="text" name="search" placeholder="Search for a category">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="column large">
+                    <form autocomplete="off" class="create-category-form" action="#">
+                        <div class="input-field border">
+                            <input id="create-category-name" type="text" name="name" placeholder="Create a category">
+                            <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            <button type="submit" class="create-button" title="Create"><i class="fa fa-magic"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="column medium"><h1>Category</h1></div>
+                <div class="column large">
+                    <form autocomplete="off" class="update-category-form" action="#">
+                        <div class="input-field border">
+                            <input id="update-category-name" type="text" name="name" placeholder="Update a category">
+                            <button type="submit" class="update-button" title="Update"><i class="fa fa-edit"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="content-types-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+<!--                <div class="column medium">Application</div> -->
+                <div class="search-applications column large">
+                    <div class="input-field border">
+                        <input class="select-application" type="text" name="search" placeholder="Select an application">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
+                <div class="column large"><h1>Content type</h1></div>
+                <div id="search-content-type" class="column large">
+                    <div class="input-field border">
+                        <input type="text" name="search" placeholder="Search for a content type">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+<!--                <div class="column medium">Application</div> -->
+                <div class="search-applications column large">
+                    <div class="input-field border">
+                        <input class="select-application" type="text" name="search" placeholder="Select an application">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
+                <div class="column small"><h1>Content</h1></div>
+                <div id="search-content" class="column large">
+                    <div class="input-field border">
+                        <input type="text" name="search" placeholder="Search for content">
+                        <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                        <button type="submit" class="search-button" title="Search"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="column large">
+                    <form autocomplete="off" class="create-content-form" action="#">
+                        <div class="input-field border">
+                            <input id="create-content-name" type="text" name="name" placeholder="Create content">
+                            <button type="reset" class="clear-button" title="Clear"><i class="fa fa-remove"></i></button>
+                            <button type="submit" class="create-button" title="Create"><i class="fa fa-magic"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="column large">
+                    <form autocomplete="off" class="update-content-form" action="#">
+                        <div class="input-field border">
+                            <input id="update-content-name" type="text" name="name" placeholder="Update content">
+                            <button type="submit" class="update-button" title="Update"><i class="fa fa-edit"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    	<div id="users-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column small"><h1>Users</h1></div>
+            </div>
+            <div id="panel-create-users" class="panel">
+            	<div class="panel-header">Create user</div>
+	            <form id="form-create-user" action="" method="POST">
+                    <input id="form-create-user-email-address" type="text" name="emailaddress" placeholder="Email address"/>
+                    <input id="form-create-user-user-name" type="text" name="username" placeholder="User name"/>
+	            	<input id="form-create-user-first-name" type="text" name="firstname" placeholder="First name"/>
+	            	<input id="form-create-user-last-name" type="text" name="lastname" placeholder="Last name"/>
+                    <button type="submit" class="save-button" title="Save">Create</button>
+	            </form>
+            </div>
+            <div id="panel-list-users" class="panel">
+            	<div class="panel-header">User list<img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <div id="users-list"><ul></ul></div>
+            </div>
+    	</div>
+    	<div id="usergroups-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column large"><h1>User groups</h1></div>
+            </div>
+            <div id="panel-create-usergroups" class="panel">
+            	<div class="panel-header">Create usergroup</div>
+                <form id="form-create-usergroup" action="" method="POST">
+	            	<input id="form-create-usergroup-name" type="text" name="name" placeholder="Usergroup name"/>
+                    <button type="submit" class="save-button" title="Save">Create</button>
+	            </form>
+            </div>
+            <div id="panel-list-usergroups" class="panel">
+                <div class="panel-header">User group list<img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <div id="usergroups-list"><ul></ul></div>
+            </div>
+    	</div>
+        <div id="locales-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column large"><h1>Locales</h1></div>
+            </div>
+            <div id="panel-create-locales" class="panel">
+                <div class="panel-header">Create locale</div>
+                <form id="form-create-locale" action="" method="POST">
+                    <input id="form-create-locale-name" type="text" name="name" placeholder="Usergroup name"/>
+                </form>
+            </div>
+            <div id="panel-list-locales" class="panel">
+                <div class="panel-header">User group list<img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <div id="locales-list"><ul></ul></div>
+            </div>
+        </div>
+        <div id="servers-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column large"><h1>Servers</h1></div>
+            </div>
+            <div id="panel-create-server" class="panel">
+                <div class="panel-header">Create server</div>
+                <form id="form-create-server" action="" method="POST">
+                    <input id="form-create-server-name" type="text" name="name" placeholder="Server name"/><br/>
+                    <select id="form-create-server-type" name="type">
+                        <option value="ftp">FTP</option>
+                        <option value="local">Local Copy</option>
+                    </select><br/>
+                    <input id="form-create-server-ftp-address" type="text" name="name" placeholder="FTP address"/>
+                    <input id="form-create-server-ftp-port" type="text" name="name" placeholder="FTP port"/>
+                    <input id="form-create-server-ftp-username" type="text" name="name" placeholder="FTP username"/>
+                    <input id="form-create-server-ftp-password" type="text" name="name" placeholder="FTP password"/><br/>
+                    <input id="form-create-server-local-folder" type="text" name="name" placeholder="Local folder"/>
+                    <button type="submit" class="save-button" title="Save">Create</button>
+                </form>
+            </div>
+            <div id="panel-list-servers" class="panel">
+                <div class="panel-header">Destination list<img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <div id="servers-list"><ul></ul></div>
+            </div>
+        </div>
+        <div id="destinations-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column large"><h1>Destinations</h1></div>
+            </div>
+            <div id="panel-create-destination" class="panel">
+                <div class="panel-header">Create destination</div>
+                <form id="form-create-destination" action="" method="POST">
+                    <input id="form-create-destination-name" type="text" name="name" placeholder="Destination name"/><br/>
+                    <input id="form-create-destination-description" type="text" name="description" placeholder="Description"/><br/>
+                    <input id="form-create-destination-domain" type="text" name="domain" placeholder="Domain"/><br/>
+                    <input id="form-create-destination-server" type="text" name="server" placeholder="Server`"/><br/>
+                    <input id="form-create-destination-server-uuid" type="text" name="serverUuid" placeholder="Server uuid"/><br/>
+                    <button type="submit" class="save-button" title="Save">Create</button>
+                </form>
+            </div>
+            <div id="panel-list-destinations" class="panel">
+                <div class="panel-header">Destination list<img class="icon-loading" src="/web/loading-spinner.gif"/></div>
+                <div id="destinations-list"><ul></ul></div>
+            </div>
+        </div>
+    	<div id="settings-admin-panel" class="admin-panel">
+            <div class="header">
+                <img src="/web/kaiser_permanente_logo_400px.png"/>
+                <div class="column large"><h1>Settings</h1></div>
+            </div>
+    	</div>
+    	<div id="footer">
+    	Copyright &copy; 2016
+    	</div>
+        <script src="/libraries/jquery/3.0.0/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/securityManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/navigationManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/accountManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/adminPanel.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/popup.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/userManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/usergroupManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/serverManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/destinationManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/applicationAdminPanel.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/featureAdminPanel.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/categoryManager.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/web/pageAdminPanel.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/libraries/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+            var applicationControllerEditor = ace.edit("application-controller-editor");
+            applicationControllerEditor.setTheme("ace/theme/twilight");
+            applicationControllerEditor.getSession().setMode("ace/mode/javascript");
+            applicationControllerEditor.setValue('', -1);
+            var applicationStyleEditor = ace.edit("application-style-editor");
+            applicationStyleEditor.setTheme("ace/theme/chrome");
+            applicationStyleEditor.getSession().setMode("ace/mode/css");
+            applicationStyleEditor.setValue('', -1);
+
+            var pageLayoutEditor = ace.edit("page-layout-editor");
+            pageLayoutEditor.setTheme("ace/theme/monokai");
+            pageLayoutEditor.getSession().setMode("ace/mode/html");
+            pageLayoutEditor.setValue('', -1);
+            var pageControllerEditor = ace.edit("page-controller-editor");
+            pageControllerEditor.setTheme("ace/theme/twilight");
+            pageControllerEditor.getSession().setMode("ace/mode/javascript");
+            pageControllerEditor.setValue('', -1);
+            var pageStyleEditor = ace.edit("page-style-editor");
+            pageStyleEditor.setTheme("ace/theme/chrome");
+            pageStyleEditor.getSession().setMode("ace/mode/css");
+            pageStyleEditor.setValue('', -1);
+
+			var featureLayoutEditor = ace.edit("feature-layout-editor");
+			featureLayoutEditor.setTheme("ace/theme/monokai");
+			featureLayoutEditor.getSession().setMode("ace/mode/html");
+            featureLayoutEditor.setValue('', -1);
+		    var featureControllerEditor = ace.edit("feature-controller-editor");
+		    featureControllerEditor.setTheme("ace/theme/twilight");
+		    featureControllerEditor.getSession().setMode("ace/mode/javascript");
+            featureControllerEditor.setValue('', -1);
+		    var featureStyleEditor = ace.edit("feature-style-editor");
+		    featureStyleEditor.setTheme("ace/theme/chrome");
+		    featureStyleEditor.getSession().setMode("ace/mode/css");
+            featureStyleEditor.setValue('', -1);
+		</script>
+    </body>
+</html>

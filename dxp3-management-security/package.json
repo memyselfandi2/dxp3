@@ -1,0 +1,23 @@
+{
+  "name": "dxp3-management-security",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - Management - Security",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js -help",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-cleanup": "file:../local_modules/dxp3-cleanup",
+    "dxp3-configuration": "file:../local_modules/dxp3-configuration",
+    "dxp3-db": "file:../local_modules/dxp3-db",
+    "dxp3-logging": "file:../local_modules/dxp3-logging",
+    "dxp3-microservice-rest": "file:../local_modules/dxp3-microservice-rest",
+    "dxp3-mutex-inmemory": "file:../local_modules/dxp3-mutex-inmemory",
+    "dxp3-util": "file:../local_modules/dxp3-util",
+    "dxp3-uuid": "file:../local_modules/dxp3-uuid"
+  }
+}

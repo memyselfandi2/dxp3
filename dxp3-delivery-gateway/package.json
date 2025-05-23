@@ -1,0 +1,19 @@
+{
+  "name": "dxp3-delivery-gateway",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - Delivery - Gateway",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js -help",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-cleanup": "file:../local_modules/dxp3-cleanup",
+    "dxp3-logging": "file:../local_modules/dxp3-logging",
+    "dxp3-microservice-web": "file:../local_modules/dxp3-microservice-web",
+    "dxp3-util": "file:../local_modules/dxp3-util"
+  }
+}

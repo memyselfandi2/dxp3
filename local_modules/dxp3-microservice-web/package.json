@@ -1,0 +1,19 @@
+{
+  "name": "dxp3-microservice-web",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - MicroService - Web",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js -help",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-logging": "file:../dxp3-logging",
+    "dxp3-microservice": "file:../dxp3-microservice",
+    "dxp3-net": "file:../dxp3-net",
+    "dxp3-util": "file:../dxp3-util"
+  }
+}

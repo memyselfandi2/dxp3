@@ -1,0 +1,82 @@
+{
+	"name":"DXP3 Delivery",
+	"description": "The DXP3 Delivery solution",
+	"services":
+		[
+			{
+				"name":"dxp3-delivery-gateway",
+				"description": "The DXP3 delivery gateway is the entry point of the application.",
+				"path":"../dxp3-delivery-gateway",
+				"executable": "index.js",
+				"port": 80,
+				"loglevel": "trace",
+				"options" : {
+					"secure": "false"
+				},
+				"replicas": 1
+			},
+			{
+				"name":"dxp3-delivery-ui",
+				"description": "The DXP3 delivery UI provides all the user interface elements (html, css, javascript, etc.).",
+				"path":"../dxp3-delivery-ui/",
+				"executable": "index.js",
+				"loglevel": "trace",
+				"options" : {
+					"secure": "false"
+				},
+				"replicas": 1
+			},
+			{
+				"name":"dxp3-delivery-api",
+				"description": "The DXP3 delivery API provides all the back end functionality.",
+				"path":"../dxp3-delivery-api/",
+				"executable": "index.js",
+				"loglevel": "info",
+				"replicas": 1
+			},
+			{
+				"name":"dxp3-delivery-dao-ApplicationDAO",
+				"description": "The DXP3 delivery Application DAO provides data storage and data retrieval for applications.",
+				"path":"../dxp3-delivery-dao/",
+				"executable": "ApplicationDAO.js",
+				"loglevel": "info",
+				"options" : {
+					"implementation": "mock"
+				},
+				"replicas":1
+			},
+			{
+				"name":"dxp3-delivery-dao-DomainDAO",
+				"description": "The DXP3 delivery Domain DAO provides data storage and data retrieval for domains.",
+				"path":"../dxp3-delivery-dao/",
+				"executable": "DomainDAO.js",
+				"loglevel": "info",
+				"options" : {
+					"implementation": "mock"
+				},
+				"replicas":1
+			},
+			{
+				"name":"dxp3-delivery-dao-FeatureDAO",
+				"description": "The DXP3 delivery Feature DAO provides data storage and data retrieval for features.",
+				"path":"../dxp3-delivery-dao/",
+				"executable": "FeatureDAO.js",
+				"loglevel": "info",
+				"options" : {
+					"implementation": "mock"
+				},
+				"replicas":1
+			},
+			{
+				"name":"dxp3-delivery-dao-PageDAO",
+				"description": "The DXP3 delivery Page DAO provides data storage and data retrieval for pages.",
+				"path":"../dxp3-delivery-dao/",
+				"executable": "PageDAO.js",
+				"loglevel": "info",
+				"options" : {
+					"implementation": "mock"
+				},
+				"replicas":1
+			}
+		]
+}

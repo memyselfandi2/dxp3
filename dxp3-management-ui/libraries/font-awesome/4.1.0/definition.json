@@ -1,0 +1,8 @@
+{
+   "cdn": {
+      "css": ["//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.cs"]
+   },
+   "local": {
+      "css": ["/libraries/font-awesome/4.1.0/css/font-awesome.min.css"]
+   }
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: UDPServerOptions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: UDPServerOptions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-net-udp
+ *
+ * NAME
+ * UDPServerOptions
+ */
+const packageName = 'dxp3-net-udp';
+const moduleName = 'UDPServerOptions';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * Use this module to parse the arguments/options supplied to an UDPServer.
+ * When certain options are omitted an attempt is made to set reasonable defaults.&lt;br/>
+ * &lt;ul>
+ * &lt;li>address&lt;/li>
+ * &lt;li>destinations&lt;/li>
+ * &lt;li>encryptionAlgorithm&lt;/li>
+ * &lt;li>encryptionKey&lt;/li>
+ * &lt;li>ignoreParentProcess&lt;/li>
+ * &lt;li>ignoreOurselves&lt;/li>
+ * &lt;li>mode&lt;/li>
+ * &lt;li>multicastAddresses&lt;/li>
+ * &lt;li>port&lt;/li>
+ * &lt;li>reuseAddr&lt;/li>
+ * &lt;/ul>
+ *
+ * @module dxp3-net-udp/UDPServerOptions
+ */
+// It's important to log errors and warnings.
+const logging = require('dxp3-logging');
+const UDPAddress = require('./UDPAddress');
+const UDPMode = require('./UDPMode');
+const UDPServerDefaults = require('./UDPServerDefaults');
+const UDPServerEventMode = require('./UDPServerEventMode');
+// We use the util.Help class to print out help information.
+const util = require('dxp3-util');
+
+const Level = logging.Level;
+/**
+ * @see module:dxp3-net-udp/UDPServerDefaults
+ */
+class UDPServerOptions extends util.Options {
+	/**
+	 * @property {String} address
+	 * The address we are listening on (default: 0.0.0.0).
+	 *
+	 * @property {Array|String} destinations
+	 * List of ip addresses we send udp messages to.
+	 * These can be broadcast, multicast or unicast addresses.
+	 *
+	 * @property {String} encryptionAlgorithm
+	 * The encryption algorithm to use.
+	 *
+	 * @property {String} encryptionKey
+	 * Key to be used to encrypt/decrypt messages.
+	 *
+	 * @property {module:dxp3-net/UDPServerEventMode} eventMode
+	 * One of event, message or raw.
+	 * This determines if the UDPServer will listen for and emit specific
+	 * events, or emit the decrypted message, or emit
+	 * the, potentially encrypted, raw message.
+	 * 
+	 * @property {Boolean|String} ignoreParentProcess
+	 * True if we should ignore messages send by our parent process. This includes us.
+	 *
+	 * @property {Boolean|String} ignoreOurselves
+	 * True if we should ignore messages send by ourselves.
+	 *
+	 * @property {module:dxp3-net/UDPMode} mode
+	 * One of directed broadcast, limited broadcast, multicast or unicast.
+	 * The first three will enable the socket to receive broadcast messages.
+	 *
+	 * @property {Array|String} multicastAddresses
+	 * List of ip addresses we send udp messages to.
+	 * These are by default also set as destinations unless one specifically
+	 * opts out. Additionally this will set the mode to multicast.
+	 *
+	 * @property {Number|String} port
+	 * The port we are listening on. If any of the destinations does not have a port,
+	 * this port will be used instead.
+	 *
+	 * @property {Boolean|String} reuseAddr
+	 * Indicates if we should reuse the address. Setting this to true will allow
+	 * other processes/instances to run on the same machine while still receiving
+	 * UDP messages.
+	 */
+	constructor() {
+		super();
+		// The address/interface we listen on for incoming messages.
+		// To listen on all interfaces one should use 0.0.0.0.
+		this.address = UDPServerDefaults.DEFAULT_ADDRESS;
+		super.setAlias('host','address');
+		// Unless specified an UDPServer only listens for UDPMessages.
+		// The exception is when the mode is multicast. In that case
+		// the multicast addresses are automatically added to the destinations list.
+		this.destinations = [];
+		super.setAlias('clients,udpclients', 'destinations');
+		this.encryptionAlgorithm = UDPServerDefaults.DEFAULT_ENCRYPTION_ALGORITHM;
+		this.encryptionKey = UDPServerDefaults.DEFAULT_ENCRYPTION_KEY;
+		super.addAliases('encrypt,encrypted,encryption,encryptionpassword,key,password,security,securitykey,securitypassword', 'encryptionKey');
+		// Should we or should we not ignore UDP messages send by our parent process.
+		this.ignoreParentProcess = UDPServerDefaults.DEFAULT_IGNORE_PARENT_PROCESS;
+		// Should we or should we not ignore UDP messages send by ourselves.
+		this.ignoreOurselves = UDPServerDefaults.DEFAULT_IGNORE_OURSELVES;
+		this.logLevel = [{regexp:"*",level:UDPServerDefaults.DEFAULT_LOG_LEVEL}];
+		super.addAlias('log,logger,logging', 'logLevel');
+		this.mode = UDPServerDefaults.DEFAULT_UDP_MODE;
+		super.setAlias('udpmode', 'mode');
+		// If the mode is set to multicast the array of multicast addresses will be
+		// initialized by calling the static parse method.
+		this.multicastAddresses = [];
+		this.port = UDPServerDefaults.DEFAULT_PORT;
+		super.setAlias('serverport,udpport,udpserverport', 'port');
+		this.reuseAddr = UDPServerDefaults.DEFAULT_REUSE_ADDR;
+		super.addAlias('reuseaddress,reuseport', 'reuseAddr');
+		// The eventMode is a UDPServerEventMode value.
+		// It is one of 'event', 'message', or 'raw'.
+		this.eventMode = null;
+		super.addAlias('servereventmode,udpservereventmode', 'eventMode');
+	}
+
+	static parse(_sourceInstance) {
+		let result = super.parse(_sourceInstance);
+		if(result.mode === UDPMode.MULTICAST) {
+			if(result.multicastAddresses.length &lt;= 0) {
+				result.multicastAddresses = [UDPServerDefaults.DEFAULT_MULTICAST_ADDRESS];
+			}
+		}
+		// We are going to perform some validations on the multicast addresses.
+		let validMulticastAddresses = [];
+		for(let i=0;i &lt; result.multicastAddresses.length;i++) {
+			let multicastAddress = result.multicastAddresses[i];
+			if(multicastAddress === undefined || multicastAddress === null) {
+				continue;
+			}
+			multicastAddress = multicastAddress.trim();
+			if(multicastAddress.length &lt;= 0) {
+				continue;
+			}
+			if(!UDPAddress.isMulticastAddress(multicastAddress)) {
+				continue;
+			}
+			validMulticastAddresses.push(multicastAddress);
+		}
+		if(validMulticastAddresses.length > 0) {
+			result.mode = UDPMode.MULTICAST;
+		}
+		result.multicastAddresses = validMulticastAddresses;
+		// We are going to perform some validations on the destinations.
+		// If they have no port we will use our own port.
+		let validDestinations = [];
+		for(let i=0;i &lt; result.destinations.length;i++) {
+			let destination = result.destinations[i];
+			if(destination === undefined || destination === null) {
+				// No point in adding an empty destination.
+				continue;
+			}
+			if(typeof destination === 'string') {
+				destination = destination.trim();
+				if(destination.length &lt;= 0) {
+					// No point in adding an empty destination.
+					continue;
+				} 
+				// A destination should be &lt;address> or &lt;address>:&lt;port>
+				let indexOfColon = destination.indexOf(':');
+				let address = null;
+				let port = -1;
+				if(indexOfColon &lt; 0) {
+					// Missing port. Use ours instead.
+					address = destination;
+					port = result.port;
+				} else {
+					address = destination.substring(0, indexOfColon);
+					port = destination.substring(indexOfColon + 1);
+					try {
+						port = parseInt(port);
+					} catch(_exception) {
+						// No point in adding a destination with an
+						// invalid port.
+						continue;
+					}
+				}
+				destination = {
+					address: address,
+					port: port
+				}
+			} else if(destination.port === undefined || destination.port === null || destination.port &lt;= 0) {
+				// Missing port. Use ours instead.
+				destination.port = result.port;
+			}
+			validDestinations.push(destination);
+		}
+		result.destinations = validDestinations;
+		return result;
+	}
+
+	static parseCommandLine() {
+		let result = new UDPServerOptions();
+		let commandLineOptions = new util.CommandLineOptions();
+		
+		// -address
+		let commandLineOption = commandLineOptions.createString('address',
+														   	    'host',
+																'address');
+		commandLineOptions.add(commandLineOption);
+
+		// -destination
+		commandLineOption = commandLineOptions.createStringArray('destinations',
+																 'destination',
+																 'destinations');
+		commandLineOptions.add(commandLineOption);
+
+		// -encryption
+		commandLineOption = commandLineOptions.createString('encryption',
+															'encrypt,encrypted,encryptionpassword,key,password,security,securitykey,securitypassword',
+															'encryptionKey');
+		commandLineOptions.add(commandLineOption);
+
+		// -eventmode
+		commandLineOption = commandLineOptions.createEnumeration('eventmode',
+																 'servereventmode,updservereventmode',
+																 'eventMode',
+																 UDPServerEventMode);
+		commandLineOptions.add(commandLineOption);
+
+		// -help
+		commandLineOption = commandLineOptions.createFlag('help',
+														  'faq,info,information',
+														  'help');
+		commandLineOptions.add(commandLineOption);
+
+		// -ignoreparent
+		commandLineOption = commandLineOptions.createBoolean('ignoreparent',
+															 'ignoreparentprocess',
+															 'ignoreParentProcess');
+		commandLineOptions.add(commandLineOption);
+
+		// -ignoreourselves
+		commandLineOption = commandLineOptions.createBoolean('ignoreourselves',
+															 null,
+															 'ignoreOurselves');
+		commandLineOptions.add(commandLineOption);
+
+		// -loglevel
+		commandLineOption = commandLineOptions.createObjectArray('loglevel',
+																 'log,logger,logging',
+																 'logLevel');
+		commandLineOption.addStringProperty('regexp');
+		commandLineOption.addEnumerationProperty('level', Level);
+		commandLineOptions.add(commandLineOption);
+
+		// -mode
+		commandLineOption = commandLineOptions.createEnumeration('mode',
+																 'udpmode',
+																 'mode',
+																 UDPMode);
+		commandLineOptions.add(commandLineOption);
+
+		// -multicastaddress
+		commandLineOption = commandLineOptions.createStringArray('multicastaddresses',
+																 'multicastaddress,listenon,source,sources',
+																 'multicastAddresses');
+		commandLineOptions.add(commandLineOption);
+
+		// -port
+		commandLineOption = commandLineOptions.createNumber('port',
+															'listenon,serverport,udpport,udpserverport',
+															'port');
+		commandLineOptions.add(commandLineOption);
+
+		// -reuseaddr
+		commandLineOption = commandLineOptions.createBoolean('reuseaddr',
+															 'reuseaddress',
+															 'reuseAddr');
+		commandLineOptions.add(commandLineOption);
+		result = commandLineOptions.parse(result);
+		if(result.eventMode === null) {
+			if(result.encryptionKey === undefined || result.encryptionKey === null || result.encryptionKey.length &lt;= 0) {
+				result.eventMode = UDPServerEventMode.RAW;
+			} else {
+				result.eventMode = UDPServerEventMode.MESSAGE;
+			}
+		}
+		return result;
+	}
+}
+// Check if someone tried to run/execute this file.
+if(util.Assert.isFileToExecute(canonicalName)) {
+    util.Help.print(UDPServerOptions);
+    return;
+}
+module.exports = UDPServerOptions;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-net-udp.html">dxp3-net-udp</a></li><li><a href="module-dxp3-net-udp_UDPAddress.html">dxp3-net-udp/UDPAddress</a></li><li><a href="module-dxp3-net-udp_UDPBridge.html">dxp3-net-udp/UDPBridge</a></li><li><a href="module-dxp3-net-udp_UDPBridgeDefaults.html">dxp3-net-udp/UDPBridgeDefaults</a></li><li><a href="module-dxp3-net-udp_UDPBridgeEvent.html">dxp3-net-udp/UDPBridgeEvent</a></li><li><a href="module-dxp3-net-udp_UDPBridgeOptions.html">dxp3-net-udp/UDPBridgeOptions</a></li><li><a href="module-dxp3-net-udp_UDPBridgeState.html">dxp3-net-udp/UDPBridgeState</a></li><li><a href="module-dxp3-net-udp_UDPClient.html">dxp3-net-udp/UDPClient</a></li><li><a href="module-dxp3-net-udp_UDPClientCLI.html">dxp3-net-udp/UDPClientCLI</a></li><li><a href="module-dxp3-net-udp_UDPClientDefaults.html">dxp3-net-udp/UDPClientDefaults</a></li><li><a href="module-dxp3-net-udp_UDPClientEvent.html">dxp3-net-udp/UDPClientEvent</a></li><li><a href="module-dxp3-net-udp_UDPClientOptions.html">dxp3-net-udp/UDPClientOptions</a></li><li><a href="module-dxp3-net-udp_UDPError.html">dxp3-net-udp/UDPError</a></li><li><a href="module-dxp3-net-udp_UDPMode.html">dxp3-net-udp/UDPMode</a></li><li><a href="module-dxp3-net-udp_UDPServer.html">dxp3-net-udp/UDPServer</a></li><li><a href="module-dxp3-net-udp_UDPServerCLI.html">dxp3-net-udp/UDPServerCLI</a></li><li><a href="module-dxp3-net-udp_UDPServerDefaults.html">dxp3-net-udp/UDPServerDefaults</a></li><li><a href="module-dxp3-net-udp_UDPServerEvent.html">dxp3-net-udp/UDPServerEvent</a></li><li><a href="module-dxp3-net-udp_UDPServerEventMode.html">dxp3-net-udp/UDPServerEventMode</a></li><li><a href="module-dxp3-net-udp_UDPServerOptions.html">dxp3-net-udp/UDPServerOptions</a></li><li><a href="module-dxp3-net-udp_UDPServerState.html">dxp3-net-udp/UDPServerState</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-net-udp_UDPBridgeOptions-UDPBridgeOptions.html">UDPBridgeOptions</a></li><li><a href="module-dxp3-net-udp_UDPBridge-UDPBridge.html">UDPBridge</a></li><li><a href="module-dxp3-net-udp_UDPClientCLI-UDPClientCLI.html">UDPClientCLI</a></li><li><a href="module-dxp3-net-udp_UDPClientOptions-UDPClientOptions.html">UDPClientOptions</a></li><li><a href="module-dxp3-net-udp_UDPClient-UDPClient.html">UDPClient</a></li><li><a href="module-dxp3-net-udp_UDPError-UDPError.html">UDPError</a></li><li><a href="module-dxp3-net-udp_UDPServerCLI-UDPServerCLI.html">UDPServerCLI</a></li><li><a href="module-dxp3-net-udp_UDPServerOptions-UDPServerOptions.html">UDPServerOptions</a></li><li><a href="module-dxp3-net-udp_UDPServer-UDPServer.html">UDPServer</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 17 2023 09:23:39 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

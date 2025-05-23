@@ -1,0 +1,9 @@
+.page-panel {
+    position:relative;
+}
+.page-panel .header {
+    font-size:20px;
+}
+.page-panel .header input {
+    width:80%;
+}

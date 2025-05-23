@@ -1,0 +1,46 @@
+*****************************************
+* DXP3 - Digital Experience Platform 3  *
+*                                       *
+* MODULE: dxp3-microservice/WebServer   *
+*****************************************
+A WebServer implements a typical http request/response mechanism.
+It listens on a provided (or, if not provided, a random) open port for incoming requests,
+processes them and returns a response.
+
+It internally uses a dxp3-net.http.HTTPServer and it can serve one or more domains.
+When executed on the command line you will need to at least specify
+a name for this web server and a root folder.
+
+*****************************************
+* OPTIONS                               *
+*****************************************
+
+node WebServer -help -loglevel <String> -port <Number> -root <String> -secure <Boolean>
+node WebServer -domain <String> -root <String> -produces <String>
+
+-help               - A flag, which, when present, will print this help content.                         
+                      Aliases: faq, info, information.
+-loglevel <String>  - Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+                      Aliases: log, logger, logging, log-level, log_level.
+-port     <Number>  - The port to listen on. Default port is 80.
+                      Aliases: serverport, server-port, server_port, webserverport, web-server-port, web_server_port.
+-domain   <String>  - A specific domain
+-root     <String>  - The folder to server content from.
+-secure   <Boolean> - Indicates if this is a http or a https web server.
+-produces <String>  - The content this webserver serves. This is used by web clients and web gateways to connect to servers.
+
+*****************************************
+* EXAMPLES - CODE                       *
+*****************************************
+
+const microservice = require('dxp3-microservice');
+let myWebServer = new microservice.WebServer({port:8080});
+myWebServer.on('/api/*', function(req, resp, route) {
+});
+myWebServer.start();
+
+*****************************************
+* EXAMPLES - COMMAND LINE               *
+*****************************************
+
+node WebServer -name MainWebServer -root C:\temp\mainwebsite\ -port 80 -produces main-website-pool -log info

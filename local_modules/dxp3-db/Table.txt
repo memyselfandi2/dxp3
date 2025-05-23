@@ -1,0 +1,24 @@
+Table is an interface.
+The following methods will need to be implemented:
+
+async count(_sqlCondition)
+
+async deleteFrom(_sqlCondition)
+
+async desc()
+
+async insertInto(_columns, _values)
+
+async insertMany(_array)
+
+async insertOne(_object)
+
+async refreshSQLTableIndices()
+
+async selectSlice(_columns, _sqlCondition)
+
+async selectSubset(_sqlCondition)
+
+async update(_columns, _values, _sqlCondition)
+
+getSQLTableIndex(_columnName)

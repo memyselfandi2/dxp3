@@ -1,0 +1,18 @@
+{
+  "name": "dxp3-net-udp",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - Net - UDP",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-logging": "file:../dxp3-logging",
+    "dxp3-util": "file:../dxp3-util",
+    "dxp3-uuid": "file:../dxp3-uuid"
+  }
+}

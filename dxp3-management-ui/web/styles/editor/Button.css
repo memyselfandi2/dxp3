@@ -1,0 +1,37 @@
+div.button {
+	display:inline-block;
+	position:relative;
+}
+div.button > a > i {
+    margin-right:5px;
+}
+div.button > a.button-confirm,
+div.button > a.button-save,
+div.button > a.shade-of-green,
+div.button > a:visited.shade-of-green {
+    color: #008000;
+}
+div.button > a:hover.shade-of-green {
+    color: #1f671f;
+}
+div.button > a.button-cancel,
+div.button > a.button-message,
+div.button > a.button-delete,
+div.button > a.shade-of-red,
+div.button > a:visited.shade-of-red {
+    color:#CE0000;
+}
+div.button > a:hover.shade-of-red {
+    color: #b53636;
+}
+div.button > a.button-help {
+    color: #1E90FF;
+}
+div.button.disabled > a,
+div.button.disabled > a.shade-of-green,
+div.button.disabled > a.shade-of-red,
+div.button.disabled > a:hover,
+div.button.disabled > a:visited {
+    color: lightgray;
+    cursor:default;
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Disable browser caching, as this page may change a lot. -->
+        <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+        <!-- Use the fontawesome library to provide icons -->
+        <link rel="stylesheet" href="/libraries/font-awesome/5.9.0/css/all.css"/>
+        <!-- Add a version to our stylesheets to force a reload when a new
+             editor.html is released -->
+        <!-- Our reset.css removes all borders, margins, outlines, padding, etc. -->
+        <link rel="stylesheet" href="/web/styles/reset.css?version=1"/>
+        <!-- Our Editor.css adds editor wide styling and positiong for our logo, menu's etc. -->
+        <link rel="stylesheet" href="/web/styles/editor/Editor.css?version=1"/>
+        <!-- Our EditorLogo.css adds our logo. Currently on the top left. -->
+        <link rel="stylesheet" href="/web/styles/editor/EditorLogo.css?version=1"/>
+        <!-- Our EditorMenu.css adds our main editor menu. Currently on the left. -->
+        <link rel="stylesheet" href="/web/styles/editor/EditorMenu.css?version=1"/>
+        <!-- Our AccountMenu.css adds our account options. Currently on the top right -->
+        <link rel="stylesheet" href="/web/styles/editor/AccountMenu.css?version=1"/>
+        <!-- Our AdminPanel.css adds admin panel specific styles -->
+        <link rel="stylesheet" href="/web/styles/editor/AdminPanel.css?version=1"/>
+        <!-- Our ApplicationPanel.css styles our application panels. -->
+        <link rel="stylesheet" href="/web/styles/editor/ApplicationPanel.css?version=1"/>
+        <!-- Our editor-popup.css adds our popup styles -->
+        <link rel="stylesheet" href="/web/styles/editor/Popup.css?version=1"/>
+        <!-- Our InpuField.css adds our input field styles -->
+        <link rel="stylesheet" href="/web/styles/editor/InputField.css?version=1"/>
+        <!-- Our List.css adds our list styles -->
+        <link rel="stylesheet" href="/web/styles/editor/ListInputField.css?version=1"/>
+        <!-- Our InpuField.css adds our input field styles -->
+        <link rel="stylesheet" href="/web/styles/editor/PanelMenu.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/TabMenu.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/DetailsPanel.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/PagePanel.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/AcePanel.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/Action.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/Button.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/Table.css?version=1"/>
+        <link rel="stylesheet" href="/web/styles/editor/DropArea.css?version=1"/>
+
+        <!-- Add a version to our scripts to force a reload when a new
+             editor.html is released -->
+        <script type="text/javascript" src="/web/scripts/editor-input-field.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor-application-menu.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor-pages-panel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor-page-panel.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/Security.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/EditorElement.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/AccountMenu.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/EditorLogo.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/Editor.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/Action.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/Button.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/DropArea.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/Popup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ConfirmationPopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ImagesPopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectControllerPopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectStylePopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectApplicationPopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreateApplicationPopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreateControllerPopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreateStylePopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectPagePopup.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreatePagePopup.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/TabMenu.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/Frame.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/Panel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/AcePanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/LayoutPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ControllerPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/StylePanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PreviewPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CategoriesPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ContentPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ContentTypesPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ApplicationInfoPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PageInfoPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ApplicationDetailsPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ApplicationsHomePanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/FeaturesPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PagesHomePanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PagesPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PagePanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/AdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ApplicationsAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/DashboardAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/UsersAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/UsergroupsAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/LocalesAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ServersAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/DestinationsAdminPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SettingsAdminPanel.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/InputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/RadioInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/TextAreaInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ImageInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/TextInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ListInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectApplicationInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreateApplicationInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectPageInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreatePageInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectUserInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreateUserInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectUsergroupInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/CreateUsergroupInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/ApplicationPanel.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PanelMenu.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/ApplicationDAO.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/PageDAO.js?version=1"></script>
+
+        <script type="text/javascript" src="/web/scripts/editor/SelectControllerInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectStyleInputField.js?version=1"></script>
+        <script type="text/javascript" src="/web/scripts/editor/SelectVersionInputField.js?version=1"></script>
+
+        <script type="text/javascript" src="/libraries/ace/src-min-noconflict/ace.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <header></header>
+    	<main></main>
+    	<footer></footer>
+    </body>
+</html>

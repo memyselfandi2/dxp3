@@ -1,0 +1,24 @@
+****************************************
+* DXP3 - Digital Experience Platform 3 *
+*                                      *
+* MODULE: dxp3-net-tcp/TCPServerPort   *
+****************************************
+Use a TCPServerPort to find an open port.
+You can supply both a start and end port to search between.
+
+****************************************
+* COMMANDLINE OPTIONS                  *
+****************************************
+
+node TCPServerPort -endport <Number> -help -loglevel <String> <String> -startport <Number>
+
+-endport   <Number>  - The last port in the search range.
+-help                         
+-loglevel  <String> <String> - One of debug, info, warn, error, fatal
+-startport <Number>  - The start of the search range.
+
+****************************************
+* COMMANDLINE EXAMPLES                 *
+****************************************
+
+node TCPServerPort -log * debug -startport 80 -endport 1024

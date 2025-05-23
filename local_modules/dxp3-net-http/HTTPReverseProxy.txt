@@ -1,0 +1,81 @@
+*****************************************
+* DXP3 - Digital Experience Platform 3  *
+*                                       *
+* MODULE: dxp3-net-udp/HTTPReverseProxy *
+*****************************************
+An HTTPReverseProxy load balances requests between multiple http servers and/or
+other load balancers/proxies.
+
+*****************************************
+* OPTIONS                               *
+*****************************************
+
+node HTTPReverseProxy.js -help -loglevel <String> -port <Number> -upstream [<String>] <Array> 
+node HTTPReverseProxy.js -domain <String> -destinations <Array>
+node HTTPReverseProxy.js -domain <String> -destinations <Array> -rule <Regular Expression> <String>
+
+-help                        - A flag, which, when present, will print this help content.                         
+                               Aliases: info, information.
+-loglevel <String>           - Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+                               Aliases: log, logging.
+-port     <Number>           - The port to listen on. Default port is 80.
+                               Aliases: httpport, listenon, proxyport, reverseproxyport, serverport.
+-upstream [<String>] <Array> - A comma separated value list of server address and port combinations.
+                               The optional first String parameter is the server group name.
+                               Server group names are mandatory when separating traffic by path using rules/regular expressions.
+                               A server address and port are separated by a colon character (:).
+                               Aliases: destination(s), forwardto, server(s)
+-domain   <String>           - A specific domain
+
+If no loglevel, port or servers are supplied as arguments,
+the application will attempt to search for them in the following environment variables:
+
+LOGLEVEL         : Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+PORT             : The port to listen on. Default port is ' + defaults.DEFAULT_PORT + '.
+SERVER           : A comma separated values list of server address and port combinations.
+                   A server address and port are separated by a colon character (:).
+
+*****************************************
+* EXAMPLES - CODE                       *
+*****************************************
+
+const net = require('dxp3-net');
+// We set the port at creation time. Perfectly fine to do it later as long as
+// you do it before you call start().
+let myHTTPReverseProxy = new net.HTTPReverseProxy({port:8080});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.ADDED_CLIENT, function() {
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.DATA, function() {
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.ERROR, function(err) {
+	if(err === net.HTTPReverseProxyErrors.SERVICE_UNAVAILABLE) {
+		console.log('Received a request while there are no downstream servers available.');
+		console.log('This should be a panic condition.');
+	}
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.CLOSED_CLIENT, function() {
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.RUNNING, function(address, port) {
+	console.log('HTTPReverseProxy running at ' + address + ':' + port + '.');
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.STARTING, function() {
+	console.log('HTTPReverseProxy is starting.');
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.STOPPED, function() {
+	console.log('HTTPReverseProxy has stopped.');
+});
+myHTTPReverseProxy.on(net.HTTPReverseProxyEvent.STOPPING, function() {
+	console.log('HTTPReverseProxy is stopping.');
+});
+myHTTPReverseProxy.start();
+
+*****************************************
+* EXAMPLES - COMMAND LINE               *
+*****************************************
+
+node HTTPReverseProxy -loglevel info -port 80 -destination 127.0.0.1:5000
+node HTTPReverseProxy -port 80 -destination 127.0.0.1:5000 -destination 127.0.0.1:6000
+node HTTPReverseProxy -destinations 127.0.0.1:5000,127.0.0.1:6000
+node HTTPReverseProxy -destinations backend 127.0.0.1:5000,127.0.0.1:6000 -destinations frontend localhost:8080
+node HTTPReverseProxy -server api_server 127.0.0.1:5000,6000 -server ui_server 127.0.0.1:8080 -rule */api/ api_server -rule * ui_server
+node HTTPReverseProxy -domain example.com -server api_server 127.0.0.1:5000,127.0.0.1:6000 -server ui_server 127.0.0.1:8080,127.0.0.1:8090 -rule */api/ api_server -rule * ui_server

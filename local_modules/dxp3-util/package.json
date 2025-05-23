@@ -1,0 +1,14 @@
+{
+  "name": "dxp3-util",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - Util",
+  "main": "index.js",
+  "scripts": {
+    "help": "node Help.js",
+    "start": "node Help.js"
+  },
+  "dependencies": {}
+}

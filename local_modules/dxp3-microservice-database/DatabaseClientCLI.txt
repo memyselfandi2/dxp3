@@ -1,0 +1,40 @@
+********************************************************
+* DXP3 - Digital Experience Platform 3                 *
+*                                                      *
+* MODULE: dxp3-microservice-database/DatabaseClientCLI *
+********************************************************
+
+A DatabaseClientCLI allows one to interact with a DatabaseServer.
+
+*****************************************************
+* COMMANDLINE OPTIONS                               *
+*****************************************************
+
+node DatabaseClientCLI.js -help
+                          -name <String>
+                          -loglevel <String> <String>
+                          -consumes <String>
+                          -reconnectwaittime <Number>
+
+-help                        - A flag, which, when present, will print this help content.                         
+                               Aliases: faq, info, information.
+-loglevel <String> <String>  - Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+                               Aliases: log, logging.
+-name <String>               - The name of this database client. Ideally unique, but does not have to be.
+                               This is simply used as another means of identification when this client is running
+                               in the larger microservices ecosystem.
+-consumes <String>           - The subject of the database to connect to.
+                               Aliases: connectto, database, subject
+
+*****************************************************
+* EXAMPLES - CODE                                   *
+*****************************************************
+
+N/A
+
+*****************************************************
+* EXAMPLES - COMMAND LINE                           *
+*****************************************************
+
+node DatabaseClientCLI -help
+node DatabaseClientCLI -loglevel * info -name testclient -consumes dxp3-db

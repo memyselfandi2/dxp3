@@ -1,0 +1,56 @@
+Typically a database is backed by persistent storage.
+However it is possible to run an ephemeral in-memory database.
+That option is typically used in caching or user session scenarios.
+Four command line interface programs are provided to configure and interact with databases:
+1) DatabaseAdminCLI
+2) DatabaseCLI
+3) DatabaseServerCLI
+4) DatabaseClientCLI
+
+The DatabaseAdminCLI allows you to create, delete, list and rename filesystem backed databases.
+Additionally it will let you create, delete, list and rename in-memory databases as a way to test/validate
+their administration. As in-memory databases are not persisted they will disappear after the program ends.
+
+The DatabaseCLI allows you to interact with the database and execute all the typical SQL queries.
+This command line interface needs to be executed/run on the same computer the database is stored on.
+
+To enable a client server database interaction use the dxp3-microservice-database module.
+This module contains a DatabaseServer and a DatabaseClientCLI.
+To start a DatabaseServer one must specify:
+1) the name of the server (there could be more servers on the network. A name simply allows for easy identification),
+2) the name of the filesystem persisted database (typically different from the name of the server),
+3) the source folder of the filesystem persisted database,
+4) what this database 'produces'. It allows database consumers to find this database.
+   This can be something generic like 'storage' or more specific like 'cat-videos-db'
+
+For example:
+> node DatabaseServer -name database-server-one -databaseName db -sourcefolder C:\data\ -produces storage
+> node DatabaseClientCLI -name database-client-one -consumes storage
+
+ARCHITECTURE
+
+--------------------  ---------------                                ---------------------
+| DatabaseAdminCLI |  | DatabaseCLI |                                | DatabaseClientCLI |
+--------------------  ---------------                                ---------------------
+          |                  |                                                 |
+         has                has                                               has
+          |                  |                                                 |
+  -----------------          |          ------------------            ------------------
+  | DatabaseAdmin |          |          | DatabaseServer |<--connect--| DatabaseClient |
+  -----------------          |          ------------------            ------------------
+          |                  |                 |
+          |             ------------          has
+          -----crud-----| Database |------------
+                        ------------
+                             |
+       ----------------implementation
+       |                     |
+----------------------  --------------------
+| FileSystemDatabase |  | InMemoryDatabase |
+----------------------  --------------------
+       |
+    stores
+       |
+---------------
+| Filesystem  |
+---------------

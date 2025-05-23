@@ -1,0 +1,55 @@
+<html>
+	<head>
+        <script type="text/javascript" src="/web/scripts/editor/Security.js"></script>
+        <script type="text/javascript" src="/web/test-usergroup.js"></script>
+		<title>Test usergroups</title>
+	</head>
+	<body>
+        CREATE<br/>
+		<div id="create-usergroup-panel">
+            <input type="text" id="create-usergroup-parent-uuids" placeholder="Parent UUID's"/><br/>
+            <input type="text" id="create-usergroup-application-uuid" placeholder="Application UUID"/><br/>
+            <input type="text" id="create-usergroup-name" placeholder="Name"/><br/>
+            <textarea type="text" id="create-usergroup-description" placeholder="Description"></textarea><br/>
+			<button id="action-create">Create</button>
+		</div>
+        <br/>
+        UPDATE<br/>
+        <div id="update-usergroup-panel">
+            <span id="update-usergroup-uuid"></span><br/>
+            <input type="text" id="update-usergroup-parent-uuids" placeholder="Parent UUIDs"/><br/>
+            <input type="text" id="update-usergroup-name" placeholder="Name"/><br/>
+            <textarea type="text" id="update-usergroup-description" placeholder="Description"></textarea><br/>
+            <button id="action-update">Update</button>
+        </div>
+        <br/>
+        LIST<br/>
+        <div id="list-categories-panel">
+            <button id="action-refresh">Refresh</button>
+            <input id="usergroup-name-input" class="select-usergroup" type="text" name="search" placeholder="Category name"/>
+            <div class="filter-panel">
+                <form>
+                    <fieldset>
+                        <legend>Filter</legend>
+                        <input id="usergroup-type-all" class="filter-radio-button" type="radio" name="filter-usergroup-type" value="all" checked="checked"/>
+                        <label for="usergroup-type-all">Include all</label><br/>
+                        <input id="usergroup-type-global-only" class="filter-radio-button" type="radio" name="filter-usergroup-type" value="globalonly"/>
+                        <label for="usergroup-type-global-only">Global only</label><br/>
+                        <input id="usergroup-type-application-only" class="filter-radio-button" type="radio" name="filter-usergroup-type" value="applicationonly"/>
+                        <label for="usergroup-type-application-only">Application specific only</label><br/>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="message-panel">
+                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+            </div>
+            <div class="list">
+                <ul class="header">
+                    <li><a class="action-list-item sort-by-name">Name&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item sort-by-parent">Parent&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small sort-by-types">Types&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small">&nbsp;</a></li>
+                </ul>
+                <ul class="content">
+                </ul>
+            </div>
+        </div>
+	</body>
+</html>

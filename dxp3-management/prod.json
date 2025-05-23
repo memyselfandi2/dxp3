@@ -1,0 +1,102 @@
+{
+	"name":"DXP3 Management",
+	"description": "The DXP3 Management solution",
+	"services":
+		[
+			{
+				"name":"dxp3-management-gateway",
+				"description": "The DXP3 management gateway is the entry point of the application.",
+				"path":"../dxp3-management-gateway/",
+				"executable": "index.js",
+				"port": 443,
+				"loglevel": "warn",
+				"options" : {
+					"secure": "true"
+				},
+				"replicas": 1
+			},
+			{
+				"name":"dxp3-management-ui",
+				"description": "The DXP3 management UI provides all the user interface elements (html, css, javascript, etc.).",
+				"path":"../dxp3-management-ui/",
+				"executable": "index.js",
+				"loglevel": "warn",
+				"options" : {
+					"secure": "false"
+				},
+				"replicas": 2
+			},
+			{
+				"name":"dxp3-management-api",
+				"description": "The DXP3 management API provides all the back end functionality.",
+				"path":"../dxp3-management-api/",
+				"executable": "index.js",
+				"loglevel": "warn",
+				"replicas": 2
+			},
+			{
+				"name":"dxp3-management-compiler",
+				"description": "The DXP3 management compiler compiles all saved application, features and pages.",
+				"path":"../dxp3-management-compiler/",
+				"executable": "index.js",
+				"loglevel": "warn",
+				"replicas": 1
+			},
+			{
+				"name":"dxp3-management-security",
+				"description": "The DXP3 management security provided all required authentication and authorization functionality.",
+				"path":"../dxp3-management-security/",
+				"executable": "index.js",
+				"loglevel": "warn",
+				"options" : {
+					"implementation": "mock",
+					"sourcefolder": "C:\\temp\\dxp3\\"
+				},
+				"replicas":1
+			},
+			{
+				"name":"dxp3-email",
+				"description": "The DXP3 email service allows consumers to send emails.",
+				"path":"../dxp3-email/",
+				"executable": "index.js",
+				"loglevel": "warn",
+				"replicas":1
+			},
+			{
+				"name":"dxp3-management-dao-ApplicationDAO",
+				"description": "The DXP3 management Application DAO provides data storage and data retrieval for applications.",
+				"path":"../dxp3-management-dao/",
+				"executable": "ApplicationDAO.js",
+				"loglevel": "warn",
+				"options" : {
+					"implementation": "mock",
+					"sourcefolder": "C:\\temp\\dxp3\\"
+				},
+				"replicas":1
+			},
+			{
+				"name":"dxp3-management-dao-ControllerDAO",
+				"description": "The DXP3 management Controller DAO provides data storage and data retrieval for controllers.",
+				"path":"../dxp3-management-dao/",
+				"executable": "ControllerDAO.js",
+				"loglevel": "warn",
+				"options" : {
+					"implementation": "mock",
+					"sourcefolder": "C:\\temp\\dxp3\\"
+				},
+				"replicas":1
+			},
+			{
+				"name":"dxp3-management-dao-PageDAO",
+				"description": "The DXP3 management Page DAO provides data storage and data retrieval for pages.",
+				"path":"../dxp3-management-dao/",
+				"executable": "PageDAO.js",
+				"loglevel": "warn",
+				"options" : {
+					"implementation": "mock",
+					"sourcefolder": "C:\\temp\\dxp3\\"
+				},
+				"replicas":1
+			}
+		]
+}

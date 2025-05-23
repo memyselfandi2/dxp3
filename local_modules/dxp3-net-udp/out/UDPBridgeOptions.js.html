@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: UDPBridgeOptions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: UDPBridgeOptions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-net-udp
+ *
+ * NAME
+ * UDPBridgeOptions
+ */
+const packageName = 'dxp3-net-udp';
+const moduleName = 'UDPBridgeOptions';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * Use this module to parse the arguments/options supplied to an UDPBridge.
+ * When certain options are omitted an attempt is made to set reasonable defaults.&lt;br/>
+ * &lt;ul>
+ * &lt;li>multicastAddress&lt;/li>
+ * &lt;li>multicastPort&lt;/li>
+ * &lt;li>unicastAddress&lt;/li>
+ * &lt;li>unicastPort&lt;/li>
+ * &lt;li>forwardTo&lt;/li>
+ * &lt;/ul>
+ *
+ * @module dxp3-net-udp/UDPBridgeOptions
+ */
+// It's important to log errors and warnings.
+const logging = require('dxp3-logging');
+const UDPMode = require('./UDPMode');
+const UDPBridgeDefaults = require('./UDPBridgeDefaults');
+// We use the util.Help class to print out help information.
+const util = require('dxp3-util');
+
+const Level = logging.Level;
+/**
+ * @see module:dxp3-net-udp/UDPBridgeDefaults
+ */
+class UDPBridgeOptions extends util.Options {
+	/**
+	 * @property {String} multicastAddress
+	 * The UDP multicast address we listen on for messages to 'bridge' to the forwardTo addresses.
+
+	 * @property {Number|String} multicastPort
+	 * The UDP multicast port we listen on for messages to 'bridge' to the forwardTo addresses.
+	 *
+	 * @property {String} unicastAddress
+	 * The UDP unicast address we listen on for messages to 'bridge' to the multicastAddress:multicastPort members.
+
+	 * @property {Number|String} unicastPort
+	 * The UDP unicast port we listen on for messages to 'bridge' to the multicastAddress:multicastPort members.
+	 *
+	 * @property {Array|String} forwardTo
+	 * The unicast addresses of other UDPBridge instances.
+	 *
+	 * @property {String} encryptionAlgorithm
+	 * The encryption algorithm to use.
+	 *
+	 * @property {String} encryptionKey
+	 * Key to be used to encrypt/decrypt messages.
+	 */
+	constructor() {
+		super();
+		// The array of multicast addresses will be
+		// initialized by calling the static parse method.
+		this.multicastAddresses = [];
+		this.multicastPort = UDPBridgeDefaults.DEFAULT_MULTICAST_PORT;
+		this.unicastAddress = UDPBridgeDefaults.DEFAULT_UNICAST_ADDRESS;
+		this.unicastPort = UDPBridgeDefaults.DEFAULT_UNICAST_PORT;
+		this.forwardTo = [];
+		this.encryptionAlgorithm = UDPBridgeDefaults.DEFAULT_ENCRYPTION_ALGORITHM;
+		this.encryptionKey = UDPBridgeDefaults.DEFAULT_ENCRYPTION_KEY;
+		super.addAliases('encrypt,encrypted,encryption,encryptionpassword,key,password,security,securitykey,securitypassword', 'encryptionKey');
+		this.logLevel = [{regexp:"*",level:UDPBridgeDefaults.DEFAULT_LOG_LEVEL}];
+		super.addAlias('log,logger,logging', 'logLevel');
+	}
+
+	static parse(_sourceInstance) {
+		let result = super.parse(_sourceInstance);
+		if(result.forwardTo === undefined ||
+		   result.forwardTo === null) {
+			return result;
+		}
+		if(!Array.isArray(result.forwardTo)) {
+			return result;
+		}
+		if(result.forwardTo.length &lt;= 0) {
+			return result;
+		}
+		if(result.multicastAddresses.length &lt;= 0) {
+			result.multicastAddresses = [UDPBridgeDefaults.DEFAULT_MULTICAST_ADDRESS];
+		}
+		let validDestinations = [];
+		for(let i=0;i &lt; result.forwardTo.length;i++) {
+			let destination = result.forwardTo[i];
+			if(destination === undefined || destination === null) {
+				// No point in adding an empty destination.
+				continue;
+			}
+			if(typeof destination === 'string') {
+				destination = destination.trim();
+				if(destination.length &lt;= 0) {
+					// No point in adding an empty destination.
+					continue;
+				} 
+				// A destination should be &lt;address> or &lt;address>:&lt;port>
+				let indexOfColon = destination.indexOf(':');
+				let address = null;
+				let port = -1;
+				if(indexOfColon &lt; 0) {
+					// Missing port. Use ours instead.
+					address = destination;
+					port = result.unicastPort;
+				} else {
+					address = destination.substring(0, indexOfColon);
+					port = destination.substring(indexOfColon + 1);
+					try {
+						port = parseInt(port);
+					} catch(_exception) {
+						// No point in adding a destination with an
+						// invalid port.
+						continue;
+					}
+				}
+				destination = {
+					address: address,
+					port: port
+				}
+			} else if(destination.port === undefined || destination.port === null || destination.port &lt;= 0) {
+				// Missing port. Use ours instead.
+				destination.port = result.unicastPort;
+			}
+			validDestinations.push(destination);
+		}
+		result.forwardTo = validDestinations;
+		return result;
+	}
+
+	static parseCommandLine() {
+		let result = new UDPBridgeOptions();
+		let commandLineOptions = new util.CommandLineOptions();
+
+		// -encryption
+		let commandLineOption = commandLineOptions.createString('encryption',
+															    'encrypt,encrypted,encryptionpassword,key,password,security,securitykey,securitypassword',
+															    'encryptionKey');
+		commandLineOptions.add(commandLineOption);
+
+		// -forwardto
+		commandLineOption = commandLineOptions.createStringArray('forwardto',
+																 'bridge,destination,destinations,forward,send,sendto',
+																 'forwardTo');
+		commandLineOptions.add(commandLineOption);
+
+		// -help
+		commandLineOption = commandLineOptions.createFlag('help',
+														  'faq,info,information',
+														  'help');
+		commandLineOptions.add(commandLineOption);
+
+		// -loglevel
+		commandLineOption = commandLineOptions.createObjectArray('loglevel',
+																 'log,logger,logging',
+																 'logLevel');
+		commandLineOption.addStringProperty('regexp');
+		commandLineOption.addEnumerationProperty('level', Level);
+		commandLineOptions.add(commandLineOption);
+
+		// -multicastaddress
+		commandLineOption = commandLineOptions.createStringArray('multicastaddresses',
+																 'from,multicastaddress,listenon,membership,memberships,membershipaddress,membershipaddresses,source,sources',
+																 'multicastAddresses');
+		commandLineOptions.add(commandLineOption);
+
+		// -multicastport
+		commandLineOption = commandLineOptions.createNumber('multicastport',
+															'fromport,sourceport,membershipport',
+															'multicastPort');
+		commandLineOptions.add(commandLineOption);
+
+		// -unicastaddress
+		commandLineOption = commandLineOptions.createString('unicastaddress',
+															'bridgeaddress,localaddress,serveraddress',
+															'unicastAddress');
+		commandLineOptions.add(commandLineOption);
+
+		// -unicastport
+		commandLineOption = commandLineOptions.createNumber('unicastport',
+															'bridgeport,localport,serverport',
+															'unicastPort');
+		commandLineOptions.add(commandLineOption);
+
+		result = commandLineOptions.parse(result);
+		return result;
+	}
+}
+// Check if someone tried to run/execute this file.
+if(util.Assert.isFileToExecute(canonicalName)) {
+    util.Help.print(UDPBridgeOptions);
+    return;
+}
+module.exports = UDPBridgeOptions;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-net-udp.html">dxp3-net-udp</a></li><li><a href="module-dxp3-net-udp_UDPAddress.html">dxp3-net-udp/UDPAddress</a></li><li><a href="module-dxp3-net-udp_UDPBridge.html">dxp3-net-udp/UDPBridge</a></li><li><a href="module-dxp3-net-udp_UDPBridgeDefaults.html">dxp3-net-udp/UDPBridgeDefaults</a></li><li><a href="module-dxp3-net-udp_UDPBridgeEvent.html">dxp3-net-udp/UDPBridgeEvent</a></li><li><a href="module-dxp3-net-udp_UDPBridgeOptions.html">dxp3-net-udp/UDPBridgeOptions</a></li><li><a href="module-dxp3-net-udp_UDPBridgeState.html">dxp3-net-udp/UDPBridgeState</a></li><li><a href="module-dxp3-net-udp_UDPClient.html">dxp3-net-udp/UDPClient</a></li><li><a href="module-dxp3-net-udp_UDPClientCLI.html">dxp3-net-udp/UDPClientCLI</a></li><li><a href="module-dxp3-net-udp_UDPClientDefaults.html">dxp3-net-udp/UDPClientDefaults</a></li><li><a href="module-dxp3-net-udp_UDPClientEvent.html">dxp3-net-udp/UDPClientEvent</a></li><li><a href="module-dxp3-net-udp_UDPClientOptions.html">dxp3-net-udp/UDPClientOptions</a></li><li><a href="module-dxp3-net-udp_UDPError.html">dxp3-net-udp/UDPError</a></li><li><a href="module-dxp3-net-udp_UDPMode.html">dxp3-net-udp/UDPMode</a></li><li><a href="module-dxp3-net-udp_UDPServer.html">dxp3-net-udp/UDPServer</a></li><li><a href="module-dxp3-net-udp_UDPServerCLI.html">dxp3-net-udp/UDPServerCLI</a></li><li><a href="module-dxp3-net-udp_UDPServerDefaults.html">dxp3-net-udp/UDPServerDefaults</a></li><li><a href="module-dxp3-net-udp_UDPServerEvent.html">dxp3-net-udp/UDPServerEvent</a></li><li><a href="module-dxp3-net-udp_UDPServerEventMode.html">dxp3-net-udp/UDPServerEventMode</a></li><li><a href="module-dxp3-net-udp_UDPServerOptions.html">dxp3-net-udp/UDPServerOptions</a></li><li><a href="module-dxp3-net-udp_UDPServerState.html">dxp3-net-udp/UDPServerState</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-net-udp_UDPBridgeOptions-UDPBridgeOptions.html">UDPBridgeOptions</a></li><li><a href="module-dxp3-net-udp_UDPBridge-UDPBridge.html">UDPBridge</a></li><li><a href="module-dxp3-net-udp_UDPClientCLI-UDPClientCLI.html">UDPClientCLI</a></li><li><a href="module-dxp3-net-udp_UDPClientOptions-UDPClientOptions.html">UDPClientOptions</a></li><li><a href="module-dxp3-net-udp_UDPClient-UDPClient.html">UDPClient</a></li><li><a href="module-dxp3-net-udp_UDPError-UDPError.html">UDPError</a></li><li><a href="module-dxp3-net-udp_UDPServerCLI-UDPServerCLI.html">UDPServerCLI</a></li><li><a href="module-dxp3-net-udp_UDPServerOptions-UDPServerOptions.html">UDPServerOptions</a></li><li><a href="module-dxp3-net-udp_UDPServer-UDPServer.html">UDPServer</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 17 2023 09:23:39 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

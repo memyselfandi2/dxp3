@@ -1,0 +1,279 @@
+header {
+	padding-top: 70px;
+}
+main {
+	flex: 1 0 auto;
+	overflow-x: hidden;
+}
+main .row {
+}
+main .row .cards {
+	max-width: 640px;
+	position: relative;
+}
+main .row .cards .card {
+	position:absolute;
+	top:0px;
+	max-width: 640px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 20px 60px 20px 60px;
+	margin-top:20px;
+	box-shadow: 0 10px 25px #ddd;
+	overflow: hidden;
+}
+main .card h1 {
+	font-size:3rem;
+	color:#1d1d1d;
+	letter-spacing:-1.5px;
+	color: #1d1c1d;
+	line-height: 1.2143;
+	margin-bottom:15px;
+	text-align:center;
+}
+main .card p {
+	color: #454545;
+	letter-spacing: -0.2px;
+}
+/* Some of the letters in our messages have a different color to make them stand out. */
+/* We use the strong class to apply that color. */
+main .card .strong {
+	color:#209CEE;
+}
+main .card.hide {
+	display:initial;
+}
+main .card .error-message {
+    position: absolute;
+    background: white;
+    margin: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
+    opacity: 1;
+    border: 1px solid #868686;
+    border-radius:4px;
+	box-shadow: 0 10px 25px #ddd;
+    z-index: 100;
+	color:#1d1d1d;
+}
+main .card #registration-error-message {
+	top:110px;
+}
+main .card #signin-error-message {
+	top: 50px;
+}
+main .card #account-error-message {
+	bottom: 200px;
+}
+main .card .error-message i {
+    color: red;
+}
+main .card .input-container {
+	padding: .75rem;
+	border: 1px solid #868686;
+	border-radius: .25rem;
+	transition: box-shadow 100ms ease-out,border-color 100ms ease-out;
+	box-shadow: none;
+	margin: 10px 0px;
+	position:relative;
+}
+main .card .input-container:hover {
+	border-color:#66bfff;
+	box-shadow: 0 0 0 4px rgba(0, 149, 255, 0.15);
+}
+main .card .input-container button {
+    position:absolute;
+    top:0px;
+    right:0px;
+    border:none;
+    background:transparent;
+    margin:2px 5px 0px 0px;
+    padding:10px;
+}
+main .card .input-container button.clear-button {
+    color:lightgrey;
+}
+main .card .input-container button.clear-button:hover,
+main .card .input-container button.clear-button:focus {
+    color:grey;
+}
+main .card .input-container button.clear-button:hover {
+	cursor:pointer;
+}
+main .card .button-container {
+	position:relative;
+}
+main .card .button-container .loading {
+    position:absolute;
+    top:32px;
+    right:9px;
+}
+
+.btn {
+	background: #007a5a;
+	color: #fff;
+	transition: all 75ms ease-in-out;
+	line-height: 1.2rem;
+	font-weight: 900;
+	user-select: none;
+	text-decoration: none;
+	cursor: pointer;
+	text-shadow: none;
+	border: none;
+	border-radius: .25rem;
+	box-shadow: none;
+	position: relative;
+	display: inline-block;
+	vertical-align: bottom;
+	text-align: center;
+	white-space: nowrap;
+	margin: 20px 0px;
+	width:100%;
+	padding:20px;
+	font-size: 20px;
+}
+
+.btn.disabled {
+	background: #ddd;
+	color:#616061;
+}
+
+input {
+	font-size: 1.25rem;
+	line-height: normal;
+	outline: 0;
+	color: #1d1c1d;
+	width: 100%;
+	max-width: 100%;
+	margin: 0 0 .5rem;
+	height: auto;
+}
+
+.column {
+	float:left;
+}
+
+li {
+	list-style-type: none;
+}
+
+a, a:visited {
+	text-decoration: underline;
+	color:#1d1d1d;
+}
+
+.span_1_of_3 {
+	width: 32%;
+}
+
+/*
+.card {
+	animation-duration:3s;
+	animation-name: slideIn;
+}
+*/
+.card.show {
+    opacity: 1;
+	animation-duration:1s;
+	animation-name:slideIn;
+    animation-timing-function:ease-in-out;
+	z-index:1;
+}
+.card.hide {
+	animation-duration:1s;
+	animation-name:slideOut;
+    animation-timing-function:ease-in-out;
+    opacity: 0;
+	z-index:-1;
+}
+.card.hidden {
+	visibility:hidden;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translate3d(50%, 0, 0);
+        opacity: 0;
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    0% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(-50%, 0, 0);
+        opacity: 0;
+    }
+}
+
+.split_input {
+	display:table;
+}
+
+.split_input_item {
+border-top: 1px solid #616061;
+border-bottom: 1px solid #616061;
+border-left: 1px solid #616061;
+display:table-cell;
+}
+.confirmation_code_span_cell {
+	display:table-cell;
+font-weight: 400;
+font-size: 15px;
+vertical-align: middle;
+}
+.split_input_item input {
+	height: 5rem;
+text-align: center;
+font-size: 2.5rem;
+border: none;
+background: 0 0;
+box-shadow: none;
+}
+
+.split_input_item:first-child {
+	border-top-left-radius:4px;
+	border-bottom-left-radius:4px;
+}
+.split_input_item:last-child {
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+	border-right: 1px solid #616061;
+}
+
+.confirmation_code {
+	margin:10px 0px;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.dropdown .popup {
+/*    display: none; */
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+    z-index:10000;   
+    padding:10px;
+    margin-top: 5px;
+    border:1px solid grey;
+}
+
+#organization_list li {
+	padding-top:5px;
+}
+
+#account-menu a {
+	display:block;
+    margin-bottom:5px;
+}

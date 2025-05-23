@@ -1,0 +1,49 @@
+****************************************
+* DXP3 - Digital Experience Platform 3 *
+*                                      *
+* MODULE: dxp3-microservice/Scout      *
+****************************************
+A Scout performs its duties on behalf of a microservice.
+It announces the existence of the microservice and transmits the microservice definition
+to other scouts.
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+node Scout -destinations <Array> -encryption <String> -help
+           -ignoreParent <Boolean> -ignoreOurselves <Boolean> -loglevel <String> <String>
+           -mode <String> -port <Number> -reuseAddr <Boolean>
+
+-destinations    <Array>           - The comma separated list of destinations. Each mode will have a default set.
+                                     Therefor this is optional.
+-encryption      <String>          - The encryption key/password to use.
+-help                              - Show this content.
+-ignoreParent    <Boolean>         - Set this to true to ignore messages send by other Scouts
+                                     running under the same process.
+-ignoreOurselves <Boolean>         - Set this to true to ignore messages send by ourselves.
+-loglevel        <String> <String> - Set the log level of specific functionalities of the Scout.
+                                     The first parameter indicates the package and module name and accepts wildcards.
+                                     For example: * or *udp* or dxp3-net-udp/UDP*.
+                                     The second parameter is one of trace, debug, info, warn, error, fatal, off.
+                                     Aliases: log, logger, logging.
+-mode            <String>          - One of directed-broadcast, limited-broadcast, multicast or unicast
+                                     The different modes will send messages to:
+                                     - everyone on a network (limited broadcast),
+                                     - a subset of nodes (directed broadcast),
+                                     - a group nodes have subscribed to (multicast), or
+                                     - a specific set of nodes (unicast).
+-port            <Number>          - The port the scout will communicate on.
+-reuseAddr       <Boolean>         - Set this to true if you need multiple UDP servers listening on the same port.
+
+****************************************
+* COMMAND LINE EXAMPLES                *
+****************************************
+node Scout -log * info -port 10123 -mode multicast -destinations 239.128.1.1 -ignoreParent false -ignoreOurselves true
+
+****************************************
+* CODE EXAMPLES                        *
+****************************************
+const microservice = require('dxp3-microservice');
+let scout = new microservice.Scout();
+scout.start();
+

@@ -1,0 +1,44 @@
+.tab-menu {
+    font-size:20px;
+}
+.tab-menu > ul li {
+    display:inline-block;
+    border-right:1px solid #616061;
+    padding-right:5px;
+    padding-left:5px;
+}
+.tab-menu > ul li:first-child {
+    border-left:1px solid #616061;
+}
+
+.tab-menu > ul li.selected {
+    color:#1E90FF;
+}
+.tab-menu > ul li.selected i {
+    opacity: 1;
+}
+.tab-menu li {
+    color:lightgray;
+}
+.tab-menu li > a > i {
+    margin-right:3px;
+}
+.tab-menu .close-button {
+    margin-left:10px;
+    margin-top:5px;
+    background-color:white;
+}
+.tab-menu .close-button i:hover {
+    color:black;
+    opacity:1;
+}
+.tab-menu .close-button i {
+    opacity:0.2;
+}
+.tab-menu a:hover {
+    color:black;
+}
+
+.tab-menu {
+    margin-bottom:5px;
+}

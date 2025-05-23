@@ -1,0 +1,48 @@
+*****************************************
+* DXP3 - Digital Experience Platform 3  *
+*                                       *
+* MODULE: dxp3-microservice/WebGateway  *
+*****************************************
+A WebGateway load balances requests between multiple web servers and/or
+other web gateways.
+It internally uses a HTTP reverse proxy and it can serve one or more domains.
+When executed on the command line you will need to at least specify
+a name for this web gateway and the subjects it serves.
+Additionally it allows you to proxy different routes to different destinations/subjects.
+If you have more than one subject you must at least one rule corresponding to each subject.
+Traffic can also be segmented by domain.
+
+*****************************************
+* OPTIONS                               *
+*****************************************
+
+node WebGateway.js -help -loglevel <String> -port <Number> -subjects [<String>] <Array> 
+node WebGateway.js -domain <String> -subjects <Array>
+node WebGateway.js -domain <String> -forwardto <Array> -rule <Regular Expression> <String>
+
+-help                        - A flag, which, when present, will print this help content.                         
+                               Aliases: info, information.
+-loglevel <String>           - Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+                               Aliases: log, logging.
+-port     <Number>           - The port to listen on. Default port is 80.
+                               Aliases: gatewayport.
+-subjects <Array>            - A comma separated value list of microservice subjects.
+                               Aliases: destination(s), forwardto, server(s)
+-domain   <String>           - A specific domain
+
+*****************************************
+* EXAMPLES - CODE                       *
+*****************************************
+
+const microservice = require('dxp3-microservice');
+let myWebGateway = new microservice.WebGateway({port:8080});
+myWebGateway.start();
+
+*****************************************
+* EXAMPLES - COMMAND LINE               *
+*****************************************
+
+node WebGateway -name ImageGateway -loglevel info -port 80 -subject images
+node WebGateway -name EnterpriseGateway -port 8080 -subjects users,products -rule /users/* users -rule /product/* products
+node WebGateway -name DashboardGateway-subject dashboard-api,dashboard-ui -rule /api/* dashboard-api -rule * dashboard-ui
+node WebGateway -name ExampleGateway -domain example.com -subjects example-api,example-dao -rule /api/* example-api -rule /dao/* example-dao -domain * -subject catch_all_servers

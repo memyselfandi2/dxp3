@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="-1"/>
+    </head>
+    <body>
+    	Create a new account.
+    	This requires:<br/>
+    	- a new account name<br/>
+    	- optionally a new user name<br/>
+    	- an email address<br/>
+	    <form id="createAccountForm" action="/account/" method="POST">
+	    	<input id="accountName" type="text" name="accountname" placeholder="account name"/>
+	    	<br/>
+	    	<input id="userName" type="text" name="username" placeholder="user name"/>
+	    	<br/>
+	    	<input id="emailAddress" type="text" name="emailaddress" placeholder="email address"/>
+			<br/>	    	
+	    	<input type="text" name="description" placeholder="description"/>
+	    	<br/>
+	    	<input type="submit" value="Create"/>
+	    </form>
+	    <a id="bulkcreate" href="">Bulk create account</a><br/>
+	    <div>
+	    	<a id="actionAccountRefresh" href="#">Refresh</a>
+	    	<ul id="accountList">
+	    	</ul>
+	    </div>
+	    <form id="createUserForm" action="/user/" method="POST">
+	    	<input id="userName" type="text" name="username" placeholder="user name"/>
+	    	<br/>
+	    	<input id="emailAddress" type="text" name="emailaddress" placeholder="email address"/>
+			<br/>	    	
+	    	<input type="text" name="description" placeholder="description"/>
+	    	<br/>
+	    	<input type="submit" value="Create"/>
+	    </form>
+	    <a id="bulkcreateusers" href="">Bulk create users</a><br/>
+	    <div>
+	    	<a id="actionAccountRefresh" href="#">Refresh</a>
+	    	<ul id="accountList">
+	    	</ul>
+	    </div>
+	    <form id="loginForm" action="/authenticate/" method="POST">
+	    	<input id="loginUserName" type="text" name="username" placeholder="username"/>
+	    	<br/>
+	    	<input id="loginPassword" type="text" name="password" placeholder="password"/>
+	    	<br/>
+	    	<input type="submit" value="Login"/>
+	    </form>
+
+	    <form id="createPageForm" action="/page/" method="POST">
+	    	<input id="pageName" type="text" name="name" placeholder="page name"/>
+	    	<br/>
+	    	<input type="text" name="description" placeholder="description"/>
+	    	<br/>
+	    	<input type="submit" value="Create"/>
+	    </form>	
+	    <form id="loadEditor" action="/editor/" method="POST">
+	    	<input id="token" name="token" value="" type="hidden"/>
+	    </form>
+        <script src="/libraries/jquery/3.0.0/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+jQuery(document).ready(function() {
+	var token = null;
+	$('#loginForm').submit(function(ev) {
+		ev.preventDefault();
+		var formData = $(this).serialize();
+		$.ajax({type: "POST",
+			async: true,
+		    url: '/login/',
+		    data: formData,
+		    dataType: 'json',
+		    success: function(data) {
+		    	token = data.token.id;
+		    	$('#token').val(token);
+		    	$('#loadEditor').submit();
+		    },
+		    error: function(data) {
+		    	alert('not logged in');
+		    }
+		});
+		return false;
+	});
+	$('#createPageForm').submit(function(ev) {
+		ev.preventDefault();
+		var formData = $(this).serialize();
+		formData += '&token=' + token;
+		alert(formData);
+		$.ajax({type: "POST",
+			async: true,
+		    url: '/page/',
+		    data: formData,
+		    dataType: 'json',
+		    success: function(data) {
+		    },
+		    error: function(data) {
+		    }
+		});
+		return false;
+	});
+	var counter = 1;
+	$('#createAccountForm').submit(function(ev) {
+		ev.preventDefault();
+//    	counter++;
+		var formData = $(this).serialize();
+		$.ajax({type: "POST",
+			async: true,
+		    url: '/account/',
+		    data: formData,
+		    dataType: 'json',
+		    success: function(data) {
+//		    	$('#accountName').val('account ' + counter);
+//		    	$('#emailAddress').val('email' + counter + '@testje.com');
+//		    	if(counter < 10) {
+//		    		$('#createAccountForm').submit();
+//		    	}
+		    },
+		    error: function(data) {
+//		    	$('#accountName').val('account ' + counter);
+//		    	$('#emailAddress').val('email' + counter + '@testje.com');
+//		    	if(counter < 10) {
+//		    		$('#createAccountForm').submit();
+//		    	}
+		    }
+		});
+		return false;
+	});
+	$('#bulkcreateusers').on('click', function(ev) {
+		ev.preventDefault();
+		alert('bulk create users');
+		var indexAccount=0;
+		var indexUser=0;
+		// var numberOfAccounts=10000;
+		// var numberOfUsersPerAccount=10000;
+		var numberOfAccounts=5;
+		var numberOfUsersPerAccount=5;
+		var createUser = function(callback) {
+			var formData = $('#createUserForm').serialize();
+			$.ajax({type: "POST",
+				async: true,
+			    url: '/user/?token=' + token,
+			    data: formData,
+			    dataType: 'json',
+			    success: function(data) {
+			    	if(callback) {
+			    		callback();
+			    	}
+			    },
+			    error: function(data) {
+			    	if(callback) {
+			    		callback();
+			    	}
+			    }
+			});
+		}
+		var token = null;
+		var login = function(userName, password, callback) {
+			alert('attempting to login');
+			$('#loginUserName').val(userName);
+			$('#loginPassword').val(password);
+			alert('attempting to serialize');
+			var formData = $('#loginForm').serialize();
+			$.ajax({type: "POST",
+				async: true,
+			    url: '/login/',
+			    data: formData,
+			    dataType: 'json',
+			    success: function(data) {
+			    	token = data.token.id;
+			    	alert('token is : ' + token);
+			    	$('#token').val(token);
+			    	callback();
+			    },
+			    error: function(data) {
+			    	alert('token error');
+			    }
+			});
+		}
+		var bulk = function() {
+			if(indexAccount < numberOfUsersPerAccount) {
+				if(indexUser < numberOfUsersPerAccount) {
+					indexUser = indexUser + 1;
+					createUser(bulk);
+				} else {
+					indexUser = 0;
+					indexAccount = indexAccount + 1;
+					login('user' + indexUser, '1234', bulk());
+				}
+			}
+		}
+		alert('calling login')
+		login('user1', '1234', bulk);
+		return false;
+	});
+	$('#bulkcreate').on('click', function(ev) {
+		ev.preventDefault();
+		var index = 0;
+		var numberOfCalls = 10000;
+		var createAccount = function(callback) {
+			var formData = $('#createAccountForm').serialize();
+			$.ajax({type: "POST",
+				async: true,
+			    url: '/account/',
+			    data: formData,
+			    dataType: 'json',
+			    success: function(data) {
+			    	if(callback) {
+			    		callback();
+			    	}
+			    },
+			    error: function(data) {
+			    	if(callback) {
+			    		callback();
+			    	}
+			    }
+			});
+		}
+		var bulk = function() {
+			index = index + 1;
+			if(index < numberOfCalls) {
+				$('#accountName').val('account' + index);
+		    	$('#userName').val('user' + index);
+		    	$('#emailAddress').val('email' + index + '@testje.com');
+		    	createAccount(bulk);
+			}
+		}
+		bulk();
+		return false;
+	});
+	$('#actionAccountRefresh').on('click', function(ev) {
+		ev.preventDefault();
+		$.ajax({type: "GET",
+			async: true,
+		    url: '/account/',
+		    data: 'token=' + token,
+		    dataType: 'json',
+		    success: function(data) {
+		    	alert(data);
+		    },
+		    error: function(data) {
+		    }
+		});
+		return false;
+	})
+});
+        </script>
+    </body>
+</html>

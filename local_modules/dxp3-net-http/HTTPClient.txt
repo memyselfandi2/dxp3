@@ -1,0 +1,39 @@
+****************************************
+* DXP3 - Digital Experience Platform 3 *
+*                                      *
+* MODULE: dxp3-net-http/HTTPClient     *
+****************************************
+
+
+****************************************
+* CODE EXAMPLES                        *
+****************************************
+
+let http = require('dxp3-net-http');
+let httpClient = new http.HTTPClient({followRedirects:true});
+httpClient.get()
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+node HTTPClient -url <String> -followredirects <Boolean> -timeout <Number> -useragent <String>
+               -help -loglevel <String> <String>
+
+-url             <String>          - The url to visit.
+-followredirects <Boolean>         - Turn follow redirects on or off.
+-timeout         <Number>          - The timeout of the http connection.
+-useragent       <String>          - The user agent to send with the request. The default one is Mozilla Firefox.
+-help                              - Show this content.
+-loglevel        <String> <String> - Set the log level of specific functionalities of the HTTP client.
+                                     The first parameter indicates the package and module name and accepts wildcards.
+                                     For example: * or *http* or dxp3-net-http/HTTP*.
+                                     The second parameter is one of trace, debug, info, warn, error, fatal, off.
+                                     Aliases: log, logger, logging.
+
+****************************************
+* COMMAND LINE EXAMPLES                *
+****************************************
+Typically one would use the HTTPClientCLI to communicate with an HTTPServer from the command line.
+However if you need to perform a quick test, you can run the HTTPClient from the command line.
+
+> node HTTPClient -log * info -followredirects true -timeout 10000 -url www.example.com

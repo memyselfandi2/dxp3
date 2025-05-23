@@ -1,0 +1,3 @@
+class DOMDocumentFragmentNode extends DOMNode {
+	
+}

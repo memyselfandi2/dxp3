@@ -1,0 +1,86 @@
+.application-panel {
+    position: relative;
+}
+.application-panel > .panel-menu {
+    animation-duration: 0.5s;
+    animation-name: animateLeft;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.application-panel > .panel-menu {
+    /* Always on the bottom left side */
+    position: fixed;
+    top: 400px;
+    left: 15px;
+    width: 45px;
+    /* Always on top */
+    z-index: 10000;
+    animation-duration: 0.5s;
+    animation-name: animateLeft;
+    transition-duration: 0.5s;
+    /* We do not allow wrapping. */
+    /* This ensures that when our width gets smaller the text does not wrap to the next line. */
+    white-space: nowrap;
+    /* No scrolling in either direction */
+    overflow-x: hidden;
+    overflow-y:hidden;
+}
+
+@keyframes animateLeft {
+    0% {
+        left:-70px;
+    }
+    100% {
+        left:15px;
+        animation-timing-function:ease-out;
+    }
+}
+
+.application-panel .header {
+    height:45px;
+    padding-left:0px;
+    padding-right: 10px;
+    display:inline-block;
+}
+
+.application-panel .header > .column {
+    display:inline-block;
+}
+
+.application-panel .header > .column.large {
+    width:245px;
+}
+
+.application-panel .header > .column.medium {
+    width:170px;
+}
+
+.application-panel .header > .column.small {
+    width:120px;
+}
+
+.application-panel .header > .column.smaller {
+    width:95px;
+}
+
+.application-panel .header > .column.smallest {
+    width:60px;
+}
+
+.details > .header {
+    font-size:20px;
+    float:right;
+}
+
+.details > .header > .menu > a {
+    margin-left:5px;
+}
+.details > .header > .menu > a i {
+    margin-right:5px;
+}
+
+.pages-panel .content,
+.page-panel .content {
+    border:none;
+}

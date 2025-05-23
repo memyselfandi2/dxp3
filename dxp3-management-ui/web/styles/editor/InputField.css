@@ -1,0 +1,94 @@
+.input-field {
+    position:relative;
+}
+
+.input-field > .label {
+    font-weight: bold;
+    display:inline-block;
+    min-width:245px;
+    min-height:33px;
+}
+.input-field .input-field-subclass {
+    display:inline-block;
+    min-width:100%;
+    min-height:33px;
+}
+.input-field-with-label .input-field-subclass {
+    min-width:300px;
+}
+.input-field-subclass {
+    position:relative;
+    background-color:white;
+    font-size:20px;
+}
+.input-field-subclass.border {
+    border:1px solid rgba(0, 0, 0, 0.54);
+}
+.input-field-subclass > input {
+    font-size:20px;
+    font-family:sans-serif;
+}
+.input-field-subclass i {
+    font-size:20px;
+    background: white;
+}
+.input-field input[type='text'],
+.input-field textarea,
+.input-field input[type='radio'],
+.input-field label {
+    margin:5px;
+}
+.input-field input[type='radio'] {
+    vertical-align:baseline;
+}
+.input-field textarea {
+    height:100px;
+    position:relative;
+}
+.input-field form {
+    display:inline-block;
+    margin:5px;
+}
+
+.input-field textarea {
+    font-size:20px;
+    font-family:sans-serif;
+    margin:5px;
+    resize:none;
+    width:90%;
+    height:90%;
+}
+.input-field-buttons {
+    position:absolute;
+    top:0px;
+    right:0px;
+    border:none;
+    background:white;
+    margin:7px 5px 0px 0px;
+    padding:0px;
+}
+.input-field-buttons > button {
+    margin-right: 5px;
+}
+.input-field-buttons > button.clear-button,
+.input-field-buttons > button.reset-button {
+    opacity:0.2;
+}
+.input-field-buttons > button.clear-button:hover,
+.input-field-buttons > button.reset-button:hover {
+    opacity:1;
+}
+
+.input-field-subclass {
+    overflow: hidden;
+}
+
+.input-field-subclass.border.highlight {
+    border-color:#66bfff;
+    box-shadow: 0 0 0 4px rgba(0, 149, 255, 0.15);
+}
+
+.input-field-subclass > span {
+    display: inline-block;
+    margin: 5px;
+}

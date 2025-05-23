@@ -1,0 +1,67 @@
+<html>
+	<head>
+        <script type="text/javascript" src="/libraries/jquery/3.4.1/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="/web/securityManager.js"></script>
+        <script type="text/javascript" src="/web/test-category.js"></script>
+		<title>Test categories</title>
+	</head>
+	<body>
+        CREATE<br/>
+		<div id="create-category-panel">
+            <input type="text" id="create-category-parent-uuid" placeholder="Parent UUID"/><br/>
+            <input type="text" id="create-category-name" placeholder="Name"/><br/>
+            <textarea type="text" id="create-category-description" placeholder="Description"></textarea><br/>
+            <input type="checkbox" name="category-type" value="all" id="select-all-category-types"/>all<br/>
+            <input type="checkbox" name="category-type" value="applications" class="category-type"/>applications<br/>
+            <input type="checkbox" name="category-type" value="categories" class="category-type"/>categories<br/>
+            <input type="checkbox" name="category-type" value="features" class="category-type"/>features<br/>
+            <input type="checkbox" name="category-type" value="pages" class="category-type"/>pages<br/>
+            <input type="checkbox" name="category-type" value="servers" class="category-type"/>servers<br/>
+			<button id="action-create">Create</button>
+		</div>
+        <br/>
+        UPDATE<br/>
+        <div id="update-category-panel">
+            <span id="update-category-uuid"></span><br/>
+            <input type="text" id="update-category-parent-uuid" placeholder="Parent UUID"/><br/>
+            <input type="text" id="update-category-name" placeholder="Name"/><br/>
+            <textarea type="text" id="update-category-description" placeholder="Description"></textarea><br/>
+            <input type="checkbox" name="update-category-type" value="all" id="update-select-all-category-types"/>all<br/>
+            <input type="checkbox" name="update-category-type" value="applications" class="update-category-type"/>applications<br/>
+            <input type="checkbox" name="update-category-type" value="categories" class="update-category-type"/>categories<br/>
+            <input type="checkbox" name="update-category-type" value="features" class="update-category-type"/>features<br/>
+            <input type="checkbox" name="update-category-type" value="pages" class="update-category-type"/>pages<br/>
+            <input type="checkbox" name="update-category-type" value="servers" class="update-category-type"/>servers<br/>
+            <button id="action-update">Update</button>
+        </div>
+        <br/>
+        LIST<br/>
+        <div id="list-categories-panel">
+            <button id="action-refresh">Refresh</button>
+            <input id="category-name-input" class="select-category" type="text" name="search" placeholder="Category name"/>
+            <div class="filter-panel">
+                <form>
+                    <fieldset>
+                        <legend>Filter</legend>
+                        <input id="category-type-all" class="filter-radio-button" type="radio" name="filter-category-type" value="all" checked="checked"/>
+                        <label for="category-type-all">Include all</label><br/>
+                        <input id="category-type-global-only" class="filter-radio-button" type="radio" name="filter-category-type" value="globalonly"/>
+                        <label for="category-type-global-only">Global only</label><br/>
+                        <input id="category-type-application-only" class="filter-radio-button" type="radio" name="filter-category-type" value="applicationonly"/>
+                        <label for="category-type-application-only">Application specific only</label><br/>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="message-panel">
+                <span class="message"></span>&nbsp;<i class="fa fa-warning"></i>
+            </div>
+            <div class="list">
+                <ul class="header">
+                    <li><a class="action-list-item sort-by-name">Name&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item sort-by-parent">Parent&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small sort-by-types">Types&nbsp;<i class="fa fa-sort"></i></a><a class="action-list-item small">&nbsp;</a></li>
+                </ul>
+                <ul class="content">
+                </ul>
+            </div>
+        </div>
+	</body>
+</html>

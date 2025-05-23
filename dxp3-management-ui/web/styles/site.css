@@ -1,0 +1,20 @@
+html, body {
+	font-family:sans-serif;
+	color:#616061;
+	height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  background:#f8f8f8;
+}
+svg {
+  fill: currentColor;
+}
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+.hide {
+	display:none;
+}

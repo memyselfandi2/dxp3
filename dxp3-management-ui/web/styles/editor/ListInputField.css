@@ -1,0 +1,16 @@
+.list-input-field a.action-remove {
+    float:right;
+}
+
+.list-input-field li.draggable {
+	cursor:move;
+}
+
+.list-input-field li {
+	border-top:1px solid white;
+	padding: 5px;
+}
+
+.list-input-field li.over {
+	border-top:1px dashed black;
+}

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Help</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: Help</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="module-dxp3-util_Help.html">dxp3-util/Help</a>~</span>Help<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>A singleton Help class allows one to print a brief help to the console.<br/>The contents come from the README.txt file found in the same directory.<br/>Alternatively one can specify a Class or its name and the contents of the .txt file<br/>with that name will be printed. If no such .txt file exists, the default README.txt file<br/>will be tried instead.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="Help"><span class="type-signature"></span>new Help<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    As all methods are static, we don't really need a constructor.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Help.js.html">Help.js</a>, <a href="Help.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>node Help.jsOr you can use the npm command as this help file is referenced in the package.json:npm run help</code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".print"><span class="type-signature">(static) </span>print<span class="signature">(_aClass)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Attempt to read the README.txt file and print its contents to the console.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_aClass</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Class</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Help.js.html">Help.js</a>, <a href="Help.js.html#line49">line 49</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".printReadMe"><span class="type-signature">(static) </span>printReadMe<span class="signature">(_filePath)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Attempt to read a text file at a specific location and print its contents to the console.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_filePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Help.js.html">Help.js</a>, <a href="Help.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-util.html">dxp3-util</a></li><li><a href="module-dxp3-util_Assert.html">dxp3-util/Assert</a></li><li><a href="module-dxp3-util_CommandLineBooleanArrayOption.html">dxp3-util/CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption.html">dxp3-util/CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption.html">dxp3-util/CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError.html">dxp3-util/CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption.html">dxp3-util/CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberArrayOption.html">dxp3-util/CommandLineNumberArrayOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption.html">dxp3-util/CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineObjectArrayOption.html">dxp3-util/CommandLineObjectArrayOption</a></li><li><a href="module-dxp3-util_CommandLineObjectOption.html">dxp3-util/CommandLineObjectOption</a></li><li><a href="module-dxp3-util_CommandLineOption.html">dxp3-util/CommandLineOption</a></li><li><a href="module-dxp3-util_CommandLineOptions.html">dxp3-util/CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineStringArrayOption.html">dxp3-util/CommandLineStringArrayOption</a></li><li><a href="module-dxp3-util_CommandLineStringOption.html">dxp3-util/CommandLineStringOption</a></li><li><a href="module-dxp3-util_Help.html">dxp3-util/Help</a></li><li><a href="module-dxp3-util_Options.html">dxp3-util/Options</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-util_CommandLineBooleanArrayOption-CommandLineBooleanArrayOption.html">CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption-CommandLineBooleanOption.html">CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption-CommandLineEnumerationOption.html">CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError-CommandLineError.html">CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption-CommandLineFlagOption.html">CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption-CommandLineNumberOption.html">CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineOptions-CommandLineOptions.html">CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineOption-CommandLineOption.html">CommandLineOption</a></li><li><a href="module-dxp3-util_Help-Help.html">Help</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 24 2023 20:28:11 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

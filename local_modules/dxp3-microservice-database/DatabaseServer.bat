@@ -1,0 +1,1 @@
+node ./DatabaseServer -name db -produces storage

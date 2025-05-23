@@ -1,0 +1,16 @@
+{
+  "name": "dxp3-uuid",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - UUID",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js -help",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-util": "file:../dxp3-util"
+  }
+}

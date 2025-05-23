@@ -1,0 +1,20 @@
+{
+  "name": "dxp3-microservice-platform",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - MicroService - Platform",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js -help",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-cleanup": "file:../dxp3-cleanup",
+    "dxp3-logging": "file:../dxp3-logging",
+    "dxp3-microservice": "file:../dxp3-microservice",
+    "dxp3-microservice-web": "file:../dxp3-microservice-web",
+    "dxp3-util": "file:../dxp3-util"
+  }
+}

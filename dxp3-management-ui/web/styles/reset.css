@@ -1,0 +1,23 @@
+/* RESET ALL ELEMENTS */
+/* Remove all borders, margins, outlines, padding and text decorations */
+a, a:visited, a:hover, body, button, div, footer, form, h1, h2, h3, header, html, img, input, li, nav, p, section, span, table, td, textarea, th, tr, ul {
+	border:none;
+	margin:0px;
+	outline:none;
+	padding:0px;
+	text-decoration: none;
+	text-align: left;
+	vertical-align:top;
+}
+ul {
+	list-style: none;
+}
+a, a:visited {
+	color:inherit;
+}
+i {
+	color:inherit;
+}
+html {
+	overflow-y: scroll;
+}

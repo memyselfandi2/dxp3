@@ -1,0 +1,28 @@
+****************************************
+* DXP3 - Digital Experience Platform 3 *
+*                                      *
+* MODULE: dxp3-net-udp/HTTRequestQuery *
+****************************************
+
+Use an HTTPRequestQuery to parse and transform a query string into an object.
+
+****************************************
+* OPTIONS                              *
+****************************************
+
+node HTTPRequestQuery <String>
+
+The first argument will be interpreted as the query to parse.
+
+node HTTPRequestQuery -help -query <String>
+
+-help           - A flag, which, when present, will print this help content.                         
+-query <String> - The query to parse.
+
+****************************************
+* EXAMPLES                             *
+****************************************
+
+node HTTPRequestQuery ?firstname=Henk&lastname=Smith
+node HTTPRequestQuery -help
+node HTTPRequestQuery -query filterBy[name]=Henk&sortBy=Age

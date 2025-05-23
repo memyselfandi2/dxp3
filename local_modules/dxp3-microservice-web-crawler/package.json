@@ -1,0 +1,21 @@
+{
+  "name": "dxp3-microservice-web-crawler",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": "Patrick Versteeg",
+  "description": "DXP3 - Digital Experience Platform 3 - MicroService - Web - Crawler",
+  "main": "index.js",
+  "scripts": {
+    "help": "node index.js -help",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dxp3-lang-html": "file:../dxp3-lang-html",
+    "dxp3-logging": "file:../dxp3-logging",
+    "dxp3-microservice-rest": "file:../dxp3-microservice-rest",
+    "dxp3-net-http": "file:../dxp3-net-http",
+    "dxp3-util": "file:../dxp3-util",
+    "dxp3-uuid": "file:../dxp3-uuid"
+  }
+}

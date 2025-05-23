@@ -1,0 +1,71 @@
+***************************************************************
+* DXP3 - Digital Experience Platform 3                        *
+*                                                             *
+* MODULE: dxp3-net-udp/UDPClient                              *
+***************************************************************
+
+A broadcast address is a network address at which all devices connected to
+a multiple-access communications network are enabled to receive datagrams.
+A message sent to a broadcast address may be received by all network-attached hosts.
+In contrast, a multicast address is used to address a specific group of devices and
+a unicast address is used to address a single device.
+Setting all the bits of an IP address to one, or 255.255.255.255, forms the limited broadcast address.
+Sending a UDP datagram to this address delivers the message to any host on the local network segment.
+Because routers never forward messages sent to this address, only hosts on the network segment
+receive the broadcast message.
+Broadcasts can be directed to specific portions of a network by setting all bits of the host identifier.
+For example, to send a broadcast to all hosts on the network identified by IP addresses starting
+with 192.168.1, use the address 192.168.1.255.
+
+***************************************************************
+* CODE EXAMPLES                                               *
+***************************************************************
+
+// Include our dxp3-net-udp module.
+const udp = require('dxp3-net-udp');
+// Next we create an UDP client to send a test message.
+let udpClient = new udp.UDPClient({port:12345});
+udpClient.addDestinations('10.0.4.255');
+// Send a couple of UDP messages. These are fire and forget.
+udpClient.send('test', {id:1001,name: 'test one'});
+udpClient.send('birthday', {firstName: 'David',lastName:'Smith',age:1},() => {
+    // We'll close up after the last message was sent.
+    udpClient.close();
+});
+
+***************************************************************
+* COMMAND LINE OPTIONS                                        *
+***************************************************************
+
+node UDPClient -destinations <Array> -encryption <String> -event <String> -eventBody <String>
+               -help -loglevel <String> <String> -port <Number>
+
+-destinations    <Array>           - The comma separated list of destinations.
+                                     If this is missing a default multicast destination will be used instead.
+-encryption      <String>          - The encryption key/password to use.
+-event           <String>          - The event to send.
+                                     If omitted the event will be 'test'. 
+                                     Aliases: message,msg.
+-eventBody       <String>          - JSON String event payload. Use backslash (\) to escape double quote (").
+                                     If event is omitted and this eventBody is omitted the payload will be {"name":"test"}.
+-help                              - Show this content.
+-loglevel        <String> <String> - Set the log level of specific functionalities of the UDP client.
+                                     The first parameter indicates the package and module name and accepts wildcards.
+                                     For example: * or *udp* or dxp3-net-udp/UDP*.
+                                     The second parameter is one of trace, debug, info, warn, error, fatal, off.
+                                     Aliases: log, logger, logging.
+-port            <Number>          - The port the UDPClient will send the message to.
+
+***************************************************************
+* COMMAND LINE EXAMPLES                                       *
+***************************************************************
+
+Typically one would use the UDPClientCLI to send UDP messages from the command line.
+However if you need to perform a quick test, you can run the UDPClient from the command line.
+A default test message is hardcoded, but can be overwritten using the -event and -eventBody options.
+On the receiving end you'd probably run an UDPServer.
+
+> node UDPClient -log * info -port 10123 -destinations 239.128.1.1 -event namechange -eventBody {\"id\":99,\"from\":\"Henk\",\"to\":\"David\"} -encryption toughencryptionkey
+
+Run the server as
+> node UDPServer -log * trace -port 10123 -encryption toughencryptionkey -mode multicast -destinations 239.128.1.1

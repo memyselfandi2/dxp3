@@ -1,0 +1,856 @@
+@font-face {
+    font-family: "Open Sans";
+    src: url('/libraries/open-sans/OpenSans-Regular.ttf');
+}
+
+/* RESET ALL ELEMENTS */
+
+html, body, div, form, input, textarea, a, button, h1, h2, h3, ul, li {
+    border:none;
+    padding:0px;
+    margin:0px;
+    vertical-align:top;
+    outline:none;
+}
+
+html {
+    font-family:"Open Sans";
+    color:rgba(0, 0, 0, 0.87);
+/*    overflow-y:scroll; */
+}
+
+textarea, input {
+    font-family:"Open Sans";
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+    color: #3a4145;
+}
+
+ul {
+    list-style: none;
+}
+/* ANY AND ALL HOVERING */
+
+a:hover {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+button:hover {
+    cursor:pointer;
+}
+
+/* OUR MAIN NAVIGATION MENU */
+
+#navigation-menu {
+    /* Always on the top left side */
+    position: fixed; 
+    top: 0px;
+    left: 0px;
+    width: 40px;
+    height: 100%;
+    /* Always on top */
+    z-index: 10000;
+    background-color: white;
+    transition: 0.5s;
+    /* We do not allow wrapping. */
+    /* This makes sure that when our width gets smaller the text does not wrap to the next line. */
+    white-space: nowrap;
+    border-right:1px solid #3a4145;
+    /* No scrolling in either direction */
+    overflow-x: hidden;
+    overflow-y:hidden;
+}
+
+#navigation-menu a {
+    padding: 5px 5px 5px 6px;
+    font-size: 25px;
+    display: block;
+    transition: 0.3s
+}
+
+#navigation-menu a i {
+    padding-right:5px;
+    width: 30px;
+}
+
+#navigation-menu > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#navigation-menu > ul > li {
+    margin:0px;
+    padding:0px;
+    font-size:32px;
+}
+
+#navigation-menu .action-toggle-navigation {
+    margin-bottom:0px;
+    padding:0px 0px 0px 8px;
+    border-bottom: 1px solid #3a4145;
+    height:45px;
+}
+
+/* OUR ACCOUNT MANAGEMENT MENU */
+
+#account-menu {
+    /* Always on the top right side */
+    position:fixed;
+    top:0px;
+    right:0px;
+    /* Always on top */
+    z-index: 10000;
+    border: 1px solid grey;
+    font-size: 20px;
+    padding: 5px;
+}
+
+#account-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#account-menu ul li {
+    float:left;
+    margin-right:20px;
+}
+
+#account-menu ul li:last-child {
+    margin-right:0px;
+}
+/* ADMIN PANELS */
+
+/* By default an admin panel is hidden. */
+.admin-panel {
+    display:none;
+    /* Always on the top left side */
+    /* slightly offset due to the left menu. */
+    position:absolute;
+    top:0px;
+    left:40px;
+    bottom:0px;
+    right:0px;
+    border:none;
+    margin-top:0px;
+    margin-left:0px;
+    margin-right:0px;
+    /* Make room for the footer. */
+    margin-bottom:50px;
+    background-color: white;
+    z-index:1;
+}
+.admin-panel > .header {
+    height:45px;
+    background-color:white;
+    padding-left:2px;
+}
+
+.admin-panel > .header > .column {
+    display:inline-block;
+    margin-top:0px;
+    margin-left:7px;
+}
+
+.admin-panel > .header > .column.large {
+    width:220px;
+}
+
+.admin-panel > .header > .column.medium {
+    width:170px;
+}
+
+.admin-panel > .header > .column.small {
+    width:120px;
+}
+
+.admin-panel > .header > .column.smaller {
+    width:80px;
+}
+
+.admin-panel > .header > .column.smallest {
+    width:60px;
+}
+
+.admin-panel > .header > .column > .input-field,
+.admin-panel > .header > .column > form {
+    margin-top:8px;
+}
+
+/* We set the postion of the main content of an admin panel to relative */
+/* in order for any sections in the admin panel to go full screen. */
+.admin-panel > .main {
+    position:relative;
+}
+
+/* We set the postion of a section of an admin panel to relative */
+/* in order for any drop downs in the section to be displayed within the section. */
+.admin-panel > .main > .section {
+    position: relative;
+    display:inline-block;
+    min-width:200px;
+    width:49%;
+    height:430px;
+    background-color:white;
+}
+
+.admin-panel > .main > .section.block {
+    width:99%;
+    height:140px;
+}
+.section.block .buttons {
+    float:right;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+.admin-panel > .main > .section.block > .content {
+    margin-left: 8px;
+}
+
+/* SECTIONS */
+
+.section > .header {
+    margin:3px 5px 0px 8px;
+    font-size:18px;
+    height: 33px;
+}
+
+.section > .header > a {
+    margin-right:8px;
+}
+
+.section > .header > .column {
+    display:inline-block;
+}
+
+.section > .header > .column.large {
+    width:220px;
+}
+
+.section > .header > .column.medium {
+    width:170px;
+}
+
+.section > .header > .column.small {
+    width:120px;
+}
+
+.section > .header > .column.smaller {
+    width:80px;
+}
+
+.section > .header > .column.smallest {
+    width:60px;
+}
+
+.section > .header > .loading {
+    display:inline-block;
+    margin-top:4px;
+    padding-left:5px;
+    height:20px;
+}
+
+/* Hide our section loading icons on load... */
+.section > .header > .loading > img.icon-loading {
+    height:20px;
+    display:none;
+}
+
+.section > .header > .menu {
+    float:right;
+}
+
+.section > .header > .menu a {
+    text-decoration: none;
+    padding-left:4px;
+    padding-right:4px;
+}
+
+.section > .header > .menu > .dropdown {
+    display:inline-block;
+}
+
+.section > .header > .menu a i {
+    margin-right:5px;
+}
+
+.section .table .row {
+    margin: 2px;
+}
+
+.section .table .row .column {
+    display:inline-block;
+    width: 260px;
+}
+
+.section .table .row .column.small {
+    width: 120px;
+}
+.section .table .column .label {
+    font-weight: bold;
+}
+
+/* DROPDOWNS */
+
+.dropdown-content > .menu {
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: right;
+    background: rgb(225,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(225,255,255,1) 0%, rgba(225,255,255,1) 7%, rgba(225,255,255,1) 12%, rgba(253,255,255,1) 12%, rgba(230,248,253,1) 30%, rgba(200,238,251,1) 54%, rgba(190,228,248,1) 75%, rgba(177,216,245,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(225,255,255,1) 0%,rgba(225,255,255,1) 7%,rgba(225,255,255,1) 12%,rgba(253,255,255,1) 12%,rgba(230,248,253,1) 30%,rgba(200,238,251,1) 54%,rgba(190,228,248,1) 75%,rgba(177,216,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(225,255,255,1) 0%,rgba(225,255,255,1) 7%,rgba(225,255,255,1) 12%,rgba(253,255,255,1) 12%,rgba(230,248,253,1) 30%,rgba(200,238,251,1) 54%,rgba(190,228,248,1) 75%,rgba(177,216,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e1ffff', endColorstr='#b1d8f5',GradientType=0 ); /* IE6-9 */
+}
+
+.dropdown-content > .menu > .loading {
+    display: inline-block;
+    height:20px;
+}
+
+/* Hide our loading icon on load... */
+.dropdown-content > .menu > .loading > img.icon-loading {
+    display:none;
+    height:20px;
+}
+
+/* POPUPS */
+
+/* Hide our popups on load... */
+.popup {
+    display: none;
+}
+
+.popup > .menu {
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: right;
+    background: rgb(225,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(225,255,255,1) 0%, rgba(225,255,255,1) 7%, rgba(225,255,255,1) 12%, rgba(253,255,255,1) 12%, rgba(230,248,253,1) 30%, rgba(200,238,251,1) 54%, rgba(190,228,248,1) 75%, rgba(177,216,245,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(225,255,255,1) 0%,rgba(225,255,255,1) 7%,rgba(225,255,255,1) 12%,rgba(253,255,255,1) 12%,rgba(230,248,253,1) 30%,rgba(200,238,251,1) 54%,rgba(190,228,248,1) 75%,rgba(177,216,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(225,255,255,1) 0%,rgba(225,255,255,1) 7%,rgba(225,255,255,1) 12%,rgba(253,255,255,1) 12%,rgba(230,248,253,1) 30%,rgba(200,238,251,1) 54%,rgba(190,228,248,1) 75%,rgba(177,216,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e1ffff', endColorstr='#b1d8f5',GradientType=0 ); /* IE6-9 */
+}
+
+.popup > .menu > .loading {
+    display: inline-block;
+    height:20px;
+}
+
+/* Hide our loading icon on load... */
+.popup > .menu > .loading > img.icon-loading {
+    display:none;
+    height:20px;
+}
+
+.popup ul {
+    list-style:none;
+    padding:8px;
+    margin:0px;
+}
+
+.popup ul li {
+    padding-top:0px;
+    padding-bottom:0px;
+    padding-right:0px;
+    margin:0px;
+}
+
+.popup ul.content li:hover {
+    background-color:grey;
+}
+
+.list > .header a {
+    cursor: pointer;
+}
+
+.list > .header a i {
+    cursor: pointer;
+}
+
+.popup ul li a.action-list-item {
+    width:300px;
+    display:inline-block;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.popup ul li a.action-list-item.small {
+    width:95px;
+}
+
+.popup ul.header li a:hover {
+    color:grey;
+}
+.popup form .bottom {
+    height:40px;
+}
+
+.popup form .buttons {
+    float:right;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.popup a i {
+    margin-right:5px;
+}
+
+/* FILTER PANELS */
+
+.filter-panel {
+    padding:0px 5px 5px;
+}
+
+.filter-panel fieldset {
+    border-left:none;
+    border-right:none;
+}
+
+.filter-panel input {
+    vertical-align:baseline;
+}
+
+/* INPUT FIELDS */
+/* An input field typically has additional buttons to clear, submit, select, etc. */
+/* Each of these actions has an icon */
+
+.input-field {
+    height:28px;
+    position:relative;
+}
+.input-field > input[type='text'] {
+    margin:5px;
+    width:80%;
+}
+.input-field > span {
+    margin:5px;
+}
+
+.input-field > input[type='radio'] {
+    vertical-align:baseline;
+}
+
+.input-textarea {
+    height:100px;
+    position:relative;
+}
+
+.input-textarea > textarea {
+    margin:5px;
+    resize:none;
+    width:90%;
+    height:90%;
+}
+
+.input-field > button,
+.input-textarea > button {
+    position:absolute;
+    top:0px;
+    right:0px;
+    border:none;
+    background:transparent;
+    margin:2px 5px 0px 0px;
+    padding:0px;
+}
+
+.input-field > button.clear-button,
+.input-textarea > button.clear-button {
+    right:20px;
+    color:lightgrey;
+}
+
+.input-field > button.clear-button:hover,
+.input-textarea > button.clear-button:hover {
+    color:grey;
+}
+
+/* BORDER */
+/* Our standard border thickness and color */
+
+.border {
+    border:1px solid rgba(0, 0, 0, 0.54);
+}
+
+#search-pages-popup {
+    position: fixed;
+    top: 45px;
+    left:300px;
+    width:450px;
+    height:100%;
+    z-index:1002;
+    border:1px solid grey;
+    border-bottom:none;
+    background-color:white;
+    overflow:hidden;
+}
+#search-features-popup {
+    position: fixed;
+    top: 45px;
+    left:300px;
+    width:450px;
+    height:100%;
+    z-index:1002;
+    border:1px solid grey;
+    border-bottom:none;
+    background-color:white;
+    overflow:hidden;
+}
+#application-select-controller-popup,
+#page-select-controller-popup,
+#feature-select-controller-popup {
+    position:absolute;
+    top: 33px;
+    left:100px;    
+    width:380px;
+    height:427px;
+    z-index:1002;
+    background-color:white;
+}
+#application-select-style-popup,
+#page-select-style-popup,
+#feature-select-style-popup {
+    position:absolute;
+    width:380px;
+    height:427px;
+    z-index:1002;
+    background-color:white;
+    top: 33px;
+    left:80px;    
+}
+#page-layout {
+    position:relative;
+    overflow:hidden;
+}
+#page-controller {
+    position:relative;
+}
+#page-locale-popup,
+#feature-locale-popup {
+    position:absolute;
+    width:80%;
+    height:427px;
+    z-index:1002;
+    background-color:white;
+    top: 33px;
+    left:100px;
+}
+#page-style {
+    position:relative;
+    overflow:hidden;
+}
+#application-layout-version-popup,
+#page-layout-version-popup,
+#feature-layout-version-popup,
+#application-controller-version-popup,
+#page-controller-version-popup,
+#feature-controller-version-popup,
+#application-style-version-popup,
+#page-style-version-popup,
+#feature-style-version-popup {
+    position:absolute;
+    width:400px;
+    height:427px;
+    z-index:1002;
+    background-color:white;
+    top: 33px;
+    left:100px;
+}
+#application-select-fonts-popup,
+#page-select-fonts-popup,
+#feature-select-fonts-popup {
+    position:absolute;
+    width:400px;
+    height:427px;
+    z-index:1002;
+    background-color:white;
+    top: 33px;
+    left:400px;
+}
+#feature-layout {
+    position:relative;
+    overflow:hidden;
+}
+#feature-controller {
+    position:relative;
+}
+#application-libraries-popup,
+#page-libraries-popup,
+#feature-libraries-popup {
+    position:absolute;
+    width:100%;
+    height:427px;
+    z-index:1002;
+    background-color:white;
+    top: 33px;
+    left:0px;
+}
+#feature-style {
+    position:relative;
+    overflow:hidden;
+}
+#update-application-popup {
+    position: fixed;
+    top: 38px;
+    left:704px;
+    width:400px;
+    z-index:1002;
+    background-color:white;
+}
+#publish-application-popup {
+    position: fixed;
+    top: 38px;
+    left:900px;
+    width:600px;
+    z-index:1002;
+    background-color:white;
+}
+#update-page-popup {
+    position: fixed;
+    top: 38px;
+    left:850px;
+    width:400px;
+    z-index:1002;
+    background-color:white;
+}
+#publish-page-popup {
+    position: fixed;
+    top: 38px;
+    left:900px;
+    width:600px;
+    z-index:1002;
+    background-color:white;
+}
+#create-feature-popup {
+    position: fixed;
+    top: 38px;
+    left:520px;
+    width:400px;
+    z-index:1002;
+    background-color:white;
+}
+#update-feature-popup {
+    position: fixed;
+    top: 38px;
+    left:900px;
+    width:400px;
+    z-index:1002;
+    background-color:white;
+}
+#publish-feature-popup {
+    position: fixed;
+    top: 38px;
+    left:900px;
+    width:600px;
+    z-index:1002;
+    background-color:white;
+}
+#create-category-popup {
+    position: fixed;
+    top: 38px;
+    left:730px;
+    width:400px;
+    z-index:1002;
+    background-color:white;
+}
+#update-category-popup {
+    position: fixed;
+    top: 38px;
+    left:957px;
+    width:400px;
+    z-index:1002;
+    background-color:white;
+}
+
+#application-controller {
+    position:relative;
+}
+#application-style {
+    position:relative;
+}
+
+a.action-save:hover,
+a.action-save:focus,
+a.action-save-all:hover,
+a.action-save-all:focus {
+    color: #008000;
+}
+
+a.action-cancel:hover,
+a.action-cancel:focus {
+    color: #CE0000;
+}
+a.action-message {
+    color:#CE0000;
+}
+a.action-help:hover {
+    color: #1E90FF;
+}
+.editor {
+    width:100%;
+    min-width:200px;
+    height:392px;
+}
+.editor.preview {
+    border:none;
+    margin:0px;
+    padding:0px;
+}
+#footer {
+    position:absolute;
+    bottom:0px;
+    left:40px;
+    margin-left:8px;
+}
+
+.left-menu-slide.is-active {
+    transform: translateX(0);
+}
+#left-menu-mask {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    background-color: #000;
+    opacity: 0;
+    transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
+}
+
+#left-menu-mask.is-active {
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.panel {
+    margin:10px;
+}
+.panel-header {
+    font-weight:700;
+}
+.panel button {
+    background: #2ab27b none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 0.25rem;
+    box-shadow: none;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Slack-Lato,appleLogo,sans-serif;
+    font-weight: 900;
+    line-height: 1.2rem;
+    margin: 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    vertical-align: bottom;
+    white-space: nowrap;
+    padding: 10px;
+}
+.panel input {
+    border: 1px solid #c5c5c5;
+    border-radius: 0.25rem;
+    box-shadow: none;
+    color: #555459;
+    font-size: 1rem;
+    padding: 0.45rem 0.75rem 0.55rem;
+}
+
+.panel input:focus,
+.panel input:hover {
+    border-color: #2780f8;
+    box-shadow: 0 0 7px rgba(39, 128, 248, 0.15);
+    outline: 0 none;
+    outline-offset: 0;
+}
+.action-minimize {
+    display:none;
+}
+input.debug {
+    vertical-align: baseline;
+}
+.mask {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+/*    background: rgba(0, 0, 0, 0.3) none repeat scroll 0 0; */
+    background-color: white;
+    opacity:0.8;
+    z-index: 20000;
+}
+
+.blur {
+    filter: blur(2px);
+}
+
+.maskable {
+    position:relative;
+}
+
+.column_x2 {
+    width: 200px;
+    display:inline-block;
+    margin-bottom:2px;
+    margin-top:2px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown .popup {
+    display: none;
+    position: absolute;
+    /* offset the 1px border of the parent */
+    margin-left: -1px;
+    background-color: white;
+    min-width: 420px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+    z-index:10000;   
+}
+
+.dropdown .popup.large {
+    min-width: 820px;
+}
+
+.message-panel {
+    display:none;
+    margin: 5px;
+}
+.message-panel.error {
+    color:red;
+}
+.message-panel.info {
+    color:blue;
+}
+.message-panel.warning {
+    color:orange;
+}
+.shade-of-blue {
+    color: #1E90FF;    
+}
+.shade-of-yellow {
+    color: #f3ed14;
+}
+.shade-of-red {
+    color: #CE0000;
+}
+.shade-of-green {
+    color: #008000;
+}
+
+#update-application-parentUuids-popup {
+    min-width:500px;
+}

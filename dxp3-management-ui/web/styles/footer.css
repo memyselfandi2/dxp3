@@ -1,0 +1,30 @@
+/* FOOTER */
+footer {
+	flex-shrink: 0;
+	background-color:#fff;
+	border-top:1px solid #ddd;
+	padding:40px;
+	line-height: 1.5rem;
+}
+footer .menu {
+}
+footer .menu>ul>li {
+	display:inline-block;
+	border-right:1px solid #616061;
+	padding-right: 5px;
+}
+footer .menu>ul>li:last-child {
+	border:none;
+}
+footer a {
+	color:#616061;
+}
+footer a:visited {
+	color:#616061;
+}
+footer a:hover {
+	color:black;
+}
+footer .menu>ul.center {
+	text-align: center;
+}

@@ -1,0 +1,121 @@
+html, body {
+    font-family:sans-serif;
+    color:#616061;
+    height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+svg {
+  fill: currentColor;
+}
+
+/***********/
+/* BORDERS */
+/***********/
+.border {
+    border:1px solid rgba(0, 0, 0, 0.54);
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+.fullscreen {
+    position:absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+}
+.hide {
+    display:none;
+}
+
+/***********/
+/* COLORS */
+/***********/
+.shade-of-blue {
+    color: #1E90FF;    
+}
+.shade-of-yellow {
+    color: #E8DD14;
+}
+.shade-of-red {
+    color: #CE0000;
+}
+.shade-of-green {
+    color: #008000;
+}
+
+/****************/
+/* EDITOR LOGO  */
+/****************/
+#editor-logo {
+    /* Always on the top left side */
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    /* Always on top */
+    z-index: 10000;
+    background-color: white;
+    /* We do not allow wrapping. */
+    /* This makes sure that when our width gets smaller the text does not wrap to the next line. */
+    white-space: nowrap;
+    /* No scrolling in either direction */
+    overflow-x: hidden;
+    overflow-y:hidden;
+}
+
+/****************/
+/* EDITOR PANEL MENU  */
+/****************/
+#editor-panel-menu {
+    /* Always on the top left side just under the logo */
+    position: fixed; 
+    top: 50px;
+    left: 0px;
+    /* Always on top */
+    z-index: 10000;
+    /* We do not allow wrapping. */
+    /* This ensures that when our width gets smaller the text does not wrap to the next line. */
+    white-space: nowrap;
+    /* No scrolling in either direction */
+    overflow-x: hidden;
+    overflow-y:hidden;
+}
+
+/****************/
+/* ACCOUNT MENU  */
+/****************/
+#account-menu {
+    /* Always on the top right side */
+    position:fixed;
+    top:0px;
+    right:0px;
+    /* Always on top */
+    z-index: 10000;
+    padding-top:5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+}
+
+/****************/
+/* ADMIN PANELS  */
+/****************/
+.admin-panel {
+    /* Always on the top left side, but */
+    /* slightly offset due to the editor menu on the left. */
+    position:absolute;
+    top:0px;
+    left:50px;
+    /* Fill the screen */
+    bottom:0px;
+    right:0px;
+    margin:0px;
+    background-color: white;
+    z-index:1;
+    border:none;
+}

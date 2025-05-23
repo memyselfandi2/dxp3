@@ -1,0 +1,81 @@
+.admin-panel.hide {
+	display:none;
+}
+
+@keyframes animatetop {
+    0% {
+        top:-70px;
+    }
+    100% {
+        top:0;
+        animation-timing-function:ease-out;
+    }
+}
+
+.admin-panel > .header {
+    height:45px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-left:10px;
+    padding-right: 10px;
+/*    border: 1px solid #ddd;*/
+/*    box-shadow: 2px 2px 2px rgba(0,0,0,.1);*/
+/*    border-bottom-left-radius: 10px;*/
+/*    border-bottom-right-radius: 10px; */
+    display:inline-block;
+    animation-name: animatetop;
+    animation-duration: 0.5s;
+    position:absolute;
+}
+
+.admin-panel > .header > .column {
+    display:inline-block;
+    font-size:20px;
+}
+
+.admin-panel > .header > .column.large {
+    width:245px;
+}
+
+.admin-panel > .header > .column.medium {
+    width:170px;
+}
+
+.admin-panel > .header > .column.small {
+    width:120px;
+    margin-top:5px;
+}
+
+.admin-panel > .header > .column.smaller {
+    width:100px;
+    margin-top:5px;
+    text-align: right;
+}
+
+.admin-panel > .header > .column.smallest {
+    width:60px;
+}
+
+.admin-panel .header > .column a {
+/*    color:lightgray; */
+}
+
+/*
+.admin-panel .header > .column a:hover {
+    color:black;
+}
+*/
+
+table {
+    width: 100%;
+}
+
+.admin-panel > .content {
+    margin-top:50px;
+    margin-left:10px;
+}
+
+.admin-panel table th a {
+    display:inline-block;
+    width:100%;
+}

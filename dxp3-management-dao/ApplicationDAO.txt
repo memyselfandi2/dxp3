@@ -1,0 +1,55 @@
+**********************************************
+* DXP3 - Digital Experience Platform 3       *
+*                                            *
+* MODULE: dxp3-management-dao/ApplicationDAO *
+**********************************************
+An ApplicationDAO implementation allows a consumer to create, read, update and delete applications.
+
+*****************************************
+* OPTIONS                               *
+*****************************************
+
+node ApplicationDAO.js -help -implementation <String> -loglevel <String> <String> -timeout <Number>
+
+-help                        - A flag, which, when present, will print this help content.                         
+                               Aliases: faq, info, information.
+-implementation              - Aliases: impl.
+-loglevel <String> <String>  - Set the detail of logging. Allowed values are debug, info, warn, error, fatal, off.
+                               Aliases: log, logging.
+
+*****************************************
+* EXAMPLES - CLIENT                     *
+*****************************************
+
+const rest = require('dxp3-microservice-rest');
+let applicationDAO = new rest.RestClient({name: 'application dao consumer test', consumes: 'dxp3-management-dao-applicationDAO'});
+applicationDAO.start();
+applicationDAO.execute('createBasic', '123456', 'abcdef', 'Main Website', function(err, application) {
+	
+});
+*****************************************
+* EXAMPLES - COMMAND LINE               *
+*****************************************
+
+node ApplicationDAO -impl mock -log * info -timeout 10000
+
+*****************************************
+* IMPLEMENTS                            *
+*****************************************
+Object createBasic(String accountUUID, String loggedInUserUUID, String applicationName, [String description], [String shortName]);
+
+Object createAdvanced(String accountUUID, String loggedInUserUUID, String applicationName, [String description], String parentUUIDs, String shortName, Boolean isTemplate);
+
+Object get(String accountUUID, String loggedInUserUUID, String applicationUUID);
+
+Object list(String accountUUID, String loggedInUserUUID, String parentUUID, Number startIndex, Number maximumNumberOfResults, String categorizedAs, Object filterBy, Object sortBy);
+
+void categorize(String accountUUID, String loggedInUserUUID, String applicationUUID, String categoryUUID);
+
+void decategorize(String accountUUID, String loggedInUserUUID, String applicationUUID, String categoryUUID);
+
+Object updateBasic(String accountUUID, String loggedInUserUUID, String applicationUUID, String applicationName, String description, String shortName);
+
+Object updateAdvanced(String accountUUID, String loggedInUserUUID, String applicationUUID, String applicationName, String description, String parentUUIDs, String shortName, Boolean isTemplate, String homePageUUID);
+
+Object delete(String accountUUID, String loggedInUserUUID, String applicationUUID);

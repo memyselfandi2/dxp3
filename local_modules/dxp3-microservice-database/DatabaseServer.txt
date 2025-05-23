@@ -1,0 +1,39 @@
+********************************************************
+* DXP3 - Digital Experience Platform 3                 *
+*                                                      *
+* MODULE: dxp3-microservice-database/DatabaseServer    *
+********************************************************
+
+DatabaseServer.js provides a microservice wrapper around the `dxp3-db` database abstraction layer. It allows other microservices (typically `DatabaseClient` or generic `RestClient` instances) to interact with a database via a network interface (REST-like, using the `dxp3-microservice-rest` framework).
+
+This decouples database access from the services that need the data, allowing the database and its access logic to run as a separate process.
+
+Prerequisites
+-------------
+1.  **Node.js:** Ensure you have Node.js installed.
+2.  **DXP3 Dependencies:** The project containing `DatabaseServer.js` must have the following DXP3 modules installed as dependencies:
+    *   `dxp3-db`: The underlying database interaction library.
+    *   `dxp3-microservice-rest`: The framework for creating the REST-based microservice.
+    *   `dxp3-logging`: Used for logging within the server.
+    *   `dxp3-util`: Provides utility functions.
+3.  **Database Setup:** The database that `dxp3-db` will connect to needs to be configured and potentially initialized. The `DatabaseServer` relies on `dxp3-db`'s configuration, typically involving a source folder containing database schema definitions or configuration files. Refer to the `dxp3-db` documentation for details on setting up the database source.
+
+*****************************************************
+* COMMANDLINE OPTIONS                               *
+*****************************************************
+The `DatabaseServer` is configured using command-line arguments, parsed by `DatabaseServerOptions`. Key options include:
+
+-name <serverName>`: (Required) A unique name for this database server instance. This name is used for service discovery if applicable within your DXP3 environment.
+-databaseName <dbName>`: (Required) The name of the database instance that `dxp3-db` should connect to. This often corresponds to a configuration or schema identifier within the `sourceFolder`.
+-sourceFolder <pathToSource>`: (Required) The path to the directory containing the database configuration/schema files used by `dxp3-db`.
+-port <portNumber>`: (Optional) The network port the server should listen on. Defaults are usually handled by the underlying `dxp3-microservice-rest` framework if not specified.
+-logLevel <level>`: (Optional) Sets the logging level (e.g., `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). Defaults to `INFO` if not specified.
+-help`: Displays help information about the available command-line arguments and exits.
+
+*****************************************************
+* EXAMPLES - COMMAND LINE                           *
+*****************************************************
+You can run the server directly from your terminal using Node.js:
+
+node DatabaseServer.js -help
+node DatabaseServer.js -name MyDatabaseService -databaseName mainDB -sourceFolder ./db_config -port 8081 -logLevel DEBUG

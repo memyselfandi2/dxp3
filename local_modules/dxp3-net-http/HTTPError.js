@@ -1,0 +1,80 @@
+/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-net-http
+ *
+ * NAME
+ * HTTPError
+ */
+const packageName = 'dxp3-net-http';
+const moduleName = 'HTTPError';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * @module dxp3-net-http/HTTPError
+ */
+// We use the util.Help class to print out help information.
+const util = require('dxp3-util');
+
+/**
+ * An HTTP error may contain both a message and a code.
+ * @extends Error
+ * @property {String} message
+ * @property {String} code
+ */
+class HTTPError extends Error {
+    /*********************************************
+     * CONSTRUCTOR
+     ********************************************/
+
+	constructor(_code, _message) {
+		super(_message);
+		this.code = _code;
+	}
+
+    equals(_error) {
+        if(_error instanceof HTTPError) {
+            return (_error.code === this.code);
+        }
+        return false;
+    }
+
+	toString() {
+		return this.code + ': ' + this.message;
+	}
+
+	static from(_error) {
+		if(_error === undefined || _error === null) {
+			return HTTPError.SOCKET_EXCEPTION;
+		}
+		return new HTTPError('SOCKET_EXCEPTION', _error.message);
+	}
+}
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} CONFLICT */
+HTTPError.CONFLICT = new HTTPError('CONFLICT', 'Conflict');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} EACCESS */
+HTTPError.EACCES = new HTTPError('EACCES', 'Permission denied');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} EADDRINUSE */
+HTTPError.EADDRINUSE = new HTTPError('EADDRINUSE', 'Port already in use');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} ECONREFUSED */
+HTTPError.ECONNREFUSED = new HTTPError('ECONNREFUSED', 'Connection refused');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} FILE_NOT_FOUND */
+HTTPError.FILE_NOT_FOUND = new HTTPError('FILE_NOT_FOUND', 'File not found');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} ILLEGAL_ARGUMENT */
+HTTPError.ILLEGAL_ARGUMENT = new HTTPError('ILLEGAL_ARGUMENT', 'Illegal argument');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} ILLEGAL_STATE */
+HTTPError.ILLEGAL_STATE = new HTTPError('ILLEGAL_STATE', 'Illegal state');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} SERVICE_UNAVAILABLE */
+HTTPError.SERVICE_UNAVAILABLE = new HTTPError('SERVICE_UNAVAILABLE', 'No downstream server available');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} SOCKET_EXCEPTION */
+HTTPError.SOCKET_EXCEPTION = new HTTPError('SOCKET_EXCEPTION', 'Socket exception');
+/** @member {module:dxp3-net-http/HTTPError~HTTPError} UNKNOWN */
+HTTPError.UNKNOWN = new HTTPError('UNKNOWN', 'Unknown');
+
+// Check if someone tried to run/execute this file.
+if(util.Assert.isFileToExecute(canonicalName)) {
+    util.Help.print(HTTPError);
+    return;
+}
+module.exports = HTTPError;

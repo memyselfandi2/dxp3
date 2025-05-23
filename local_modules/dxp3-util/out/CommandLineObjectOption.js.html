@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CommandLineObjectOption.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CommandLineObjectOption.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * DXP3 - Digital Experience Platform 3
+ *
+ * PACKAGE
+ * dxp3-util
+ *
+ * NAME
+ * CommandLineObjectOption
+ */
+const packageName = 'dxp3-util';
+const moduleName = 'CommandLineObjectOption';
+const path = require('path');
+const canonicalName = packageName + path.sep + moduleName;
+/**
+ * @module dxp3-util/CommandLineObjectOption
+ */
+const Assert = require('./Assert');
+const CommandLineError = require('./CommandLineError');
+const CommandLineOption = require('./CommandLineOption');
+const Help = require('./Help');
+
+class CommandLineObjectOption extends CommandLineOption {
+	constructor(id, name, aliases, propertyName, description) {
+		super(id, name, aliases, propertyName, description);
+		this.properties = [];
+	}
+
+	addNumberProperty(_name) {
+		let property = {
+			name: _name,
+			type: 'number'
+		}
+		this.properties.push(property);
+	}
+
+	addStringProperty(_name) {
+		let property = {
+			name: _name,
+			type: 'string'
+		}
+		this.properties.push(property);
+	}
+
+	addEnumerationProperty(_name, EnumerationClass) {
+		let property = {
+			name: _name,
+			type: 'enumeration',
+			EnumerationClass: EnumerationClass
+		}
+		this.properties.push(property);
+	}
+
+	parseObject(_result, _index) {
+		let parsedObject = {};
+		for(let i=0;i &lt; this.properties.length;i++) {
+			let property = this.properties[i];
+			_index++;
+			if(_index &lt; process.argv.length) {
+				let value = process.argv[_index];
+				if(property.type === 'string') {
+					parsedObject[property.name] = value;
+				} else if(property.type === 'enumeration') {
+					try {
+						let enumerationValue = property.EnumerationClass.parse(value);
+						parsedObject[property.name] = enumerationValue;
+					} catch(exception) {
+						throw new CommandLineError('Unable to parse enumeration value: ' + value)
+					}
+				} else if(property.type === 'number') {
+					let parsedValue = parseInt(value);
+					parsedObject[property.name] = parsedValue;
+				}
+			}
+		}
+		parsedObject._index = _index;
+		return parsedObject;
+	}
+
+	parse(_result, _index) {
+		if(_result === undefined || _result === null) {
+			throw CommandLineError.ILLEGAL_ARGUMENT;
+		}
+		if(this.handler != undefined &amp;&amp; this.handler != null) {
+			return this.handler(_result,_index,this.propertyName);
+		}
+		let parsedObject = parseObject(_result, _index);
+		_index = parsedObject._index;
+		delete parsedObject._index;
+		_result[this.propertyName] = parsedObject;
+		return _index;
+	}
+}
+// Check if someone tried to run/execute this file.
+if(Assert.isFileToExecute(canonicalName)) {
+	Help.print(CommandLineObjectOption);
+	return;
+}
+module.exports = CommandLineObjectOption;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dxp3-util.html">dxp3-util</a></li><li><a href="module-dxp3-util_Assert.html">dxp3-util/Assert</a></li><li><a href="module-dxp3-util_CommandLineBooleanArrayOption.html">dxp3-util/CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption.html">dxp3-util/CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption.html">dxp3-util/CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError.html">dxp3-util/CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption.html">dxp3-util/CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberArrayOption.html">dxp3-util/CommandLineNumberArrayOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption.html">dxp3-util/CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineObjectArrayOption.html">dxp3-util/CommandLineObjectArrayOption</a></li><li><a href="module-dxp3-util_CommandLineObjectOption.html">dxp3-util/CommandLineObjectOption</a></li><li><a href="module-dxp3-util_CommandLineOption.html">dxp3-util/CommandLineOption</a></li><li><a href="module-dxp3-util_CommandLineOptions.html">dxp3-util/CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineStringArrayOption.html">dxp3-util/CommandLineStringArrayOption</a></li><li><a href="module-dxp3-util_CommandLineStringOption.html">dxp3-util/CommandLineStringOption</a></li><li><a href="module-dxp3-util_Help.html">dxp3-util/Help</a></li><li><a href="module-dxp3-util_Options.html">dxp3-util/Options</a></li></ul><h3>Classes</h3><ul><li><a href="module-dxp3-util_CommandLineBooleanArrayOption-CommandLineBooleanArrayOption.html">CommandLineBooleanArrayOption</a></li><li><a href="module-dxp3-util_CommandLineBooleanOption-CommandLineBooleanOption.html">CommandLineBooleanOption</a></li><li><a href="module-dxp3-util_CommandLineEnumerationOption-CommandLineEnumerationOption.html">CommandLineEnumerationOption</a></li><li><a href="module-dxp3-util_CommandLineError-CommandLineError.html">CommandLineError</a></li><li><a href="module-dxp3-util_CommandLineFlagOption-CommandLineFlagOption.html">CommandLineFlagOption</a></li><li><a href="module-dxp3-util_CommandLineNumberOption-CommandLineNumberOption.html">CommandLineNumberOption</a></li><li><a href="module-dxp3-util_CommandLineOptions-CommandLineOptions.html">CommandLineOptions</a></li><li><a href="module-dxp3-util_CommandLineOption-CommandLineOption.html">CommandLineOption</a></li><li><a href="module-dxp3-util_Help-Help.html">Help</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Aug 24 2023 20:28:11 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

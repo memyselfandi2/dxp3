@@ -1,0 +1,51 @@
+.application-panel-menu {
+    background-color: white;
+    border-right:1px solid #ddd;
+    border-bottom:1px solid #ddd;
+    box-shadow: -2px -2px 2px rgba(0,0,0,.1);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.application-panel-menu a {
+    padding: 5px 5px 5px 6px;
+    font-size: 25px;
+    display: block;
+    transition: 0.2s;
+    text-decoration: none;
+    color:lightgrey;
+}
+.application-panel-menu a:visited {
+    color:lightgrey;
+}
+.application-panel-menu a:hover {
+    color:black;
+}
+.application-panel-menu a i {
+    padding-right:5px;
+    width: 30px;
+    text-align: center;
+}
+.application-panel-menu > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.application-panel-menu > ul > li {
+    margin:0px;
+    padding:0px;
+    font-size:32px;
+}
+.application-panel-menu.maximized {
+    transition-duration: 0.5s;
+    transition-property:width;
+    width:250px;
+}
+.application-panel-menu:hover a {
+    color:darkgrey;
+}
+.application-panel-menu:hover a:hover {
+    color:black;
+}
+.application-panel-menu a.selected {
+    color:black;
+}

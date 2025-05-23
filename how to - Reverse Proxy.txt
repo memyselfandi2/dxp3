@@ -1,0 +1,26 @@
+Question: How do I quickly run a web server?
+
+A webserver started from the command line will attempt to use the most secure default settings.
+It will still require a folder location to serve content from.
+
+> node ./local_modules/dxp3-net-http/HTTPServer -root C:\temp\
+
+If the default port is already in use one can override the default by specifing the port option like so:
+
+> node ./local_modules/dxp3-net-http/HTTPServer -port 8443 -root C:\temp\
+
+If you want to use http instead of https you need to set the secure option to false like so:
+
+> node ./local_modules/dxp3-net-http/HTTPServer -port 8080 -secure false -root C:\temp\
+
+If you require detailed logging one can update the log option like so:
+
+> node ./local_modules/dxp3-net-http/HTTPServer -port 8080 -secure false -root C:\temp\ -log * debug
+
+If you want to use one webserver to host multiple domains one can specify the static content folder per domain like so:
+
+> node ./local_modules/dxp3-net-http/HTTPServer -port 8080 -secure false -domain 127.0.0.1 C:\temp\127001\ -domain localhost C:\temp\localhost\
+
+Alternatively you can use the command line interface application:
+
+> node ./local_modules/dxp3-net-http/HTTPServerCLI
