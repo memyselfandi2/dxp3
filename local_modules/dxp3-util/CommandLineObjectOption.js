@@ -82,7 +82,7 @@ class CommandLineObjectOption extends CommandLineOption {
 	 * @returns {object} An object containing the parsed properties and an `_index` property indicating the new `process.argv` index.
 	 * @throws {CommandLineError} If an enumeration value cannot be parsed.
 	 */
-	parseObject(_result, _index) {
+	_parseObject(_result, _index) {
 		let parsedObject = {};
 		for(let i=0;i < this.properties.length;i++) {
 			let property = this.properties[i];
@@ -125,7 +125,7 @@ class CommandLineObjectOption extends CommandLineOption {
 		if(this.handler != undefined && this.handler != null) {
 			return this.handler(_result,_index,this.propertyName);
 		}
-		let parsedObject = this.parseObject(_result, _index); // Corrected: called this.parseObject
+		let parsedObject = this._parseObject(_result, _index);
 		_index = parsedObject._index;
 		delete parsedObject._index;
 		_result[this.propertyName] = parsedObject;
