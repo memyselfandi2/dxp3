@@ -53,11 +53,6 @@ const util = require('dxp3-util');
  */
 class UUID {
 	/**
-	 * As all methods are static, we don't really need a constructor.
-	 */
-	constructor() {
-	}
-	/**
      * Alias of {@link UUID.v4}.
 	 * @return {String}
 	 */
@@ -98,32 +93,7 @@ class UUID {
 	 * @return {String}
 	 */
 	static v4() {
-		let randomBytes = crypto.randomBytes(16);
-		// Per 4.4, set bits for version and clock_seq_hi_and_reserved
-		randomBytes[6] = (randomBytes[6] & 0x0f) | 0x40;
-		randomBytes[8] = (randomBytes[8] & 0x3f) | 0x80;
-		return (
-		    UUID.byteToHex[randomBytes[0]] +
-		    UUID.byteToHex[randomBytes[1]] +
-		    UUID.byteToHex[randomBytes[2]] +
-		    UUID.byteToHex[randomBytes[3]] +
-		    '-' +
-		    UUID.byteToHex[randomBytes[4]] +
-		    UUID.byteToHex[randomBytes[5]] +
-		    '-' +
-		    UUID.byteToHex[randomBytes[6]] +
-		    UUID.byteToHex[randomBytes[7]] +
-		    '-' +
-		    UUID.byteToHex[randomBytes[8]] +
-		    UUID.byteToHex[randomBytes[9]] +
-		    '-' +
-		    UUID.byteToHex[randomBytes[10]] +
-		    UUID.byteToHex[randomBytes[11]] +
-		    UUID.byteToHex[randomBytes[12]] +
-		    UUID.byteToHex[randomBytes[13]] +
-		    UUID.byteToHex[randomBytes[14]] +
-		    UUID.byteToHex[randomBytes[15]]
-	  	).toLowerCase();
+		return crypto.randomUUID();
 	}
 	/**
    * Alias of {@link UUID.v4}.
@@ -150,11 +120,6 @@ class UUID {
 		console.clear();
 		console.log(UUID.v4());
 	}
-}
-// Static properties
-UUID.byteToHex = [];
-for(let i = 0; i < 256; ++i) {
-  UUID.byteToHex.push((i + 0x100).toString(16).substr(1));
 }
 // Check if someone tried to run/execute this file.
 if(util.Assert.isFileToExecute(canonicalName)) {
