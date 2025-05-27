@@ -21,25 +21,30 @@ const Help = require('./Help');
 
 class CommandLineStringOption extends CommandLineOption {
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {number} id - TODO: Describe parameter.
-	 * @param {string} name - TODO: Describe parameter.
-	 * @param {Array|string} aliases - TODO: Describe parameter.
-	 * @param {string} propertyName - TODO: Describe parameter.
-	 * @param {string} description - TODO: Describe parameter.
+	 * Creates an instance of CommandLineStringOption.
+	 * @param {number} id - A unique identifier for the option.
+	 * @param {string} name - The primary name of the option (e.g., '--output').
+	 * @param {Array|string} aliases - A comma-separated string or an array of alternative names for the option (e.g., ['-o']).
+	 * @param {string} propertyName - The name of the property to set on the result object.
+	 * @param {string} description - A description of the option for help messages.
 	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id,name,aliases,propertyName,description);
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {object} _result - TODO: Describe parameter.
-	 * @param {number} _index - TODO: Describe parameter.
-	 * @returns {number} TODO: Describe return value.
+	 * Parses the string value for this option from the command line arguments.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it takes the next argument from `process.argv` as the string value
+	 * and assigns it to the `propertyName` on the `_result` object.
+	 * @param {object} _result - The object to populate with the parsed option value.
+	 * @param {number} _index - The current index in `process.argv` being parsed.
+	 * @returns {number} The updated index in `process.argv` after parsing this option.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {
+
 			throw CommandLineError.ILLEGAL_ARGUMENT;
 		}
 		if(this.handler != undefined && this.handler != null) {

@@ -21,12 +21,14 @@ const Help = require('./Help');
 
 class CommandLineObjectOption extends CommandLineOption {
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {number} id - TODO: Describe parameter.
-	 * @param {string} name - TODO: Describe parameter.
-	 * @param {Array|string} aliases - TODO: Describe parameter.
-	 * @param {string} propertyName - TODO: Describe parameter.
-	 * @param {string} description - TODO: Describe parameter.
+	 * Creates an instance of CommandLineObjectOption.
+	 * This option type expects a sequence of values on the command line that correspond
+	 * to the properties defined for the object structure (via `addStringProperty`, etc.).
+	 * @param {number} id - A unique identifier for the option.
+	 * @param {string} name - The primary name of the option (e.g., '--config').
+	 * @param {Array|string} aliases - A comma-separated string or an array of alternative names for the option.
+	 * @param {string} propertyName - The name of the property to set on the result object, which will hold the parsed object.
+	 * @param {string} description - A description of the option for help messages.
 	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id, name, aliases, propertyName, description);
@@ -34,8 +36,8 @@ class CommandLineObjectOption extends CommandLineOption {
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {string} _name - TODO: Describe parameter.
+	 * Adds a definition for a number property expected for this object option.
+	 * @param {string} _name - The name of the property.
 	 */
 	addNumberProperty(_name) {
 		let property = {
@@ -46,8 +48,8 @@ class CommandLineObjectOption extends CommandLineOption {
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {string} _name - TODO: Describe parameter.
+	 * Adds a definition for a string property expected for this object option.
+	 * @param {string} _name - The name of the property.
 	 */
 	addStringProperty(_name) {
 		let property = {
@@ -58,9 +60,9 @@ class CommandLineObjectOption extends CommandLineOption {
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {string} _name - TODO: Describe parameter.
-	 * @param {any} EnumerationClass - TODO: Describe parameter.
+	 * Adds a definition for an enumeration property expected for this object option.
+	 * @param {string} _name - The name of the property.
+	 * @param {Class} EnumerationClass - The class used to parse the enumeration value. It must have a static `parse` method.
 	 */
 	addEnumerationProperty(_name, EnumerationClass) {
 		let property = {
@@ -72,10 +74,13 @@ class CommandLineObjectOption extends CommandLineOption {
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {object} _result - TODO: Describe parameter.
-	 * @param {number} _index - TODO: Describe parameter.
-	 * @returns {object} TODO: Describe return value.
+	 * Parses subsequent command line arguments into an object based on defined properties.
+	 * For each defined property (string, number, enumeration), it consumes the next argument
+	 * from `process.argv`, parses it accordingly, and adds it to the `parsedObject`.
+	 * @param {object} _result - The main result object (not directly modified by this method but passed for context, potentially by handlers).
+	 * @param {number} _index - The current index in `process.argv` from which to start parsing values for the object's properties.
+	 * @returns {object} An object containing the parsed properties and an `_index` property indicating the new `process.argv` index.
+	 * @throws {CommandLineError} If an enumeration value cannot be parsed.
 	 */
 	parseObject(_result, _index) {
 		let parsedObject = {};
@@ -104,10 +109,14 @@ class CommandLineObjectOption extends CommandLineOption {
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {object} _result - TODO: Describe parameter.
-	 * @param {number} _index - TODO: Describe parameter.
-	 * @returns {number} TODO: Describe return value.
+	 * Parses a sequence of command line arguments into an object and assigns it to `propertyName` on `_result`.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it calls `this.parseObject()` to consume and parse the required number
+	 * of arguments from `process.argv` based on the defined object properties.
+	 * @param {object} _result - The object to populate with the parsed object.
+	 * @param {number} _index - The current index in `process.argv` being parsed.
+	 * @returns {number} The updated index in `process.argv` after parsing all values for this object.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {

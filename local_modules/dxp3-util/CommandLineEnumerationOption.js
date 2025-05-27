@@ -44,6 +44,13 @@ class CommandLineEnumerationOption extends CommandLineOption {
 	}
 	/**
 	 * @override
+	 * Parses the enumeration value for this option from the command line arguments.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it takes the next argument from `process.argv`, uses the `EnumerationClass.parse`
+	 * method to convert it to an enumeration value, and assigns it to the `propertyName`
+	 * on the `_result` object.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
+	 * @throws {CommandLineError} If `EnumerationClass.parse` throws an error (e.g., 'Unable to parse enumeration value').
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {

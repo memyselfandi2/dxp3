@@ -22,22 +22,30 @@ const Help = require('./Help');
 
 class CommandLineObjectArrayOption extends CommandLineObjectOption {
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {number} id - TODO: Describe parameter.
-	 * @param {string} name - TODO: Describe parameter.
-	 * @param {Array|string} aliases - TODO: Describe parameter.
-	 * @param {string} propertyName - TODO: Describe parameter.
-	 * @param {string} description - TODO: Describe parameter.
+	 * Creates an instance of CommandLineObjectArrayOption.
+	 * This option type expects a sequence of values on the command line that correspond
+	 * to the properties defined for the object structure (via `addStringProperty`, etc.).
+	 * Each invocation of this option adds a new object to an array.
+	 * @param {number} id - A unique identifier for the option.
+	 * @param {string} name - The primary name of the option (e.g., '--user').
+	 * @param {Array|string} aliases - A comma-separated string or an array of alternative names for the option.
+	 * @param {string} propertyName - The name of the property on the result object, which will hold an array of parsed objects.
+	 * @param {string} description - A description of the option for help messages.
 	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id, name, aliases, propertyName, description);
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {object} _result - TODO: Describe parameter.
-	 * @param {number} _index - TODO: Describe parameter.
-	 * @returns {number} TODO: Describe return value.
+	 * Parses a set of subsequent command line arguments into an object and adds it to an array.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it initializes or retrieves an array on the `_result` object using `propertyName`.
+	 * It then calls `super.parseObject()` to parse the subsequent arguments into a new object,
+	 * which is then pushed onto this array.
+	 * @param {object} _result - The object to populate. The `propertyName` will hold an array of parsed objects.
+	 * @param {number} _index - The current index in `process.argv` being parsed.
+	 * @returns {number} The updated index in `process.argv` after parsing all values for this object.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {

@@ -22,11 +22,26 @@ const Help = require('./Help');
  * <p>A CommandLineBooleanArrayOption represents a -<option name> comma separated booleans on the command line.</p>
  */
 class CommandLineBooleanArrayOption extends CommandLineOption {
+	/**
+	 * Creates an instance of CommandLineBooleanArrayOption.
+	 * Expects a comma-separated string of boolean-like values on the command line.
+	 * @param {number} id - A unique identifier for the option.
+	 * @param {string} name - The primary name of the option (e.g., '--flags').
+	 * @param {Array|string} aliases - A comma-separated string or an array of alternative names for the option (e.g., ['-f']).
+	 * @param {string} propertyName - The name of the property to set on the result object (will be an array of booleans).
+	 * @param {string} description - A description of the option for help messages.
+	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id, name, aliases, propertyName, description);
 	}
 	/**
 	 * @override
+	 * Parses a comma-separated string of boolean values for this option from the command line arguments.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it takes the next argument from `process.argv`, splits it by commas,
+	 * converts each part to a boolean, and appends it to the array on the `propertyName` of the `_result` object.
+	 * Recognized true values (case-insensitive): 'yes', 'true', 'on'. Other values result in false.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {

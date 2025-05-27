@@ -23,21 +23,28 @@ const Help = require('./Help');
  */
 class CommandLineNumberOption extends CommandLineOption {
 	/**
-	 * @param {Number} id
-	 * @param {String} name
-	 * @param {Array|String} aliases
-	 * @param {String} propertyName
-	 * @param {String} description
+	 * Creates an instance of CommandLineNumberOption.
+	 * @param {Number} id - A unique identifier for the option.
+	 * @param {String} name - The primary name of the option (e.g., '--port').
+	 * @param {Array|String} aliases - A comma-separated string or an array of alternative names for the option (e.g., ['-p']).
+	 * @param {String} propertyName - The name of the property to set on the result object.
+	 * @param {String} description - A description of the option for help messages.
 	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id, name, aliases, propertyName, description);
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {object} _result - TODO: Describe parameter.
-	 * @param {number} _index - TODO: Describe parameter.
-	 * @returns {number} TODO: Describe return value.
+	 * Parses the numeric value for this option from the command line arguments.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it takes the next argument from `process.argv`, attempts to parse it as an integer,
+	 * and assigns it to the `propertyName` on the `_result` object.
+	 * If parsing fails and the value looks like another option (starts with '-'),
+	 * the index is decremented to allow that option to be processed.
+	 * @param {object} _result - The object to populate with the parsed option value.
+	 * @param {number} _index - The current index in `process.argv` being parsed.
+	 * @returns {number} The updated index in `process.argv` after parsing this option.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {

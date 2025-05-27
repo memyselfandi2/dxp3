@@ -21,22 +21,28 @@ const Help = require('./Help');
 
 class CommandLineStringArrayOption extends CommandLineOption {
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {number} id - TODO: Describe parameter.
-	 * @param {string} name - TODO: Describe parameter.
-	 * @param {Array|string} aliases - TODO: Describe parameter.
-	 * @param {string} propertyName - TODO: Describe parameter.
-	 * @param {string} description - TODO: Describe parameter.
+	 * Creates an instance of CommandLineStringArrayOption.
+	 * Expects a comma-separated string of values on the command line.
+	 * @param {number} id - A unique identifier for the option.
+	 * @param {string} name - The primary name of the option (e.g., '--files').
+	 * @param {Array|string} aliases - A comma-separated string or an array of alternative names for the option (e.g., ['-f']).
+	 * @param {string} propertyName - The name of the property to set on the result object (will be an array of strings).
+	 * @param {string} description - A description of the option for help messages.
 	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id, name, aliases, propertyName, description);
 	}
 
 	/**
-	 * @description TODO: Describe this method.
-	 * @param {object} _result - TODO: Describe parameter.
-	 * @param {number} _index - TODO: Describe parameter.
-	 * @returns {number} TODO: Describe return value.
+	 * Parses a comma-separated string of values for this option from the command line arguments.
+	 * If a custom handler is defined, it delegates parsing to the handler.
+	 * Otherwise, it takes the next argument from `process.argv`, splits it by commas,
+	 * and concatenates the resulting array with any existing array on the `propertyName`
+	 * of the `_result` object. If no array exists, a new one is created.
+	 * @param {object} _result - The object to populate with the parsed option values.
+	 * @param {number} _index - The current index in `process.argv` being parsed.
+	 * @returns {number} The updated index in `process.argv` after parsing this option.
+	 * @throws {CommandLineError.ILLEGAL_ARGUMENT} If `_result` is undefined or null.
 	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {
