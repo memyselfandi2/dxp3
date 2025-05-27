@@ -32,7 +32,7 @@ class Assert {
 		if(_array === undefined || _array === null) {
 			return true;
 		}
-		if(_array.length <= 0) {
+		if(Array.isArray(_array) && _array.length <= 0) {
 			return true;
 		}
 		return false;
