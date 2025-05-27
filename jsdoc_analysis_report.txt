@@ -1,0 +1,264 @@
+File: local_modules/dxp3-util/Assert.js
+  Missing file-level JSDoc: No (has @module, which is common for file-level, but not strictly @file)
+  Class Assert:
+    Missing JSDoc: No
+    Method isFileToExecute:
+      Missing JSDoc: Yes
+    Method isUndefinedOrNull:
+      Missing JSDoc: Yes
+    Method isUndefinedOrNullOrEmptyArray:
+      Missing JSDoc: Yes
+    Method isUndefinedOrNullOrEmptyString:
+      Missing JSDoc: Yes
+    Method isUndefinedOrNullOrNotANumber:
+      Missing JSDoc: Yes
+    Method isUndefinedOrNullOrNotAStringOrEmpty:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineBooleanArrayOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineBooleanArrayOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method parse:
+      Missing JSDoc: No
+
+File: local_modules/dxp3-util/CommandLineBooleanOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineBooleanOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineEnumerationOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineEnumerationOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method parse:
+      Missing JSDoc: No
+
+File: local_modules/dxp3-util/CommandLineError.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineError:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method toString:
+      Missing JSDoc: Yes
+    Method from (static):
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineFlagOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineFlagOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineNumberArrayOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineNumberArrayOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineNumberOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineNumberOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineObjectArrayOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineObjectArrayOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineObjectOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineObjectOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method addNumberProperty:
+      Missing JSDoc: Yes
+    Method addStringProperty:
+      Missing JSDoc: Yes
+    Method addEnumerationProperty:
+      Missing JSDoc: Yes
+    Method parseObject:
+      Missing JSDoc: Yes
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method match:
+      Missing JSDoc: Yes
+    Method addHandler:
+      Missing JSDoc: No
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineOptions.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineOptions:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method add:
+      Missing JSDoc: Yes
+    Method addOption:
+      Missing JSDoc: Yes
+    Method addCommandLineOption:
+      Missing JSDoc: Yes
+    Method createBool:
+      Missing JSDoc: Yes
+    Method createBoolean:
+      Missing JSDoc: Yes
+    Method createBooleanOption:
+      Missing JSDoc: Yes
+    Method createBoolArray:
+      Missing JSDoc: Yes
+    Method createBooleanArray:
+      Missing JSDoc: Yes
+    Method createBooleanArrayOption:
+      Missing JSDoc: Yes
+    Method createEnum:
+      Missing JSDoc: Yes
+    Method createEnumOption:
+      Missing JSDoc: Yes
+    Method createEnumeration:
+      Missing JSDoc: Yes
+    Method createEnumerationOption:
+      Missing JSDoc: Yes
+    Method createFlag:
+      Missing JSDoc: Yes
+    Method createFlagOption:
+      Missing JSDoc: Yes
+    Method createNumber:
+      Missing JSDoc: Yes
+    Method createNumberOption:
+      Missing JSDoc: Yes
+    Method createNumberArray:
+      Missing JSDoc: Yes
+    Method createNumberArrayOption:
+      Missing JSDoc: Yes
+    Method createObject:
+      Missing JSDoc: Yes
+    Method createObjectOption:
+      Missing JSDoc: Yes
+    Method createObjectArray:
+      Missing JSDoc: Yes
+    Method createObjectArrayOption:
+      Missing JSDoc: Yes
+    Method createString:
+      Missing JSDoc: Yes
+    Method createStringOption:
+      Missing JSDoc: Yes
+    Method createStringArray:
+      Missing JSDoc: Yes
+    Method createStringArrayOption:
+      Missing JSDoc: Yes
+    Method parse:
+      Missing JSDoc: Yes
+    Method addDefaultHandler:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineStringArrayOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineStringArrayOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/CommandLineStringOption.js
+  Missing file-level JSDoc: No (has @module)
+  Class CommandLineStringOption:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method parse:
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/Help.js
+  Missing file-level JSDoc: No (has @module)
+  Class Help:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: No
+    Method print (static):
+      Missing JSDoc: No
+    Method printReadMe (static):
+      Missing JSDoc: No
+
+File: local_modules/dxp3-util/Options.js
+  Missing file-level JSDoc: No (has @module)
+  Class Options:
+    Missing JSDoc: No
+    Method constructor:
+      Missing JSDoc: Yes
+    Method setAlias:
+      Missing JSDoc: Yes
+    Method setAliases:
+      Missing JSDoc: Yes
+    Method setAliasProperty:
+      Missing JSDoc: Yes
+    Method addAliases:
+      Missing JSDoc: Yes
+    Method addAliasProperty:
+      Missing JSDoc: Yes
+    Method addAlias:
+      Missing JSDoc: Yes
+    Method hasAlias:
+      Missing JSDoc: Yes
+    Method hasAliasProperty:
+      Missing JSDoc: Yes
+    Method getAliasedProperty:
+      Missing JSDoc: Yes
+    Method getPropertyAlias:
+      Missing JSDoc: Yes
+    Method getPropertyAliases:
+      Missing JSDoc: Yes
+    Method new (static):
+      Missing JSDoc: Yes
+    Method create (static):
+      Missing JSDoc: Yes
+    Method concat (static):
+      Missing JSDoc: Yes
+    Method instance (static):
+      Missing JSDoc: Yes
+    Method merge (static):
+      Missing JSDoc: Yes
+    Method newInstance (static):
+      Missing JSDoc: Yes
+    Method parse (static):
+      Missing JSDoc: Yes
+    Method assign (static):
+      Missing JSDoc: Yes
+
+File: local_modules/dxp3-util/index.js
+  Missing file-level JSDoc: No (has @module)
+  (No classes found in this file)
+```

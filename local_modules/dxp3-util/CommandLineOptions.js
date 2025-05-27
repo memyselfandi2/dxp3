@@ -40,14 +40,26 @@ class CommandLineOptions {
 		this.id = 0;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {CommandLineOption} _commandLineOption - TODO: Describe parameter.
+	 */
 	add(_commandLineOption) {
 		this.addCommandLineOption(_commandLineOption);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {CommandLineOption} _commandLineOption - TODO: Describe parameter.
+	 */
 	addOption(_commandLineOption) {
 		this.addCommandLineOption(_commandLineOption);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {CommandLineOption} _commandLineOption - TODO: Describe parameter.
+	 */
 	addCommandLineOption(_commandLineOption) {
 		// Defensive programming...check input...
 		if(_commandLineOption === undefined || _commandLineOption === null) {
@@ -80,14 +92,38 @@ class CommandLineOptions {
 		}
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineBooleanOption} TODO: Describe return value.
+	 */
 	createBool(_optionName, _aliases, _propertyName, _description) {
 		return this.createBooleanOption(_optionName, _aliases, _propertyName, _description);
 	}
 	
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineBooleanOption} TODO: Describe return value.
+	 */
 	createBoolean(_optionName, _aliases, _propertyName, _description) {
 		return this.createBooleanOption(_optionName, _aliases, _propertyName, _description);
 	}
 	
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineBooleanOption} TODO: Describe return value.
+	 */
 	createBooleanOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineBooleanOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -95,14 +131,38 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineBooleanArrayOption} TODO: Describe return value.
+	 */
 	createBoolArray(_optionName, _aliases, _propertyName, _description) {
 		return this.createBooleanArrayOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineBooleanArrayOption} TODO: Describe return value.
+	 */
 	createBooleanArray(_optionName, _aliases, _propertyName, _description) {
 		return this.createBooleanArrayOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineBooleanArrayOption} TODO: Describe return value.
+	 */
 	createBooleanArrayOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineBooleanArrayOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -110,18 +170,54 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {any} enumerationClass - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineEnumerationOption} TODO: Describe return value.
+	 */
 	createEnum(_optionName, _aliases, _propertyName, enumerationClass, _description) {
 		return this.createEnumerationOption(_optionName, _aliases, _propertyName, enumerationClass, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {any} enumerationClass - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineEnumerationOption} TODO: Describe return value.
+	 */
 	createEnumOption(_optionName, _aliases, _propertyName, enumerationClass, _description) {
 		return this.createEnumerationOption(_optionName, _aliases, _propertyName, enumerationClass, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {any} enumerationClass - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineEnumerationOption} TODO: Describe return value.
+	 */
 	createEnumeration(_optionName, _aliases, _propertyName, enumerationClass, _description) {
 		return this.createEnumerationOption(_optionName, _aliases, _propertyName, enumerationClass, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {any} enumerationClass - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineEnumerationOption} TODO: Describe return value.
+	 */
 	createEnumerationOption(_optionName, _aliases, _propertyName, enumerationClass, _description) {
 		this.id++;
 		let option = new CommandLineEnumerationOption(this.id, _optionName, _aliases, _propertyName, enumerationClass, _description);
@@ -129,10 +225,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineFlagOption} TODO: Describe return value.
+	 */
 	createFlag(_optionName, _aliases, _propertyName, _description) {
 		return this.createFlagOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineFlagOption} TODO: Describe return value.
+	 */
 	createFlagOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineFlagOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -140,10 +252,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineNumberOption} TODO: Describe return value.
+	 */
 	createNumber(_optionName, _aliases, _propertyName, _description) {
 		return this.createNumberOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineNumberOption} TODO: Describe return value.
+	 */
 	createNumberOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineNumberOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -151,10 +279,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineNumberArrayOption} TODO: Describe return value.
+	 */
 	createNumberArray(_optionName, _aliases, _propertyName, _description) {
 		return this.createNumberArrayOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineNumberArrayOption} TODO: Describe return value.
+	 */
 	createNumberArrayOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineNumberArrayOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -162,10 +306,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineObjectOption} TODO: Describe return value.
+	 */
 	createObject(_optionName, _aliases, _propertyName, _description) {
 		return this.createObjectOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineObjectOption} TODO: Describe return value.
+	 */
 	createObjectOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineObjectOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -173,10 +333,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineObjectArrayOption} TODO: Describe return value.
+	 */
 	createObjectArray(_optionName, _aliases, _propertyName, _description) {
 		return this.createObjectArrayOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineObjectArrayOption} TODO: Describe return value.
+	 */
 	createObjectArrayOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineObjectArrayOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -184,10 +360,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineStringOption} TODO: Describe return value.
+	 */
 	createString(_optionName, _aliases, _propertyName, _description) {
 		return this.createStringOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineStringOption} TODO: Describe return value.
+	 */
 	createStringOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineStringOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -195,10 +387,26 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineStringArrayOption} TODO: Describe return value.
+	 */
 	createStringArray(_optionName, _aliases, _propertyName, _description) {
 		return this.createStringArrayOption(_optionName, _aliases, _propertyName, _description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _propertyName - TODO: Describe parameter.
+	 * @param {string} _description - TODO: Describe parameter.
+	 * @returns {CommandLineStringArrayOption} TODO: Describe return value.
+	 */
 	createStringArrayOption(_optionName, _aliases, _propertyName, _description) {
 		this.id++;
 		let option = new CommandLineStringArrayOption(this.id, _optionName, _aliases, _propertyName, _description);
@@ -206,6 +414,11 @@ class CommandLineOptions {
 		return option;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _result - TODO: Describe parameter.
+	 * @returns {object} TODO: Describe return value.
+	 */
 	parse(_result) {
 		if(_result === undefined || _result === null) {
 			_result = {};
@@ -230,6 +443,10 @@ class CommandLineOptions {
 		return _result;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {function} _handler - TODO: Describe parameter.
+	 */
 	addDefaultHandler(_handler) {
 		this.defaultHandler = _handler;
 	}

@@ -33,6 +33,12 @@ class CommandLineNumberOption extends CommandLineOption {
 		super(id, name, aliases, propertyName, description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _result - TODO: Describe parameter.
+	 * @param {number} _index - TODO: Describe parameter.
+	 * @returns {number} TODO: Describe return value.
+	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {
 			throw CommandLineError.ILLEGAL_ARGUMENT;

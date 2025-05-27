@@ -19,30 +19,63 @@ const Help = require('./Help');
 
 class Options {
 
+	/**
+	 * @description TODO: Describe this method.
+	 */
 	constructor() {
 		this._aliases = new Map();
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _property - TODO: Describe parameter.
+	 */
 	setAlias(_aliases, _property) {
 		this.addAlias(_aliases, _property);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _property - TODO: Describe parameter.
+	 */
 	setAliases(_aliases, _property) {
 		this.addAlias(_aliases, _property);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _property - TODO: Describe parameter.
+	 */
 	setAliasProperty(_aliases, _property) {
 		this.addAlias(_aliases, _property);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _property - TODO: Describe parameter.
+	 */
 	addAliases(_aliases, _property) {
 		this.addAlias(_aliases, _property);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _property - TODO: Describe parameter.
+	 */
 	addAliasProperty(_aliases, _property) {
 		this.addAlias(_aliases, _property);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Array|string} _aliases - TODO: Describe parameter.
+	 * @param {string} _property - TODO: Describe parameter.
+	 */
 	addAlias(_aliases, _property) {
 		// Defensive programming...check input...
 		if(_aliases === undefined || _aliases === null) {
@@ -84,10 +117,20 @@ class Options {
 		}
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _alias - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	hasAlias(_alias) {
 		return this.hasAliasProperty(_alias);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _alias - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	hasAliasProperty(_alias) {
 		if(_alias === undefined || _alias === null) {
 			return false;
@@ -101,6 +144,11 @@ class Options {
 		return this._aliases.has(_alias);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _alias - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	getAliasedProperty(_alias) {
 		if(_alias === undefined || _alias === null) {
 			return null;
@@ -114,6 +162,11 @@ class Options {
 		return this._aliases.get(_alias);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _property - TODO: Describe parameter.
+	 * @returns {Array} TODO: Describe return value.
+	 */
 	getPropertyAlias(_property) {
 		let result = [];
 		if(_property === undefined || _property === null) {
@@ -127,38 +180,83 @@ class Options {
 		return result;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _property - TODO: Describe parameter.
+	 * @returns {Array} TODO: Describe return value.
+	 */
 	getPropertyAliases(_property) {
 		return this.getPropertyAlias(_property);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static new(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static create(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static concat(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static instance(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static merge(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static newInstance(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _args - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static parse(_args) {
 		return this.assign(_args);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _sourceInstance - TODO: Describe parameter.
+	 * @returns {any} TODO: Describe return value.
+	 */
 	static assign(_sourceInstance) {
 		let targetClass = this.name;
 		// Defensive programming...check input...
@@ -217,11 +315,11 @@ class Options {
 			}
 			if(argumentType === 'string' && targetInstanceType === 'boolean') {
 				let value = sourceInstancePropertyValue;
-				value = value.trim.toLowerCase();
+				value = value.trim().toLowerCase(); // Corrected: .toLowerCase()
 				if(value === 'true' || value === 'on' || value === 'yes') {
 					targetInstance[property] = true;
 				} else {
-					targetInstance[proprty] = false;
+					targetInstance[property] = false; // Corrected: targetInstance[property]
 				}
 				continue;
 			}

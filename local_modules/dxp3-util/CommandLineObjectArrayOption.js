@@ -21,10 +21,24 @@ const CommandLineObjectOption = require('./CommandLineObjectOption');
 const Help = require('./Help');
 
 class CommandLineObjectArrayOption extends CommandLineObjectOption {
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {number} id - TODO: Describe parameter.
+	 * @param {string} name - TODO: Describe parameter.
+	 * @param {Array|string} aliases - TODO: Describe parameter.
+	 * @param {string} propertyName - TODO: Describe parameter.
+	 * @param {string} description - TODO: Describe parameter.
+	 */
 	constructor(id, name, aliases, propertyName, description) {
 		super(id, name, aliases, propertyName, description);
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _result - TODO: Describe parameter.
+	 * @param {number} _index - TODO: Describe parameter.
+	 * @returns {number} TODO: Describe return value.
+	 */
 	parse(_result, _index) {
 		if(_result === undefined || _result === null) {
 			throw CommandLineError.ILLEGAL_ARGUMENT;

@@ -15,12 +15,22 @@ const canonicalName = packageName + path.sep + moduleName;
  * @module dxp3-util/Assert
  */
 class Assert {
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {any} canonicalName - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	static isFileToExecute(canonicalName) {
 		let fileToExecute = process.argv[1];
 		return (fileToExecute.endsWith(canonicalName) ||
    		   		fileToExecute.endsWith(canonicalName + '.js'));
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {any} _value - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	static isUndefinedOrNull(_value) {
 		if(_value === undefined || _value === null) {
 			return true;
@@ -28,6 +38,11 @@ class Assert {
 		return false;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {any} _array - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	static isUndefinedOrNullOrEmptyArray(_array) {
 		if(_array === undefined || _array === null) {
 			return true;
@@ -38,6 +53,11 @@ class Assert {
 		return false;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {any} _string - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	static isUndefinedOrNullOrEmptyString(_string) {
 		if(_string === undefined || _string === null) {
 			return true;
@@ -48,6 +68,11 @@ class Assert {
 		return false;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {any} _number - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	static isUndefinedOrNullOrNotANumber(_number) {
 		if(_number === undefined || _number === null) {
 			return true;
@@ -58,6 +83,11 @@ class Assert {
 		return false;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {any} _string - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	static isUndefinedOrNullOrNotAStringOrEmpty(_string) {
 		if(_string === undefined || _string === null) {
 			return true;
