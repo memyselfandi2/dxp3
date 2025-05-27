@@ -1,0 +1,97 @@
+****************************************
+* DXP3 - Digital Experience Platform 3
+*                                     
+* MODULE: dxp3-util/Options           
+****************************************
+
+The Options class provides a base for creating classes that manage configuration
+or other sets of properties, with special support for property aliasing and
+convenient population from source objects including basic type coercion.
+
+It is designed to be extended by your own configuration or data classes.
+
+To use the Options class, you typically extend it to create your own custom
+options or configuration class. You can then define properties and set up
+aliases for them in the constructor of your subclass.
+
+Key Features:
+- Define properties on your subclass.
+- Add aliases for these properties using `addAlias()`.
+- Create and populate instances of your subclass from plain JavaScript objects
+  using the static `assign()` method (or its aliases like `create()`, `new()`).
+
+Importent to note:
+
+- When extending `Options`, always call `super()` in your subclass's constructor.
+- Properties for which you define aliases should typically be initialized in your
+subclass's constructor (e.g., with default values).
+- The `addAlias` method uses `Object.defineProperty` to create getters and setters
+for the aliases, making them behave like real properties that reflect the
+original property's value.
+- Alias names are normalized: whitespace trimmed, `_`, `-`, ` ` removed, and
+converted to lowercase. So, "User Name", "user-name", "user_name" would all
+normalize to "username" as an alias.
+- The `assign` static method is powerful for initializing your options objects
+from various sources like configuration files or command-line arguments (after
+they've been parsed into an object).
+- The numerous aliases for `addAlias` and `assign` are for developer convenience
+and preference.
+
+****************************************
+* CODE EXAMPLES                       
+****************************************
+
+// Example of Extending Options:
+
+const Options = require('dxp3-util').Options; // Get the Options class
+
+class MyConfig extends Options {
+  constructor() {
+    super(); // Always call super()
+
+    // Define default properties
+    this.port = 8080;
+    this.hostname = 'localhost';
+    this.verbose = false;
+    this.features = ['featureA']; // Example of an array property
+
+    // Add aliases
+    // 'p' and 'serverPort' will now act as aliases for 'port'
+    this.addAlias('p, serverPort', 'port');
+    // 'h' and 'host' will act as aliases for 'hostname'
+    this.addAlias('h, host', 'hostname');
+    // 'v' will act as an alias for 'verbose'
+    this.addAlias('v', 'verbose');
+  }
+}
+
+// Populating an instance from a source object
+const sourceData = {
+  p: 3000,                 // Uses alias 'p' for 'port'
+  host: 'example.com',     // Uses alias 'host' for 'hostname'
+  verbose: 'true',         // String 'true' will be coerced to boolean true
+  features: 'featureB,featureC' // String will be coerced to ['featureB', 'featureC']
+};
+
+const config = MyConfig.assign(sourceData);
+
+console.log(config.port);      // Output: 3000
+console.log(config.p);         // Output: 3000 (access via alias)
+console.log(config.hostname);  // Output: 'example.com'
+console.log(config.verbose);   // Output: true (boolean)
+console.log(config.features);  // Output: ['featureB', 'featureC'] (array)
+
+config.serverPort = 3001;      // Set via alias
+console.log(config.port);      // Output: 3001
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+
+N/A
+
+****************************************
+* COMMAND LINE EXAMPLES                *
+****************************************
+
+N/A

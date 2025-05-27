@@ -48,7 +48,11 @@ class Options {
 	constructor() {
 		this._aliases = new Map();
 	}
-
+	/**
+	 * Alias for {@link Options#addAlias}.
+	 * @param {String|Array<String>} _aliases - A comma-separated string or an array of alias names.
+	 * @param {String} _property - The name of the actual property to which the aliases should point.
+	 */
 	setAlias(_aliases, _property) {
 		this.addAlias(_aliases, _property);
 	}

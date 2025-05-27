@@ -1,0 +1,60 @@
+****************************************
+* DXP3 - Digital Experience Platform 3
+*                                     
+* MODULE: dxp3-util/Help
+****************************************
+
+The `Help` class provides static methods to display help information from text files.
+It is primarily used to show the contents of a `README.txt` file or a
+class-specific help file (e.g., `MyClass.txt`) directly to the console.
+
+When `Help.js` is executed as the main script (e.g., `node Help.js`),
+it will attempt to print the `README.txt` file located in the current directory.
+
+Key Features:
+- Prints the content of a specified help file.
+- Defaults to `README.txt` if no specific class/file is indicated.
+- Can print help for a specific class (e.g., `MyClass.txt`) if a class object or
+  class name string is provided.
+- Falls back to printing `README.txt` if a specific class help file is not found.
+- Clears the console before displaying the help content.
+- Logs an error message to the console if a help file cannot be read.
+
+Important to note:
+
+- Help files are expected to be UTF-8 encoded text files.
+- File paths are resolved relative to the current working directory where the Node.js process is running.
+
+****************************************
+* CODE EXAMPLES                       
+****************************************
+
+// Printing the default help file (`README.txt`):
+const Help = require('dxp3-util').Help;
+Help.print();
+
+// Printing help for a specific class:
+// This will attempt to load and display `MyClass.txt`. If `MyClass.txt`
+// is not found, it will try to display `README.txt`.
+const Help = require('dxp3-util').Help;
+
+class MyClass {}
+Help.print(MyClass);
+
+// Printing help using a class name string:
+// This will attempt to load and display `AnotherTopic.txt`. If not found,
+// it will try to display `README.txt`.
+const Help = require('dxp3-util').Help;
+Help.print('AnotherTopic');
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+
+N/A
+
+****************************************
+* COMMAND LINE EXAMPLES                *
+****************************************
+
+N/A

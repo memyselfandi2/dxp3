@@ -84,7 +84,7 @@ class Help {
 }
 // Check if someone tried to run/execute this file.
 if(Assert.isFileToExecute(canonicalName)) {
-	Help.print();
+	Help.print(Help);
 	return;
 }
 module.exports = Help;
