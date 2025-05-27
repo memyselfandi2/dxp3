@@ -1,0 +1,76 @@
+***************************************************************
+* DXP3 - Digital Experience Platform 3                        *
+*                                                             *
+* MODULE: dxp3-util/CommandLineOptions                        *
+***************************************************************
+
+The `CommandLineOptions` class is a utility within the `dxp3-util` package designed to
+manage, define, and parse command-line arguments passed to a Node.js application
+(typically from `process.argv`). It allows developers to specify expected options,
+their types (boolean, string, number, arrays, objects, enums, flags), aliases,
+and descriptions. The class then processes the input arguments and populates an
+object with the parsed values.
+
+KEY FEATURES:
+- Option Definition: Supports various types of command-line options:
+  - Boolean: True/false values (e.g., --verbose, --enable-feature).
+  - Boolean Array: Multiple boolean values.
+  - String: Textual values (e.g., --name "John Doe", --file /path/to/file).
+  - String Array: Multiple string values.
+  - Number: Numeric values (e.g., --port 8080, --count 10).
+  - Number Array: Multiple number values.
+  - Object: JSON string values parsed into JavaScript objects.
+  - Object Array: Multiple JSON string values.
+  - Enumeration: Values restricted to a predefined set (requires an Enum class).
+  - Flag: Options that don't take a value but indicate presence (e.g., --help).
+- Aliases: Allows defining multiple names (e.g., -v, --verbose) for the same option.
+  Aliases are normalized (trimmed, special characters removed, lowercased) for robust matching.
+- Parsing: Processes `process.argv` to identify and extract option values.
+- Result Object: Populates a JavaScript object with the parsed option values, using
+  specified property names.
+- Default Handler: Provides a mechanism to handle arguments that are not recognized
+  as options (e.g., positional arguments or file paths).
+- Extensibility: While providing convenient `create<Type>Option` methods, it also
+  allows adding custom `CommandLineOption` instances via `addCommandLineOption`.
+
+Important to note:
+
+- The class relies on various `CommandLine<Type>Option` classes (e.g., `CommandLineStringOption`)
+  for the actual parsing logic of each specific type.
+- It uses an internal `id` for options when they are created via the `create*` methods,
+  storing them in `optionsById` and `optionsByName` maps for efficient lookup.
+- Normalization of option names and aliases (removing `_`, `-`, ` ` and converting to lowercase)
+  is done to ensure flexible matching from command-line input.
+
+****************************************
+* CODE EXAMPLES                        *
+****************************************
+const options = new CommandLineOptions();
+
+// Define Expected Options:
+// Use the `create<Type>Option` methods (or their aliases like `createString`, `createBool`)
+// to define each command-line option your application accepts.
+options.createStringOption('--name', ['-n'], 'userName', 'The name of the user.');`
+options.createFlagOption('--verbose', ['-v'], 'isVerbose', 'Enable verbose output.');`
+
+// (Optional) Add a Default Handler:
+// If your application needs to process arguments that are not options (e.g., file names):
+options.addDefaultHandler((result, index, value) => { ... });
+
+// Parse Arguments from the command line.
+// Call the `parse()` method, optionally providing an existing object to populate.
+// It returns an object with the parsed values.
+const parsedArgs = options.parse();
+// parsedArgs will now contain properties like { userName: '...', isVerbose: true }
+
+****************************************
+* COMMAND LINE OPTIONS                 *
+****************************************
+
+N/A
+
+****************************************
+* COMMAND LINE EXAMPLES                *
+****************************************
+
+N/A

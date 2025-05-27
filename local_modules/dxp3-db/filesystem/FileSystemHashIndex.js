@@ -48,9 +48,9 @@ class FileSystemHashIndex extends TableIndex {
         this._totalNumberOfEntries = 0;
         this._loadFactorThreshold = DEFAULT_LOAD_FACTOR_THRESHOLD;
 
-        this._standbyWorker = null;
-        this._standbyWorkerTempPath = null;
-        this._standbyWorkerState = 'idle'; // 'idle', 'building', 'ready_for_live_updates', 'finalizing', 'error'
+        this._hashIndexWorker = null;
+        this._hashIndexWorkerTempPath = null;
+        this._hashIndexWorkerState = 'idle'; // 'idle', 'building', 'ready_for_live_updates', 'finalizing', 'error'
         this._isSwapping = false; // True during the critical file swap phase
         this._operationQueue = []; // For operations during swap or when standby is not ready
         this._isProcessingQueue = false; // To prevent re-entrant queue processing
@@ -85,26 +85,26 @@ class FileSystemHashIndex extends TableIndex {
 
     async close() {
         logger.debug(`close(): Closing hash index: ${this._currentIndexPath}`);
-        if (this._standbyWorker) {
+        if (this._hashIndexWorker) {
             logger.info(`Terminating active standby worker for ${this._currentIndexPath}.`);
-            this._standbyWorker.postMessage({ action: 'stopGracefully' });
+            this._hashIndexWorker.postMessage({ action: 'stopGracefully' });
             try {
                 // Wait for worker to confirm stop or timeout
                 await new Promise((resolve, reject) => {
                     const timeout = setTimeout(() => reject(new Error("Timeout waiting for worker to stop gracefully")), 5000);
-                    this._standbyWorker.on('message', (msg) => {
+                    this._hashIndexWorker.on('message', (msg) => {
                         if (msg.status === 'stopped') { clearTimeout(timeout); resolve(); }
                     });
-                    this._standbyWorker.on('exit', () => { clearTimeout(timeout); resolve(); }); // Resolve if it exits for any reason
+                    this._hashIndexWorker.on('exit', () => { clearTimeout(timeout); resolve(); }); // Resolve if it exits for any reason
                 });
             } catch (e) {
                 logger.warn(`Error or timeout stopping worker gracefully, terminating: ${e.message}`);
-                if (this._standbyWorker) await this._standbyWorker.terminate().catch(termErr => logger.warn(`Error terminating worker: ${termErr.message}`));
+                if (this._hashIndexWorker) await this._hashIndexWorker.terminate().catch(termErr => logger.warn(`Error terminating worker: ${termErr.message}`));
             }
-            this._standbyWorker = null;
+            this._hashIndexWorker = null;
             // The worker should clean its own temp file on 'stopGracefully'
-            this._standbyWorkerTempPath = null;
-            this._standbyWorkerState = 'idle';
+            this._hashIndexWorkerTempPath = null;
+            this._hashIndexWorkerState = 'idle';
         }
         await this._currentIndexFile.close();
         logger.debug(`close(): Hash index closed: ${this._currentIndexPath}`);
@@ -240,19 +240,19 @@ class FileSystemHashIndex extends TableIndex {
     }
 
     async _launchStandbyWorker() {
-        if (this._standbyWorker) {
+        if (this._hashIndexWorker) {
             logger.info(`_launchStandbyWorker: Terminating existing standby worker for ${this._currentIndexPath}.`);
-            this._standbyWorker.postMessage({ action: 'stopGracefully' });
+            this._hashIndexWorker.postMessage({ action: 'stopGracefully' });
             // Await termination or timeout
             try {
                 await new Promise((resolve, reject) => {
                     const t = setTimeout(() => reject(new Error("Timeout stopping old standby worker")), 2000);
-                    this._standbyWorker.on('exit', () => { clearTimeout(t); resolve(); });
+                    this._hashIndexWorker.on('exit', () => { clearTimeout(t); resolve(); });
                 });
             } catch (e) {
-                if (this._standbyWorker) await this._standbyWorker.terminate().catch(err => logger.warn("Error terminating old worker:", err));
+                if (this._hashIndexWorker) await this._hashIndexWorker.terminate().catch(err => logger.warn("Error terminating old worker:", err));
             }
-            this._standbyWorker = null;
+            this._hashIndexWorker = null;
         }
 
         let targetBuckets = (this._currentNumberOfBuckets || DEFAULT_NUMBER_OF_BUCKETS) * 2;
@@ -262,46 +262,41 @@ class FileSystemHashIndex extends TableIndex {
                 targetBuckets = targetBuckets * 2;
             }
         }
-
-
-        this._standbyWorkerTempPath = this._currentIndexPath + '.standby_build_' + Date.now() + '_' + Math.random().toString(36).substring(2,7) + '.hdx';
-        this._standbyWorkerState = 'building';
-
+        this._hashIndexWorkerTempPath = this._currentIndexPath + '.standby_build_' + Date.now() + '_' + Math.random().toString(36).substring(2,7) + '.hdx';
+        this._hashIndexWorkerState = 'building';
         const workerPath = path.join(__dirname, 'hash-index-resize-worker.js');
-        this._standbyWorker = new Worker(workerPath);
-        logger.info(`_launchStandbyWorker: Launched new standby worker for ${this._currentIndexPath}. Target buckets: ${targetBuckets}, Temp path: ${this._standbyWorkerTempPath}`);
-
-        this._standbyWorker.postMessage({
+        this._hashIndexWorker = new Worker(workerPath);
+        logger.info(`_launchStandbyWorker: Launched new standby worker for ${this._currentIndexPath}. Target buckets: ${targetBuckets}, Temp path: ${this._hashIndexWorkerTempPath}`);
+        this._hashIndexWorker.postMessage({
             action: 'prepareNextIndex',
             sourceFolder: this._sourceFolder,
             currentDataIndexPath: this._currentIndexPath, // Worker will copy this
             newNumBuckets: targetBuckets,
             recordLength: BUCKET_RECORD_LENGTH,
             loadFactorThreshold: this._loadFactorThreshold,
-            outputTempPath: this._standbyWorkerTempPath
+            outputTempPath: this._hashIndexWorkerTempPath
         });
-
-        this._standbyWorker.on('message', (message) => this._handleStandbyWorkerMessage(message));
-        this._standbyWorker.on('error', (err) => this._handleStandbyWorkerError(err));
-        this._standbyWorker.on('exit', (code) => this._handleStandbyWorkerExit(code));
+        this._hashIndexWorker.on('message', (message) => this._handleStandbyWorkerMessage(message));
+        this._hashIndexWorker.on('error', (err) => this._handleStandbyWorkerError(err));
+        this._hashIndexWorker.on('exit', (code) => this._handleStandbyWorkerExit(code));
     }
 
     _handleStandbyWorkerMessage(message) {
         logger.debug(`[FSIndex ${this.getName()}] Worker message: ${JSON.stringify(message)}`);
         if (message.status === 'readyForLiveUpdates') {
-            this._standbyWorkerState = 'ready_for_live_updates';
-            this._standbyWorkerTempPath = message.tempPath; // Confirm path
-            logger.info(`Standby worker for ${this._currentIndexPath} is ready for live updates at ${this._standbyWorkerTempPath}.`);
+            this._hashIndexWorkerState = 'ready_for_live_updates';
+            this._hashIndexWorkerTempPath = message.tempPath; // Confirm path
+            logger.info(`Standby worker for ${this._currentIndexPath} is ready for live updates at ${this._hashIndexWorkerTempPath}.`);
             this._triggerSwapIfNecessary(); // Check if we were waiting for it
         } else if (message.status === 'finalized') {
-            if (this._isSwapping && this._standbyWorkerState === 'finalizing') {
+            if (this._isSwapping && this._hashIndexWorkerState === 'finalizing') {
                 this._handleStandbyFinalized(message.finalPath);
             } else {
                 logger.warn(`Received 'finalized' from worker for ${this._currentIndexPath}, but not in a swapping/finalizing state. Ignoring.`);
             }
         } else if (message.status === 'error') {
             logger.error(`Standby worker for ${this._currentIndexPath} reported an error: ${message.message} \nStack: ${message.stack}`);
-            this._standbyWorkerState = 'error';
+            this._hashIndexWorkerState = 'error';
             // Worker should have cleaned up its temp file. If path is known, try to ensure.
             if (message.tempPath) {
                 fs.unlink(message.tempPath).catch(e => { if (e.code !== 'ENOENT') logger.warn(`Could not delete worker temp file ${message.tempPath} on error: ${e.message}`); });
@@ -309,8 +304,8 @@ class FileSystemHashIndex extends TableIndex {
             // Optionally, try to relaunch worker after a delay or on next operation.
         } else if (message.status === 'cancelled' || message.status === 'stopped') {
             logger.info(`Standby worker for ${this._currentIndexPath} reported: ${message.status}.`);
-            if (this._standbyWorkerState !== 'idle' && this._standbyWorkerState !== 'error') { // Avoid if already handled by exit/error
-                this._standbyWorkerState = 'idle'; // Or 'error' if cancelled due to an issue
+            if (this._hashIndexWorkerState !== 'idle' && this._hashIndexWorkerState !== 'error') { // Avoid if already handled by exit/error
+                this._hashIndexWorkerState = 'idle'; // Or 'error' if cancelled due to an issue
             }
              if (message.tempPath) { // Worker might report its temp path on cancellation
                 fs.unlink(message.tempPath).catch(e => { if (e.code !== 'ENOENT') logger.warn(`Could not delete worker temp file ${message.tempPath} on ${message.status}: ${e.message}`); });
@@ -322,13 +317,13 @@ class FileSystemHashIndex extends TableIndex {
         let writeLock = null;
         try {
             writeLock = await this._readWriteLock.writeLock(this._uuid);
-            if (this._isSwapping || (this._needsResize() && this._standbyWorkerState !== 'ready_for_live_updates')) {
-                logger.debug(`insertMany: Queuing ${entries.length} entries for ${this._currentIndexPath}. Swap: ${this._isSwapping}, NeedsResize: ${this._needsResize()}, WorkerState: ${this._standbyWorkerState}`);
+            if (this._isSwapping || (this._needsResize() && this._hashIndexWorkerState !== 'ready_for_live_updates')) {
+                logger.debug(`insertMany: Queuing ${entries.length} entries for ${this._currentIndexPath}. Swap: ${this._isSwapping}, NeedsResize: ${this._needsResize()}, WorkerState: ${this._hashIndexWorkerState}`);
                 this._operationQueue.push({ type: 'insertMany', entries: entries });
             } else {
                 await this._directInsertMany(entries); // Applies to _currentIndexFile
-                if (this._standbyWorker && this._standbyWorkerState === 'ready_for_live_updates') {
-                    this._standbyWorker.postMessage({ action: 'applyOperation', operation: { type: 'insertMany', entries: entries } });
+                if (this._hashIndexWorker && this._hashIndexWorkerState === 'ready_for_live_updates') {
+                    this._hashIndexWorker.postMessage({ action: 'applyOperation', operation: { type: 'insertMany', entries: entries } });
                 }
             }
         } catch(_exception) {
@@ -467,13 +462,13 @@ class FileSystemHashIndex extends TableIndex {
         let writeLock = null;
         try {
             writeLock = await this._readWriteLock.writeLock(this._uuid);
-            if (this._isSwapping || (this._needsResize() && this._standbyWorkerState !== 'ready_for_live_updates')) {
-                logger.debug(`insert: Queuing key ${_key} for ${this._currentIndexPath}. Swap: ${this._isSwapping}, NeedsResize: ${this._needsResize()}, WorkerState: ${this._standbyWorkerState}`);
+            if (this._isSwapping || (this._needsResize() && this._hashIndexWorkerState !== 'ready_for_live_updates')) {
+                logger.debug(`insert: Queuing key ${_key} for ${this._currentIndexPath}. Swap: ${this._isSwapping}, NeedsResize: ${this._needsResize()}, WorkerState: ${this._hashIndexWorkerState}`);
                 this._operationQueue.push({ type: 'insert', key: _key, value: _dataFileRecordIndex });
             } else {
                 await this._directInsert(_key, _dataFileRecordIndex);
-                if (this._standbyWorker && this._standbyWorkerState === 'ready_for_live_updates') {
-                    this._standbyWorker.postMessage({ action: 'applyOperation', operation: { type: 'insert', key: _key, value: _dataFileRecordIndex } });
+                if (this._hashIndexWorker && this._hashIndexWorkerState === 'ready_for_live_updates') {
+                    this._hashIndexWorker.postMessage({ action: 'applyOperation', operation: { type: 'insert', key: _key, value: _dataFileRecordIndex } });
                 }
             }
         } catch(_exception) {
@@ -602,8 +597,8 @@ class FileSystemHashIndex extends TableIndex {
                     appliedToCurrent = true;
                 }
 
-                if (appliedToCurrent && this._standbyWorker && this._standbyWorkerState === 'ready_for_live_updates') {
-                    this._standbyWorker.postMessage({ action: 'applyOperation', operation: op });
+                if (appliedToCurrent && this._hashIndexWorker && this._hashIndexWorkerState === 'ready_for_live_updates') {
+                    this._hashIndexWorker.postMessage({ action: 'applyOperation', operation: op });
                 }
             }
         } catch (error) {
@@ -637,17 +632,17 @@ class FileSystemHashIndex extends TableIndex {
 
         logger.info(`_triggerSwapIfNecessary: Load factor exceeded for ${this._currentIndexPath}. Checking standby worker.`);
 
-        if (this._standbyWorker && this._standbyWorkerState === 'ready_for_live_updates') {
+        if (this._hashIndexWorker && this._hashIndexWorkerState === 'ready_for_live_updates') {
             logger.info(`Standby worker for ${this._currentIndexPath} is ready. Initiating swap.`);
             this._isSwapping = true;
-            this._standbyWorkerState = 'finalizing';
-            this._standbyWorker.postMessage({ action: 'finalize' });
+            this._hashIndexWorkerState = 'finalizing';
+            this._hashIndexWorker.postMessage({ action: 'finalize' });
             // The actual swap logic will be triggered by the worker's 'finalized' message
             // in _handleStandbyWorkerMessage -> _handleStandbyFinalized
-        } else if (this._standbyWorker && (this._standbyWorkerState === 'building' || this._standbyWorkerState === 'finalizing')) {
-            logger.info(`Load factor high for ${this._currentIndexPath}, but standby worker is busy ('${this._standbyWorkerState}'). Operations will be queued.`);
+        } else if (this._hashIndexWorker && (this._hashIndexWorkerState === 'building' || this._hashIndexWorkerState === 'finalizing')) {
+            logger.info(`Load factor high for ${this._currentIndexPath}, but standby worker is busy ('${this._hashIndexWorkerState}'). Operations will be queued.`);
         } else { // No worker, or worker in error/idle state
-            logger.warn(`Load factor high for ${this._currentIndexPath}, but no usable standby worker (state: ${this._standbyWorkerState}). Relaunching worker. Operations will be queued.`);
+            logger.warn(`Load factor high for ${this._currentIndexPath}, but no usable standby worker (state: ${this._hashIndexWorkerState}). Relaunching worker. Operations will be queued.`);
             await this._launchStandbyWorker(); // Attempt to (re)launch
         }
     }
@@ -718,10 +713,10 @@ class FileSystemHashIndex extends TableIndex {
                 this._currentNumberOfBuckets = 0; // Mark as potentially unusable
             }
         } finally {
-            this._standbyWorkerState = 'idle';
-            if (this._standbyWorker) { // Terminate the worker that just finished
-                await this._standbyWorker.terminate().catch(e => logger.warn(`Error terminating finalized standby worker: ${e.message}`));
-                this._standbyWorker = null;
+            this._hashIndexWorkerState = 'idle';
+            if (this._hashIndexWorker) { // Terminate the worker that just finished
+                await this._hashIndexWorker.terminate().catch(e => logger.warn(`Error terminating finalized standby worker: ${e.message}`));
+                this._hashIndexWorker = null;
             }
             this._isSwapping = false;
             if (lock) lock.release();
@@ -738,15 +733,15 @@ class FileSystemHashIndex extends TableIndex {
 
     _handleStandbyWorkerError(err) {
         logger.error(`Standby worker for ${this._currentIndexPath} encountered an error: ${err.stack || err}`);
-        this._standbyWorkerState = 'error';
-        if (this._standbyWorkerTempPath) {
-            fs.unlink(this._standbyWorkerTempPath).catch(e => { if (e.code !== 'ENOENT') logger.warn(`Could not delete standby temp file ${this._standbyWorkerTempPath} on worker error: ${e.message}`); });
-            this._standbyWorkerTempPath = null;
+        this._hashIndexWorkerState = 'error';
+        if (this._hashIndexWorkerTempPath) {
+            fs.unlink(this._hashIndexWorkerTempPath).catch(e => { if (e.code !== 'ENOENT') logger.warn(`Could not delete standby temp file ${this._hashIndexWorkerTempPath} on worker error: ${e.message}`); });
+            this._hashIndexWorkerTempPath = null;
         }
         // Terminate the worker if it hasn't exited
-        if (this._standbyWorker) {
-            this._standbyWorker.terminate().catch(e => logger.warn(`Error terminating worker on error event: ${e.message}`));
-            this._standbyWorker = null;
+        if (this._hashIndexWorker) {
+            this._hashIndexWorker.terminate().catch(e => logger.warn(`Error terminating worker on error event: ${e.message}`));
+            this._hashIndexWorker = null;
         }
         // If we were swapping, this is a problem.
         if (this._isSwapping) {
@@ -758,18 +753,18 @@ class FileSystemHashIndex extends TableIndex {
     }
 
     _handleStandbyWorkerExit(code) {
-        logger.info(`Standby worker for ${this._currentIndexPath} exited with code ${code}. Current state: ${this._standbyWorkerState}`);
-        if (this._standbyWorkerState !== 'idle' && this._standbyWorkerState !== 'error') { // Avoid double handling if error/message already processed
+        logger.info(`Standby worker for ${this._currentIndexPath} exited with code ${code}. Current state: ${this._hashIndexWorkerState}`);
+        if (this._hashIndexWorkerState !== 'idle' && this._hashIndexWorkerState !== 'error') { // Avoid double handling if error/message already processed
             if (code !== 0) {
                 logger.error(`Standby worker for ${this._currentIndexPath} exited unexpectedly (code ${code}).`);
-                this._standbyWorkerState = 'error';
+                this._hashIndexWorkerState = 'error';
             } else {
-                this._standbyWorkerState = 'idle';
+                this._hashIndexWorkerState = 'idle';
             }
 
-            if (this._standbyWorkerTempPath) {
-                fs.unlink(this._standbyWorkerTempPath).catch(e => { if (e.code !== 'ENOENT') logger.warn(`Could not delete standby temp file ${this._standbyWorkerTempPath} on worker exit: ${e.message}`); });
-                this._standbyWorkerTempPath = null;
+            if (this._hashIndexWorkerTempPath) {
+                fs.unlink(this._hashIndexWorkerTempPath).catch(e => { if (e.code !== 'ENOENT') logger.warn(`Could not delete standby temp file ${this._hashIndexWorkerTempPath} on worker exit: ${e.message}`); });
+                this._hashIndexWorkerTempPath = null;
             }
 
             if (this._isSwapping) {
@@ -778,7 +773,7 @@ class FileSystemHashIndex extends TableIndex {
                 this._processQueuedOperations(); // Process queue on current (old) index
             }
         }
-        this._standbyWorker = null; // Ensure worker instance is cleared
+        this._hashIndexWorker = null; // Ensure worker instance is cleared
     }
 
 
@@ -786,14 +781,13 @@ class FileSystemHashIndex extends TableIndex {
         let writeLock = null;
         try {
             writeLock = await this._readWriteLock.writeLock(this._uuid);
-            if (this._isSwapping || (this._needsResize() && this._standbyWorkerState !== 'ready_for_live_updates')) {
-                logger.debug(`delete: Queuing key ${_key} for ${this._currentIndexPath}. Swap: ${this._isSwapping}, NeedsResize: ${this._needsResize()}, WorkerState: ${this._standbyWorkerState}`);
+            if (this._isSwapping || (this._needsResize() && this._hashIndexWorkerState !== 'ready_for_live_updates')) {
+                logger.debug(`delete: Queuing key ${_key} for ${this._currentIndexPath}. Swap: ${this._isSwapping}, NeedsResize: ${this._needsResize()}, WorkerState: ${this._hashIndexWorkerState}`);
                 this._operationQueue.push({ type: 'delete', key: _key });
-            } else {
-                await this._directDelete(_key);
-                if (this._standbyWorker && this._standbyWorkerState === 'ready_for_live_updates') {
-                    this._standbyWorker.postMessage({ action: 'applyOperation', operation: { type: 'delete', key: _key } });
-                }
+            }
+            await this._directDelete(_key);
+            if (this._hashIndexWorker && this._hashIndexWorkerState === 'ready_for_live_updates') {
+                this._hashIndexWorker.postMessage({ action: 'applyOperation', operation: { type: 'delete', key: _key } });
             }
         } catch(_exception) {
             logger.error(`Error in delete for ${this._currentIndexPath}, key ${_key}: ${_exception.stack || _exception}`);
@@ -850,22 +844,23 @@ class FileSystemHashIndex extends TableIndex {
         logger.info(`Clearing hash index: ${this._currentIndexPath}`);
         let lock = null;
         try {
+            // We acquire a write lock so no new inserts/deletes can happen while we clear our index.
             lock = await this._readWriteLock.writeLock(this._uuid);
-
-            if (this._standbyWorker) {
+            // If we have an existing worker, we ask it to shutdown gracefully.
+            if (this._hashIndexWorker) {
                 logger.info(`clear: Signaling and terminating active standby worker for ${this._currentIndexPath}.`);
-                this._standbyWorker.postMessage({ action: 'stopGracefully' });
+                this._hashIndexWorker.postMessage({ action: 'stopGracefully' });
                 try {
                     await new Promise((resolve, reject) => {
                         const t = setTimeout(() => reject(new Error("Timeout stopping standby worker during clear")), 2000);
-                        this._standbyWorker.on('exit', () => { clearTimeout(t); resolve(); });
+                        this._hashIndexWorker.on('exit', () => { clearTimeout(t); resolve(); });
                     });
                 } catch (e) {
-                    if (this._standbyWorker) await this._standbyWorker.terminate().catch(err => logger.warn("Error terminating worker in clear:", err));
+                    if (this._hashIndexWorker) await this._hashIndexWorker.terminate().catch(err => logger.warn("Error terminating worker in clear:", err));
                 }
-                this._standbyWorker = null;
-                this._standbyWorkerTempPath = null; // Worker should have cleaned its temp file
-                this._standbyWorkerState = 'idle';
+                this._hashIndexWorker = null;
+                this._hashIndexWorkerTempPath = null;
+                this._hashIndexWorkerState = 'idle';
             }
 
             this._isSwapping = false;
@@ -929,8 +924,8 @@ class FileSystemHashIndex extends TableIndex {
 
     async refresh() {
         logger.info(`Refreshing hash index: ${this._currentIndexPath}`);
-        await this.clear(); // This will also handle stopping standby worker and re-launching it.
-
+        // We start by clearing our index and restarting a fresh new worker.
+        await this.clear();
         const column = this._table.getColumnByUUID(this._columnUUID);
         const columnName = column.getName();
         const totalNumberOfRecordsInDataFile = await this._dataFile.getTotalNumberOfRecords();
@@ -948,7 +943,7 @@ class FileSystemHashIndex extends TableIndex {
 
             entriesToInsert.push({ key: valueToIndex, dataFileRecordIndex: i });
 
-            if (entriesToInsert.length >= batchSize || (i === totalNumberOfRecordsInDataFile - 1 && entriesToInsert.length > 0)) {
+            if (entriesToInsert.length >= batchSize || ((i === (totalNumberOfRecordsInDataFile - 1)) && entriesToInsert.length > 0)) {
                 logger.trace(`refresh: Inserting batch of ${entriesToInsert.length} entries.`);
                 await this.insertMany(entriesToInsert); // insertMany handles queuing and worker forwarding
                 entriesToInsert = [];
