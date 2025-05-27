@@ -126,7 +126,7 @@ class UUID {
 	  	).toLowerCase();
 	}
 	/**
-     * Alias of {@link UUID.v4}.
+   * Alias of {@link UUID.v4}.
 	 * @return {String}
 	 */
 	static version4() {
@@ -145,6 +145,8 @@ class UUID {
 			util.Help.print(UUID);
 			return;
 		}
+		// If we arrive here it means the user is not asking for help, but rather is asking
+		// for a new UUID. Let's give them a fresh one.
 		console.clear();
 		console.log(UUID.v4());
 	}
