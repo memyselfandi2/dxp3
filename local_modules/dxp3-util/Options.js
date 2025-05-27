@@ -42,14 +42,14 @@ const Help = require('./Help');
  */
 class Options {
 	/**
-	 * Initializes a new instance of the Options class.
+	 * @description Initializes a new instance of the Options class.
 	 * It sets up an internal map to store property aliases.
 	 */
 	constructor() {
 		this._aliases = new Map();
 	}
 	/**
-	 * Alias for {@link Options#addAlias}.
+	 * @description Alias for {@link Options#addAlias}.
 	 * @param {String|Array<String>} _aliases - A comma-separated string or an array of alias names.
 	 * @param {String} _property - The name of the actual property to which the aliases should point.
 	 */
@@ -57,7 +57,7 @@ class Options {
 		this.addAlias(_aliases, _property);
 	}
 	/**
-	 * Alias for {@link Options#addAlias}.
+	 * @description Alias for {@link Options#addAlias}.
 	 * @param {String|Array<String>} _aliases - A comma-separated string or an array of alias names.
 	 * @param {String} _property - The name of the actual property to which the aliases should point.
 	 */
@@ -65,7 +65,7 @@ class Options {
 		this.addAlias(_aliases, _property);
 	}
 	/**
-	 * Alias for {@link Options#addAlias}.
+	 * @description Alias for {@link Options#addAlias}.
 	 * @param {String|Array<String>} _aliases - A comma-separated string or an array of alias names.
 	 * @param {String} _property - The name of the actual property to which the aliases should point.
 	 */
@@ -73,7 +73,7 @@ class Options {
 		this.addAlias(_aliases, _property);
 	}
 	/**
-	 * Alias for {@link Options#addAlias}.
+	 * @description Alias for {@link Options#addAlias}.
 	 * @param {String|Array<String>} _aliases - A comma-separated string or an array of alias names.
 	 * @param {String} _property - The name of the actual property to which the aliases should point.
 	 */
@@ -81,7 +81,7 @@ class Options {
 		this.addAlias(_aliases, _property);
 	}
 	/**
-	 * Alias for {@link Options#addAlias}.
+	 * @description Alias for {@link Options#addAlias}.
 	 * @param {String|Array<String>} _aliases - A comma-separated string or an array of alias names.
 	 * @param {String} _property - The name of the actual property to which the aliases should point.
 	 */
@@ -89,7 +89,7 @@ class Options {
 		this.addAlias(_aliases, _property);
 	}
 	/**
-	 * Adds one or more aliases for a specified property on this instance.
+	 * @description Adds one or more aliases for a specified property on this instance.
 	 * When an alias is accessed or modified, it will effectively access or modify the original property.
 	 *
 	 * The alias strings are processed:
@@ -157,7 +157,7 @@ class Options {
 		}
 	}
 	/**
-	 * Alias for {@link Options#hasAliasProperty}.
+	 * @description Alias for {@link Options#hasAliasProperty}.
 	 * @param {String} _alias - The alias name to check.
 	 * @returns {Boolean} True if the alias is registered, false otherwise.
 	 */
@@ -165,7 +165,7 @@ class Options {
 		return this.hasAliasProperty(_alias);
 	}
 	/**
-	 * Checks if a given alias string has been registered for any property.
+	 * @description Checks if a given alias string has been registered for any property.
 	 * The input alias is normalized (trimmed, special characters removed, lowercased) before checking.
 	 * @param {String} _alias - The alias name to check.
 	 * @returns {Boolean} True if the alias is registered, false otherwise.
@@ -183,7 +183,7 @@ class Options {
 		return this._aliases.has(_alias);
 	}
 	/**
-	 * Retrieves the original property name for which a given alias was registered.
+	 * @description Retrieves the original property name for which a given alias was registered.
 	 * The input alias is normalized (trimmed, special characters removed, lowercased) before lookup.
 	 * @param {String} _alias - The alias name.
 	 * @returns {String|null} The original property name, or null if the alias is not found or invalid.
@@ -201,7 +201,7 @@ class Options {
 		return this._aliases.get(_alias);
 	}
 	/**
-	 * Retrieves all registered alias names for a given original property name.
+	 * @description Retrieves all registered alias names for a given original property name.
 	 * @param {String} _property - The original property name.
 	 * @returns {Array<String>} An array of alias names associated with the property.
 	 *                          Returns an empty array if the property is not found or has no aliases.
@@ -219,7 +219,7 @@ class Options {
 		return result;
 	}
 	/**
-	 * Alias for {@link Options#getPropertyAlias}.
+	 * @description Alias for {@link Options#getPropertyAlias}.
 	 * @param {String} _property - The original property name.
 	 * @returns {Array<String>} An array of alias names associated with the property.
 	 */
@@ -227,7 +227,7 @@ class Options {
 		return this.getPropertyAlias(_property);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * @static
@@ -238,7 +238,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * @static
@@ -249,7 +249,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * The name "concat" might be misleading here as it primarily assigns/merges properties.
@@ -261,7 +261,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * @static
@@ -272,7 +272,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * @static
@@ -283,7 +283,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * @static
@@ -294,7 +294,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Static factory method. Alias for {@link Options.assign}.
+	 * @description Static factory method. Alias for {@link Options.assign}.
 	 * Creates a new instance of the calling class (which should be `Options` or a subclass)
 	 * and populates it with properties from the `_args` object.
 	 * @static
@@ -305,7 +305,7 @@ class Options {
 		return this.assign(_args);
 	}
 	/**
-	 * Creates a new instance of the calling class (which should be `Options` or a subclass of `Options`)
+	 * @description Creates a new instance of the calling class (which should be `Options` or a subclass of `Options`)
 	 * and assigns properties to it from a given `_sourceInstance` object.
 	 *
 	 * This method iterates over the properties of `_sourceInstance`. For each property, it attempts to find
@@ -396,11 +396,11 @@ class Options {
 			// String to Boolean conversion
 			if(argumentType === 'string' && targetInstanceType === 'boolean') {
 				let value = sourceInstancePropertyValue;
-				value = value.trim().toLowerCase(); // Corrected: added () to trim and toLowerCase
+				value = value.trim().toLowerCase();
 				if(value === 'true' || value === 'on' || value === 'yes') {
 					targetInstance[originalTargetPropertyName] = true;
 				} else {
-					targetInstance[originalTargetPropertyName] = false; // Corrected: typo proprty -> originalTargetPropertyName
+					targetInstance[originalTargetPropertyName] = false;
 				}
 				continue;
 			}

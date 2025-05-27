@@ -50,6 +50,11 @@ class CommandLineOption {
 		this.description = _description;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _optionName - TODO: Describe parameter.
+	 * @returns {boolean} TODO: Describe return value.
+	 */
 	match(_optionName) {
 		if(_optionName === undefined || _optionName === null) {
 			return false;
@@ -71,6 +76,13 @@ class CommandLineOption {
 		this.handler = _handler;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {object} _result - TODO: Describe parameter.
+	 * @param {number} _index - TODO: Describe parameter.
+	 * @returns {number} TODO: Describe return value.
+	 * @throws {Error} If not implemented by subclass and no handler is present.
+	 */
 	parse(_result, _index) {
 		if(this.handler != undefined && this.handler != null) {
 			return this.handler(_result, _index, this.propertyName);

@@ -25,15 +25,29 @@ const Help = require('./Help');
  */
 class CommandLineError extends Error {
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {string} _code - TODO: Describe parameter.
+	 * @param {string} _message - TODO: Describe parameter.
+	 */
 	constructor(_code, _message) {
 		super(_message);
 		this.code = _code;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @returns {string} TODO: Describe return value.
+	 */
 	toString() {
 		return this.code + ': ' + this.message;
 	}
 
+	/**
+	 * @description TODO: Describe this method.
+	 * @param {Error} _error - TODO: Describe parameter.
+	 * @returns {CommandLineError} TODO: Describe return value.
+	 */
 	static from(_error) {
 		if(_error === undefined || _error === null) {
 			return CommandLineError.UNKNOWN;

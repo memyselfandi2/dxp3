@@ -17,7 +17,7 @@ const canonicalName = packageName + path.sep + moduleName;
  */
 class Assert {
 	/**
-	 * Checks if the current script being executed is this Assert module itself.
+	 * @description Checks if the current script being executed is this Assert module itself.
 	 * @static
 	 * @param {string} canonicalName - The canonical name of the module (e.g., 'packageName/moduleName').
 	 * @returns {boolean} True if the script being executed is this module, false otherwise.
@@ -29,7 +29,7 @@ class Assert {
 	}
 
 	/**
-	 * Checks if a value is undefined or null.
+	 * @description Checks if a value is undefined or null.
 	 * @static
 	 * @param {*} _value - The value to check.
 	 * @returns {boolean} True if the value is undefined or null, false otherwise.
@@ -42,7 +42,7 @@ class Assert {
 	}
 
 	/**
-	 * Checks if an array is undefined, null, or empty.
+	 * @description Checks if an array is undefined, null, or empty.
 	 * @static
 	 * @param {Array<*>} _array - The array to check.
 	 * @returns {boolean} True if the array is undefined, null, or empty, false otherwise.
@@ -58,7 +58,7 @@ class Assert {
 	}
 
 	/**
-	 * Checks if a string is undefined, null, or empty.
+	 * @description Checks if a string is undefined, null, or empty.
 	 * @static
 	 * @param {string} _string - The string to check.
 	 * @returns {boolean} True if the string is undefined, null, or empty, false otherwise.
@@ -74,7 +74,7 @@ class Assert {
 	}
 
 	/**
-	 * Checks if a value is undefined, null, or not a number.
+	 * @description Checks if a value is undefined, null, or not a number.
 	 * @static
 	 * @param {*} _number - The value to check.
 	 * @returns {boolean} True if the value is undefined, null, or not a number, false otherwise.
@@ -90,7 +90,7 @@ class Assert {
 	}
 
 	/**
-	 * Checks if a string is undefined, null, not a string, or an empty string (after trimming).
+	 * @description Checks if a string is undefined, null, not a string, or an empty string (after trimming).
 	 * @static
 	 * @param {*} _string - The value to check.
 	 * @returns {boolean} True if the value is undefined, null, not a string, or an empty string (after trimming), false otherwise.

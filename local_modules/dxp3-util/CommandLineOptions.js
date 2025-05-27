@@ -47,7 +47,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Adds a command-line option to the collection.
+	 * @description Adds a command-line option to the collection.
 	 * Alias for {@link CommandLineOptions#addCommandLineOption}.
 	 * @param {CommandLineOption} _commandLineOption - The command line option to add.
 	 */
@@ -56,7 +56,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Adds a command-line option to the collection.
+	 * @description Adds a command-line option to the collection.
 	 * Alias for {@link CommandLineOptions#addCommandLineOption}.
 	 * @param {CommandLineOption} _commandLineOption - The command line option to add.
 	 */
@@ -65,7 +65,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Adds a command-line option to the collection.
+	 * @description Adds a command-line option to the collection.
 	 * The option and its aliases are stored for later parsing.
 	 * Aliases are normalized (trimmed, special characters removed, lowercased).
 	 * @param {CommandLineOption} _commandLineOption - The command line option instance to add.
@@ -108,7 +108,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a boolean command-line option.
+	 * @description Creates and adds a boolean command-line option.
 	 * Alias for {@link CommandLineOptions#createBooleanOption}.
 	 * @param {string} _optionName - The primary name of the option (e.g., '--verbose').
 	 * @param {string[]} _aliases - An array of alternative names for the option (e.g., ['-v']).
@@ -121,7 +121,7 @@ class CommandLineOptions {
 	}
 	
 	/**
-	 * Creates and adds a boolean command-line option.
+	 * @description Creates and adds a boolean command-line option.
 	 * Alias for {@link CommandLineOptions#createBooleanOption}.
 	 * @param {string} _optionName - The primary name of the option (e.g., '--verbose').
 	 * @param {string[]} _aliases - An array of alternative names for the option (e.g., ['-v']).
@@ -134,7 +134,7 @@ class CommandLineOptions {
 	}
 	
 	/**
-	 * Creates and adds a boolean command-line option.
+	 * @description Creates and adds a boolean command-line option.
 	 * @param {string} _optionName - The primary name of the option (e.g., '--verbose').
 	 * @param {string[]} _aliases - An array of alternative names for the option (e.g., ['-v']).
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -150,7 +150,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a boolean array command-line option.
+	 * @description Creates and adds a boolean array command-line option.
 	 * Alias for {@link CommandLineOptions#createBooleanArrayOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -163,7 +163,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a boolean array command-line option.
+	 * @description Creates and adds a boolean array command-line option.
 	 * Alias for {@link CommandLineOptions#createBooleanArrayOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -176,7 +176,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a boolean array command-line option.
+	 * @description Creates and adds a boolean array command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -192,7 +192,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an enumeration command-line option.
+	 * @description Creates and adds an enumeration command-line option.
 	 * Alias for {@link CommandLineOptions#createEnumerationOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -206,7 +206,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an enumeration command-line option.
+	 * @description Creates and adds an enumeration command-line option.
 	 * Alias for {@link CommandLineOptions#createEnumerationOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -220,7 +220,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an enumeration command-line option.
+	 * @description Creates and adds an enumeration command-line option.
 	 * Alias for {@link CommandLineOptions#createEnumerationOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -234,7 +234,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an enumeration command-line option.
+	 * @description Creates and adds an enumeration command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -251,7 +251,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a flag command-line option (an option that does not take a value).
+	 * @description Creates and adds a flag command-line option (an option that does not take a value).
 	 * Alias for {@link CommandLineOptions#createFlagOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -264,7 +264,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a flag command-line option.
+	 * @description Creates and adds a flag command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object (will be set to true if flag is present).
@@ -280,7 +280,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a number command-line option.
+	 * @description Creates and adds a number command-line option.
 	 * Alias for {@link CommandLineOptions#createNumberOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -293,7 +293,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a number command-line option.
+	 * @description Creates and adds a number command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -309,7 +309,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a number array command-line option.
+	 * @description Creates and adds a number array command-line option.
 	 * Alias for {@link CommandLineOptions#createNumberArrayOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -322,7 +322,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a number array command-line option.
+	 * @description Creates and adds a number array command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -338,7 +338,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an object command-line option (expects JSON string).
+	 * @description Creates and adds an object command-line option (expects JSON string).
 	 * Alias for {@link CommandLineOptions#createObjectOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -351,7 +351,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an object command-line option (expects JSON string).
+	 * @description Creates and adds an object command-line option (expects JSON string).
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -367,7 +367,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an object array command-line option (expects array of JSON strings or multiple invocations).
+	 * @description Creates and adds an object array command-line option (expects array of JSON strings or multiple invocations).
 	 * Alias for {@link CommandLineOptions#createObjectArrayOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -380,7 +380,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds an object array command-line option.
+	 * @description Creates and adds an object array command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -396,7 +396,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a string command-line option.
+	 * @description Creates and adds a string command-line option.
 	 * Alias for {@link CommandLineOptions#createStringOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -409,7 +409,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a string command-line option.
+	 * @description Creates and adds a string command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -425,7 +425,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a string array command-line option.
+	 * @description Creates and adds a string array command-line option.
 	 * Alias for {@link CommandLineOptions#createStringArrayOption}.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
@@ -438,7 +438,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Creates and adds a string array command-line option.
+	 * @description Creates and adds a string array command-line option.
 	 * @param {string} _optionName - The primary name of the option.
 	 * @param {string[]} _aliases - An array of alternative names for the option.
 	 * @param {string} _propertyName - The name of the property to set on the result object.
@@ -454,7 +454,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Parses the command-line arguments from `process.argv` based on the configured options.
+	 * @description Parses the command-line arguments from `process.argv` based on the configured options.
 	 * Populates an object with the parsed values.
 	 * @param {object} [_result={}] - An optional object to populate with parsed options. If not provided, a new object is created.
 	 * @returns {object} The object populated with parsed command-line option values.
@@ -490,7 +490,7 @@ class CommandLineOptions {
 	}
 
 	/**
-	 * Adds a handler for arguments that are not recognized as options (i.e., do not start with '-').
+	 * @description Adds a handler for arguments that are not recognized as options (i.e., do not start with '-').
 	 * @param {function(object, number, string): number} _handler - A function that will be called for each non-option argument.
 	 * It receives the result object, the current argument index, and the argument value.
 	 * It should return the updated argument index (e.g., if it consumed multiple arguments).
