@@ -1,8 +1,8 @@
-****************************************
-* DXP3 - Digital Experience Platform 3
-*                                     
-* MODULE: dxp3-util/Help
-****************************************
+***************************************************************
+* DXP3 - Digital Experience Platform 3                        *
+*                                                             *
+* MODULE: dxp3-util/Help                                      *
+***************************************************************
 
 The `Help` class provides static methods to display help information from text files.
 It is primarily used to show the contents of a `README.txt` file or a
@@ -26,7 +26,7 @@ Important to note:
 - File paths are resolved relative to the current working directory where the Node.js process is running.
 
 ****************************************
-* CODE EXAMPLES                       
+* CODE EXAMPLES                        *
 ****************************************
 
 // Printing the default help file (`README.txt`):
