@@ -7,6 +7,7 @@ const RecordFile = require('../RecordFile');
 const DatabaseError = require('../../DatabaseError');
 const DatabaseHash = require('../../DatabaseHash'); // Assuming DatabaseHash is accessible
 const logging = require('dxp3-logging');
+const testing = require('dxp3-testing');
 
 const logger = logging.getLogger('test');
 // --- Mock Dependencies ---
@@ -100,7 +101,7 @@ let dataFile;
 let mockTable;
 let hashIndex;
 
-async function setup() {
+async function testSetup() {
     try {
         await fsPromises.rm(TEST_DIR, { recursive: true, force: true });
     } catch (err) {
@@ -119,7 +120,7 @@ async function setup() {
     // hashIndex.logger = logger; // Or however logging is accessed internally
 }
 
-async function teardown() {
+async function testTeardown() {
     if (hashIndex) {
         await hashIndex.close();
     }
@@ -136,184 +137,19 @@ async function teardown() {
     mockTable = null;
 }
 
-// --- Assertion Helpers ---
-
-let testCount = 0;
-let passCount = 0;
-let failCount = 0;
-
-function logTestStart(name) {
-    testCount++;
-    console.log(`\n--- Running test ${testCount}: ${name} ---`);
-}
-
-function logResult(passed, message = '', error = null) {
-    if (passed) {
-        passCount++;
-        console.log(`✅ PASSED: ${message}`);
-    } else {
-        failCount++;
-        console.error(`❌ FAILED: ${message}`);
-        if (error) {
-            console.error(error.stack || error);
-        }
-    }
-}
-
-async function assertEqual(actual, expected, message) {
-    const condition = actual === expected;
-    logResult(condition, `${message} (Expected: ${expected}, Actual: ${actual})`);
-    if (!condition) throw new Error(`Assertion failed: ${message}`); // Stop test on failure
-}
-
-async function assertNotEqual(actual, expected, message) {
-    const condition = actual !== expected;
-    logResult(condition, `${message} (Expected not: ${expected}, Actual: ${actual})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertDeepEqual(actual, expected, message) {
-    const actualJson = JSON.stringify(actual);
-    const expectedJson = JSON.stringify(expected);
-    const condition = actualJson === expectedJson;
-    logResult(condition, `${message} (Expected: ${expectedJson}, Actual: ${actualJson})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertTrue(value, message) {
-    const condition = value === true;
-    logResult(condition, `${message} (Expected: true, Actual: ${value})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertFalse(value, message) {
-    const condition = value === false;
-    logResult(condition, `${message} (Expected: false, Actual: ${value})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertNull(value, message) {
-    const condition = value === null;
-    logResult(condition, `${message} (Expected: null, Actual: ${value})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertEmptyArray(value, message) {
-    const condition = (Array.isArray(value) && (value.length <= 0));
-    logResult(condition, `${message} (Expected: empty array, Actual: ${JSON.stringify(value)})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertNotNull(value, message) {
-    const condition = value !== null;
-    logResult(condition, `${message} (Expected not null, Actual: ${value})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertUndefined(value, message) {
-    const condition = value === undefined;
-    logResult(condition, `${message} (Expected: undefined, Actual: ${value})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertNotUndefined(value, message) {
-    const condition = value !== undefined;
-    logResult(condition, `${message} (Expected not undefined, Actual: ${value})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertFileExists(filePath, message) {
-    let exists = false;
-    try {
-        await fsPromises.access(filePath, fs.constants.F_OK);
-        exists = true;
-    } catch (e) {
-        exists = false;
-    }
-    logResult(exists, `${message} (File: ${filePath})`);
-     if (!exists) throw new Error(`Assertion failed: ${message}`);
-}
-
-async function assertThrowsAsync(asyncFn, expectedErrorType, message) {
-    let thrownError = null;
-    try {
-        await asyncFn();
-    } catch (error) {
-        thrownError = error;
-    }
-    const condition = thrownError !== null && (expectedErrorType ? thrownError instanceof expectedErrorType : true);
-    logResult(condition, `${message} (Expected error: ${expectedErrorType ? expectedErrorType.name : 'any'}, Actual: ${thrownError ? thrownError.constructor.name : 'none'})`);
-     if (!condition) throw new Error(`Assertion failed: ${message}`);
-}
-
-// --- Test Cases ---
-
 async function testConstructor() {
-    logTestStart("Constructor");
-    await assertNotNull(hashIndex, "HashIndex object should be created");
-    await assertEqual(hashIndex._sourceFolder, TEST_DIR, "Source folder should be set");
-    await assertEqual(hashIndex._uuid, INDEX_UUID, "Index UUID should be set");
-    await assertEqual(hashIndex._name, INDEX_NAME, "Index name should be set");
-    await assertEqual(hashIndex._tableUUID, TABLE_UUID, "Table UUID should be set");
-    await assertEqual(hashIndex._columnUUID, COLUMN_UUID, "Column UUID should be set");
-    await assertNotNull(hashIndex._dataFile, "DataFile should be set");
-    await assertNotNull(hashIndex._currentIndexFile, "Index RecordFile should be set");
-    await assertEqual(hashIndex._currentIndexFile._filePath, INDEX_FILE_PATH, "Index file path should be correct");
-}
-/*
-async function testInitNewFile() {
-    logTestStart("Init - New File");
-    await hashIndex.init();
-    await assertFileExists(INDEX_FILE_PATH, "Index file should be created on init");
-
-    // Check header defaults
-    const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertNotNull(header, "Header record should exist");
-    // Default number of buckets is set during refresh called by init if file doesn't exist
-    await assertEqual(header.numberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Default number of buckets should be written");
-    await assertEqual(header.numberOfEntries, 0, "Initial number of entries should be 0");
-    await assertEqual(header.loadFactorThreshold, 0.75, "Default load factor threshold should be written");
-
-    // Check bucket headers
-    const numBuckets = header.numberOfBuckets;
-    for (let i = 0; i < numBuckets; i++) {
-        const bucketHeaderIndex = hashIndex._getBucketHeaderRecordIndex(i); // This method still exists and is valid
-        const bucketHeader = await hashIndex._currentIndexFile.readRecord(bucketHeaderIndex);
-        await assertNotNull(bucketHeader, `Bucket header ${i} should exist`);
-        await assertNull(bucketHeader.nextEntryIndex, `Bucket header ${i} nextEntryIndex should be null`);
-    }
+    await testing.assertNotNull(hashIndex, "HashIndex object should be created");
+    await testing.assertEqual(hashIndex._sourceFolder, TEST_DIR, "Source folder should be set");
+    await testing.assertEqual(hashIndex._uuid, INDEX_UUID, "Index UUID should be set");
+    await testing.assertEqual(hashIndex._name, INDEX_NAME, "Index name should be set");
+    await testing.assertEqual(hashIndex._tableUUID, TABLE_UUID, "Table UUID should be set");
+    await testing.assertEqual(hashIndex._columnUUID, COLUMN_UUID, "Column UUID should be set");
+    await testing.assertNotNull(hashIndex._dataFile, "DataFile should be set");
+    await testing.assertNotNull(hashIndex._currentIndexFile, "Index RecordFile should be set");
+    await testing.assertEqual(hashIndex._currentIndexFile._filePath, INDEX_FILE_PATH, "Index file path should be correct");
 }
 
-async function testInitExistingFile() {
-    logTestStart("Init - Existing File");
-    // 1. Manually create and populate an index file
-    const initialBuckets = 8;
-    const initialEntries = 5;
-    const initialThreshold = 0.8;
-
-    const existingIndexFile = new RecordFile(INDEX_FILE_PATH, INDEX_RECORD_LENGTH);
-    await existingIndexFile.open();
-    await existingIndexFile.appendRecord({ // Header at index 0
-        numberOfBuckets: initialBuckets,
-        numberOfEntries: initialEntries,
-        loadFactorThreshold: initialThreshold,
-    });
-    for (let i = 0; i < initialBuckets; i++) { // Bucket headers
-        await existingIndexFile.appendRecord({ entries: [], nextEntryIndex: i === 0 ? 99 : null }); // Dummy value for first bucket
-    }
-    await existingIndexFile.close(); // Close it before hashIndex tries to open it
-
-    // 2. Initialize the hashIndex - it should read the existing file
-    await hashIndex.init();
-
-    // 3. Verify the properties were read correctly
-    await assertEqual(hashIndex._currentNumberOfBuckets, initialBuckets, "Number of buckets should be read from existing file");
-    await assertEqual(hashIndex._totalNumberOfEntries, initialEntries, "Number of entries should be read from existing file");
-    await assertEqual(hashIndex._loadFactorThreshold, initialThreshold, "Load factor threshold should be read from existing file");
-}
-*/
 async function testInsertAndEqual() {
-    logTestStart("Insert and Equal");
     await hashIndex.init();
 
     const record1 = { _uuid: "uuid-1", data: "value1" };
@@ -328,38 +164,36 @@ async function testInsertAndEqual() {
     await hashIndex.insert(record2._uuid, index2);
     await hashIndex.insert(record3._uuid, index3); // Potential collision
 
-    await assertEqual(hashIndex._totalNumberOfEntries, 3, "Total entries should be 3 after inserts");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 3, "Total entries should be 3 after inserts");
 
     const found1 = (await hashIndex.equal(record1._uuid))[0];
-    await assertNotNull(found1, "Record 1 should be found");
-    await assertDeepEqual(found1, { ...record1, _index: index1 }, "Found record 1 data should match");
+    await testing.assertNotNull(found1, "Record 1 should be found");
+    await testing.assertDeepEqual(found1, { ...record1, _index: index1 }, "Found record 1 data should match");
 
     const found2 = (await hashIndex.equal(record2._uuid))[0];
-    await assertNotNull(found2, "Record 2 should be found");
-    await assertDeepEqual(found2, { ...record2, _index: index2 }, "Found record 2 data should match");
+    await testing.assertNotNull(found2, "Record 2 should be found");
+    await testing.assertDeepEqual(found2, { ...record2, _index: index2 }, "Found record 2 data should match");
 
     const found3 = (await hashIndex.equal(record3._uuid))[0];
-    await assertNotNull(found3, "Record 3 should be found (collision handled)");
-    await assertDeepEqual(found3, { ...record3, _index: index3 }, "Found record 3 data should match");
+    await testing.assertNotNull(found3, "Record 3 should be found (collision handled)");
+    await testing.assertDeepEqual(found3, { ...record3, _index: index3 }, "Found record 3 data should match");
 
     // Check header entry count
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfEntries, 3, "Header entry count should be updated");
+    await testing.assertEqual(header.numberOfEntries, 3, "Header entry count should be updated");
 }
 
 async function testEqualNotFound() {
-    logTestStart("Equal - Not Found");
     await hashIndex.init();
     const record1 = { _uuid: "uuid-1", data: "value1" };
     const index1 = await dataFile.appendRecord(record1);
     await hashIndex.insert(record1._uuid, index1);
 
     const found = await hashIndex.equal("non-existent-uuid");
-    await assertEmptyArray(found, "Should return an empty array for a non-existent key");
+    await testing.assertEmptyArray(found, "Should return an empty array for a non-existent key");
 }
 
 async function testInsertDuplicateKey() {
-    logTestStart("Insert - Duplicate Key (Update)");
     await hashIndex.init();
 
     const record1a = { _uuid: "uuid-1", data: "value1a" };
@@ -370,24 +204,23 @@ async function testInsertDuplicateKey() {
 
     await hashIndex.insert(record1a._uuid, index1a);
     let found = (await hashIndex.equal(record1a._uuid))[0];
-    await assertNotNull(found, "Record 1a should be found initially");
-    await assertDeepEqual(found, { ...record1a, _index: index1a }, "Initial record 1a data should match");
-    await assertEqual(hashIndex._totalNumberOfEntries, 1, "Total entries should be 1");
+    await testing.assertNotNull(found, "Record 1a should be found initially");
+    await testing.assertDeepEqual(found, { ...record1a, _index: index1a }, "Initial record 1a data should match");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 1, "Total entries should be 1");
 
     // Insert with the same key - should update
     await hashIndex.insert(record1b._uuid, index1b);
     found = (await hashIndex.equal(record1a._uuid))[0]; // Use original key to find
-    await assertNotNull(found, "Record 1b should be found after update");
-    await assertDeepEqual(found, { ...record1b, _index: index1b }, "Updated record 1b data should match");
-    await assertEqual(hashIndex._totalNumberOfEntries, 1, "Total entries should still be 1 after update");
+    await testing.assertNotNull(found, "Record 1b should be found after update");
+    await testing.assertDeepEqual(found, { ...record1b, _index: index1b }, "Updated record 1b data should match");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 1, "Total entries should still be 1 after update");
 
     // Check header entry count
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfEntries, 1, "Header entry count should be 1 after update");
+    await testing.assertEqual(header.numberOfEntries, 1, "Header entry count should be 1 after update");
 }
 
 async function testDelete() {
-    logTestStart("Delete");
     await hashIndex.init();
 
     const record1 = { _uuid: "uuid-1", data: "value1" };
@@ -402,46 +235,44 @@ async function testDelete() {
     await hashIndex.insert(record2._uuid, index2);
     await hashIndex.insert(record3._uuid, index3);
 
-    await assertEqual(hashIndex._totalNumberOfEntries, 3, "Entries should be 3 before delete");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 3, "Entries should be 3 before delete");
 
     // Delete record 2 (potentially middle of a chain)
     await hashIndex.delete(record2._uuid);
-    await assertEmptyArray(await hashIndex.equal(record2._uuid), "Record 2 should not be found after delete");
-    await assertEqual(hashIndex._totalNumberOfEntries, 2, "Entries should be 2 after deleting record 2");
-    await assertNotNull((await hashIndex.equal(record1._uuid))[0], "Record 1 should still exist");
-    await assertNotNull((await hashIndex.equal(record3._uuid))[0], "Record 3 should still exist");
+    await testing.assertEmptyArray(await hashIndex.equal(record2._uuid), "Record 2 should not be found after delete");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 2, "Entries should be 2 after deleting record 2");
+    await testing.assertNotNull((await hashIndex.equal(record1._uuid))[0], "Record 1 should still exist");
+    await testing.assertNotNull((await hashIndex.equal(record3._uuid))[0], "Record 3 should still exist");
 
     // Delete record 1 (potentially head of a chain)
     await hashIndex.delete(record1._uuid);
-    await assertEmptyArray(await hashIndex.equal(record1._uuid), "Record 1 should not be found after delete");
-    await assertEqual(hashIndex._totalNumberOfEntries, 1, "Entries should be 1 after deleting record 1");
-    await assertNotNull((await hashIndex.equal(record3._uuid))[0], "Record 3 should still exist");
+    await testing.assertEmptyArray(await hashIndex.equal(record1._uuid), "Record 1 should not be found after delete");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 1, "Entries should be 1 after deleting record 1");
+    await testing.assertNotNull((await hashIndex.equal(record3._uuid))[0], "Record 3 should still exist");
 
     // Delete record 3 (last one)
     await hashIndex.delete(record3._uuid);
-    await assertEmptyArray(await hashIndex.equal(record3._uuid), "Record 3 should not be found after delete");
-    await assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should be 0 after deleting record 3");
+    await testing.assertEmptyArray(await hashIndex.equal(record3._uuid), "Record 3 should not be found after delete");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should be 0 after deleting record 3");
 
     // Check header entry count
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfEntries, 0, "Header entry count should be 0 after deletes");
+    await testing.assertEqual(header.numberOfEntries, 0, "Header entry count should be 0 after deletes");
 }
 
 async function testDeleteNotFound() {
-    logTestStart("Delete - Not Found");
     await hashIndex.init();
     const record1 = { _uuid: "uuid-1", data: "value1" };
     const index1 = await dataFile.appendRecord(record1);
     await hashIndex.insert(record1._uuid, index1);
 
-    await assertEqual(hashIndex._totalNumberOfEntries, 1, "Entries should be 1 before delete");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 1, "Entries should be 1 before delete");
     await hashIndex.delete("non-existent-uuid"); // Should not throw error
-    await assertEqual(hashIndex._totalNumberOfEntries, 1, "Entries should still be 1 after trying to delete non-existent key");
-    await assertNotNull((await hashIndex.equal(record1._uuid))[0], "Record 1 should still exist");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 1, "Entries should still be 1 after trying to delete non-existent key");
+    await testing.assertNotNull((await hashIndex.equal(record1._uuid))[0], "Record 1 should still exist");
 }
 
 async function testClear() {
-    logTestStart("Clear");
     await hashIndex.init();
 
     const record1 = { _uuid: "uuid-1", data: "value1" };
@@ -451,25 +282,24 @@ async function testClear() {
     await hashIndex.insert(record1._uuid, index1);
     await hashIndex.insert(record2._uuid, index2);
 
-    await assertEqual(hashIndex._totalNumberOfEntries, 2, "Entries should be 2 before clear");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 2, "Entries should be 2 before clear");
 
     await hashIndex.clear();
 
-    await assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should be 0 after clear");
-    await assertEqual(hashIndex._currentNumberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Buckets should reset to default after clear");
-    await assertEmptyArray(await hashIndex.equal(record1._uuid), "Record 1 should not be found after clear");
-    await assertEmptyArray(await hashIndex.equal(record2._uuid), "Record 2 should not be found after clear");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should be 0 after clear");
+    await testing.assertEqual(hashIndex._currentNumberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Buckets should reset to default after clear");
+    await testing.assertEmptyArray(await hashIndex.equal(record1._uuid), "Record 1 should not be found after clear");
+    await testing.assertEmptyArray(await hashIndex.equal(record2._uuid), "Record 2 should not be found after clear");
 
     // Verify file structure reset
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Header buckets should be reset");
-    await assertEqual(header.numberOfEntries, 0, "Header entries should be 0");
+    await testing.assertEqual(header.numberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Header buckets should be reset");
+    await testing.assertEqual(header.numberOfEntries, 0, "Header entries should be 0");
     const bucketHeader0 = await hashIndex._currentIndexFile.readRecord(hashIndex._getBucketHeaderRecordIndex(0));
-    await assertNull(bucketHeader0.nextEntryIndex, "Next bucket header should be reset");
+    await testing.assertNull(bucketHeader0.nextEntryIndex, "Next bucket header should be reset");
 }
 
 async function testResize() {
-    logTestStart("Resize");
     await hashIndex.init(); // Starts with DEFAULT_NUMBER_OF_BUCKETS buckets, threshold 0.75
 
     const initialBuckets = hashIndex._currentNumberOfBuckets;
@@ -488,7 +318,7 @@ async function testResize() {
     for (let i = 0; i < numToInsert; i++) {
         await hashIndex.insert(records[i]._uuid, indices[i]);
         if (i === (numToInsert - 2)) {
-             await assertEqual(hashIndex._currentNumberOfBuckets, initialBuckets, `Buckets should be ${initialBuckets} before resize (at entry ${i+1})`);
+             await testing.assertEqual(hashIndex._currentNumberOfBuckets, initialBuckets, `Buckets should be ${initialBuckets} before resize (at entry ${i+1})`);
         }
     }
 
@@ -499,32 +329,31 @@ async function testResize() {
     }
     
     const expectedBucketsAfterResize = initialBuckets * 2; // Assuming doubling for the first resize from default
-    await assertEqual(hashIndex._currentNumberOfBuckets, expectedBucketsAfterResize, `Buckets should be ${expectedBucketsAfterResize} after resize (was ${initialBuckets})`);
-    await assertEqual(hashIndex._totalNumberOfEntries, numToInsert, `Total entries should be ${numToInsert} after resize`);
+    await testing.assertEqual(hashIndex._currentNumberOfBuckets, expectedBucketsAfterResize, `Buckets should be ${expectedBucketsAfterResize} after resize (was ${initialBuckets})`);
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, numToInsert, `Total entries should be ${numToInsert} after resize`);
 
     // Verify all records are still findable after resize
     for (let i = 0; i < numToInsert; i++) {
         const found = (await hashIndex.equal(records[i]._uuid))[0];
-        await assertNotNull(found, `Record ${i} should be found after resize`);
+        await testing.assertNotNull(found, `Record ${i} should be found after resize`);
         // Ensure the record from dataFile includes its _index for proper comparison
         const expectedRecord = { ...records[i], _index: indices[i] };
-        await assertDeepEqual(found, expectedRecord, `Record ${i} data should match after resize`);
+        await testing.assertDeepEqual(found, expectedRecord, `Record ${i} data should match after resize`);
     }
 
     // Verify header reflects the resize
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfBuckets, expectedBucketsAfterResize, `Header buckets should be ${expectedBucketsAfterResize} after resize`);
-    await assertEqual(header.numberOfEntries, numToInsert, "Header entries should be correct after resize");
+    await testing.assertEqual(header.numberOfBuckets, expectedBucketsAfterResize, `Header buckets should be ${expectedBucketsAfterResize} after resize`);
+    await testing.assertEqual(header.numberOfEntries, numToInsert, "Header entries should be correct after resize");
 
     // Verify new bucket headers exist
      const lastBucketHeaderIndex = hashIndex._getBucketHeaderRecordIndex(expectedBucketsAfterResize - 1);
      const lastBucketHeader = await hashIndex._currentIndexFile.readRecord(lastBucketHeaderIndex);
-     await assertNotNull(lastBucketHeader, `Last bucket header (index ${expectedBucketsAfterResize - 1}) should exist after resize`);
+     await testing.assertNotNull(lastBucketHeader, `Last bucket header (index ${expectedBucketsAfterResize - 1}) should exist after resize`);
      // We can't easily assert nextEntryIndex without knowing hash distribution
 }
 
 async function testRefresh() {
-    logTestStart("Refresh");
     // 1. Pre-populate data file WITHOUT adding to index initially
     const record1 = { _uuid: "uuid-1", data: "value1" };
     const record2 = { _uuid: "uuid-2", data: "value2" };
@@ -539,36 +368,35 @@ async function testRefresh() {
     await dataFile.deleteRecord(index3); // Delete record 3
 
     // 2. Initialize index (creates empty index file)
-    await assertEqual(hashIndex._totalNumberOfEntries, 0, "Index should be empty initially");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 0, "Index should be empty initially");
 
     // 3. Call init (which internally calls refresh).
     await hashIndex.init();
 
     // 4. Verify index is populated correctly
-    await assertEqual(hashIndex._totalNumberOfEntries, 3, "Entries should be 3 after refresh (excluding deleted)");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 3, "Entries should be 3 after refresh (excluding deleted)");
 
     const found1 = (await hashIndex.equal(record1._uuid))[0];
-    await assertNotNull(found1, "Record 1 should be found after refresh");
-    await assertDeepEqual(found1, { ...record1, _index: index1 }, "Record 1 data should match after refresh");
+    await testing.assertNotNull(found1, "Record 1 should be found after refresh");
+    await testing.assertDeepEqual(found1, { ...record1, _index: index1 }, "Record 1 data should match after refresh");
 
     const found2 = (await hashIndex.equal(record2._uuid))[0];
-    await assertNotNull(found2, "Record 2 should be found after refresh");
-    await assertDeepEqual(found2, { ...record2, _index: index2 }, "Record 2 data should match after refresh");
+    await testing.assertNotNull(found2, "Record 2 should be found after refresh");
+    await testing.assertDeepEqual(found2, { ...record2, _index: index2 }, "Record 2 data should match after refresh");
 
     const found3 = await hashIndex.equal(record3._uuid);
-    await assertEmptyArray(found3, "Deleted Record 3 should NOT be found after refresh");
+    await testing.assertEmptyArray(found3, "Deleted Record 3 should NOT be found after refresh");
 
     const found4 = (await hashIndex.equal(record4._uuid))[0];
-    await assertNotNull(found4, "Record 4 should be found after refresh");
-    await assertDeepEqual(found4, { ...record4, _index: index4 }, "Record 4 data should match after refresh");
+    await testing.assertNotNull(found4, "Record 4 should be found after refresh");
+    await testing.assertDeepEqual(found4, { ...record4, _index: index4 }, "Record 4 data should match after refresh");
 
      // Check header entry count
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfEntries, 3, "Header entry count should be 3 after refresh");
+    await testing.assertEqual(header.numberOfEntries, 3, "Header entry count should be 3 after refresh");
 }
 
 async function testIn() {
-    logTestStart("In");
     await hashIndex.init();
 
     const record1 = { _uuid: "uuid-1", data: "value1" };
@@ -589,12 +417,12 @@ async function testIn() {
     const keysToFind = [record1._uuid, record3._uuid, "non-existent-uuid"];
     const results = await hashIndex.in(keysToFind);
 
-    await assertNotNull(results, "`in` should return an array");
-    await assertEqual(results.length, 2, "`in` result array length should match input keys length except for the non existing keys");
+    await testing.assertNotNull(results, "`in` should return an array");
+    await testing.assertEqual(results.length, 2, "`in` result array length should match input keys length except for the non existing keys");
 
     // Check found items (order might not be guaranteed, depends on Promise.all)
     const foundItems = results.filter(r => r !== null);
-    await assertEqual(foundItems.length, 2, "Should find 2 non-null records");
+    await testing.assertEqual(foundItems.length, 2, "Should find 2 non-null records");
 
     const expectedRecord1 = { ...record1, _index: index1 };
     const expectedRecord3 = { ...record3, _index: index3 };
@@ -602,31 +430,28 @@ async function testIn() {
     // Check if expected records are present (ignoring order)
     const foundJson = foundItems.map(JSON.stringify).sort();
     const expectedJson = [JSON.stringify(expectedRecord1), JSON.stringify(expectedRecord3)].sort();
-    await assertDeepEqual(foundJson, expectedJson, "Found records should match expected records");
+    await testing.assertDeepEqual(foundJson, expectedJson, "Found records should match expected records");
 }
 
 async function testNullUndefinedKeys() {
-    logTestStart("Null/Undefined Keys");
     await hashIndex.init();
 
     // Insert should skip null/undefined
     await hashIndex.insert(null, 1);
     await hashIndex.insert(undefined, 2);
-    await assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should be 0 after inserting null/undefined");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should be 0 after inserting null/undefined");
 
     // Equal should return empty array
-    await assertEmptyArray(await hashIndex.equal(null), "equal(null) should return empty array");
-    await assertEmptyArray(await hashIndex.equal(undefined), "equal(undefined) should return empty array");
+    await testing.assertEmptyArray(await hashIndex.equal(null), "equal(null) should return empty array");
+    await testing.assertEmptyArray(await hashIndex.equal(undefined), "equal(undefined) should return empty array");
 
     // Delete should skip
     await hashIndex.delete(null);
     await hashIndex.delete(undefined);
-    await assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should still be 0 after deleting null/undefined");
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, 0, "Entries should still be 0 after deleting null/undefined");
 }
 
 async function testLargeNumberOfInserts() {
-    logging.setLevel(logging.Level.INFO);
-    logTestStart(`Insert ${LARGE_NUM_RECORDS} entries`);
     await hashIndex.init();
 
     console.log(`Starting insertion of ${LARGE_NUM_RECORDS} records... (This may take a while)`);
@@ -737,73 +562,43 @@ async function testLargeNumberOfInserts() {
         await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    await assertEqual(hashIndex._totalNumberOfEntries, LARGE_NUM_RECORDS, `Total entries should be ${LARGE_NUM_RECORDS} after large insert`);
+    await testing.assertEqual(hashIndex._totalNumberOfEntries, LARGE_NUM_RECORDS, `Total entries should be ${LARGE_NUM_RECORDS} after large insert`);
 
     // Verify a few specific records
     console.log("Verifying specific records after large insert...");
     for (const [key, expectedRecord] of recordsToVerify.entries()) {
         const found = (await hashIndex.equal(key))[0];
-        await assertNotNull(found, `Record with key ${key} should be found`);
-        await assertEqual(found._index, expectedRecord._index, `Index for key ${key} should match`);
+        await testing.assertNotNull(found, `Record with key ${key} should be found`);
+        await testing.assertEqual(found._index, expectedRecord._index, `Index for key ${key} should match`);
     }
     console.log("Specific records verified.");
 
     // Check header entry count
     const header = await hashIndex._currentIndexFile.readRecord(0);
-    await assertEqual(header.numberOfEntries, LARGE_NUM_RECORDS, "Header entry count should match total records");
-    await assertNotEqual(header.numberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Number of buckets should have increased due to resizing from default");
+    await testing.assertEqual(header.numberOfEntries, LARGE_NUM_RECORDS, "Header entry count should match total records");
+    await testing.assertNotEqual(header.numberOfBuckets, DEFAULT_INITIAL_BUCKETS, "Number of buckets should have increased due to resizing from default");
     console.log(`Final number of buckets: ${header.numberOfBuckets}`);
 }
 
-// --- Test Runner ---
+async function runTests() {
+console.log("Starting FileSystemHashIndex tests...");
 
-async function runAllTests() {
-    console.log("Starting FileSystemHashIndex tests...");
-    const tests = [
-        testConstructor,
-        // testInitNewFile, // Covered by refresh logic in init
-        // testInitExistingFile, // Covered by init reading existing header
-        testInsertAndEqual,
-        testEqualNotFound,
-        testInsertDuplicateKey,
-        testDelete,
-        testDeleteNotFound,
-        testClear,
-        testResize, 
-        testRefresh, // Init calls refresh if file doesn't exist
-        testIn,
-        testNullUndefinedKeys,
-        testLargeNumberOfInserts
-    ];
-
-    for (const test of tests) {
-        try {
-            await setup();
-            await test();
-        } catch (error) {
-            // Error is already logged by assertion helpers if it's an assertion failure
-             if (!error.message.startsWith("Assertion failed:")) {
-                 // Log unexpected errors
-                 failCount++; // Count unexpected errors as failures
-                 console.error(`❌ UNEXPECTED ERROR in test ${test.name}:`, error);
-             }
-             // Optionally stop all tests on first failure:
-             // console.error("\nStopping tests due to failure.");
-             break;
-        } finally {
-            await teardown();
-        }
-    }
-
-    console.log("\n--- Test Summary ---");
-    console.log(`Total tests: ${testCount}`);
-    console.log(`✅ Passed: ${passCount}`);
-    console.log(`❌ Failed: ${failCount}`);
-    console.log("--------------------\n");
-
-    // Exit with status code 1 if any tests failed
-    process.exitCode = failCount > 0 ? 1 : 0;
+testing.addSetup(testSetup);
+testing.addTeardown(testTeardown);
+testing.addTest("Constructor", testConstructor);
+testing.addTest("Insert and Equal", testInsertAndEqual);
+testing.addTest("Equal - Not Found", testEqualNotFound);
+testing.addTest("Insert - Duplicate Key (Update)", testInsertDuplicateKey);
+testing.addTest("Delete", testDelete);
+testing.addTest("Delete - Not Found", testDeleteNotFound);
+testing.addTest("Clear", testClear);
+testing.addTest("Resize", testResize);
+testing.addTest("Refresh", testRefresh);
+testing.addTest("In", testIn);
+testing.addTest("Null/Undefined Keys", testNullUndefinedKeys);
+testing.addTest("Insert ${LARGE_NUM_RECORDS} entries", testLargeNumberOfInserts);
+await testing.run();
+testing.summary();
 }
 
-// Execute the tests
-runAllTests();
+runTests();

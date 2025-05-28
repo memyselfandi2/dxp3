@@ -2,6 +2,7 @@
   "name": "dxp3-db",
   "version": "1.0.0",
   "license": "UNLICENSED",
+  "type": "commonjs",
   "private": true,
   "author": "Patrick Versteeg",
   "description": "DXP3 - Digital Experience Platform 3 - Database",
@@ -16,5 +17,8 @@
     "dxp3-mutex-inmemory": "file:../dxp3-mutex-inmemory",
     "dxp3-util": "file:../dxp3-util",
     "dxp3-uuid": "file:../dxp3-uuid"
+  },
+  "devDependencies": {
+    "dxp3-testing": "file:../dxp3-testing"
   }
 }

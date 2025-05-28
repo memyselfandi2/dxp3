@@ -1,6 +1,4 @@
-// test.js for dxp3-uuid
-
-// Assuming test.js is in the same directory as index.js
+const testing = require('dxp3-testing');
 const UUID = require('../index');
 
 let testsPassed = 0;

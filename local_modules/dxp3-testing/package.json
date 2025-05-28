@@ -1,19 +1,17 @@
 {
-  "name": "dxp3-uuid",
+  "name": "dxp3-testing",
   "version": "1.0.0",
   "license": "UNLICENSED",
   "private": true,
   "author": "Patrick Versteeg",
-  "description": "DXP3 - Digital Experience Platform 3 - UUID",
+  "description": "DXP3 - Digital Experience Platform 3 - Testing",
   "main": "index.js",
   "scripts": {
-    "help": "node index.js -help",
+    "help": "node index.js",
     "start": "node index.js"
   },
   "dependencies": {
+    "dxp3-logging": "file:../dxp3-logging",
     "dxp3-util": "file:../dxp3-util"
-  },
-  "devDependencies": {
-    "dxp3-testing": "file:../dxp3-testing"
   }
 }
