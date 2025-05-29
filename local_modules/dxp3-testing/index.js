@@ -169,6 +169,10 @@ class Testing {
 		console.log("--------------------\n");
 	}
 }
+Testing.setup = async function() {
+}
+Testing.teardown = async function() {
+}
 Testing.testCount = 0;
 Testing.passCount = 0;
 Testing.failCount = 0;

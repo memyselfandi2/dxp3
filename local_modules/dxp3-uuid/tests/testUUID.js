@@ -1,32 +1,6 @@
 const testing = require('dxp3-testing');
 const UUID = require('../index');
 
-let testsPassed = 0;
-let testsFailed = 0;
-
-/**
- * Runs a test function and logs its result.
- * @param {string} testName - The name of the test.
- * @param {function(): boolean} testFunction - The test function. Should return true for pass, false for fail.
- */
-function runTest(testName, testFunction) {
-    console.log(`\nRunning test: "${testName}"`);
-    try {
-        const result = testFunction();
-        if (result === true) {
-            testsPassed++;
-            console.log(`  PASSED: "${testName}"`);
-        } else {
-            testsFailed++;
-            // Error messages should be printed by the testFunction itself for clarity
-            console.error(`  FAILED: "${testName}"`);
-        }
-    } catch (e) {
-        testsFailed++;
-        console.error(`  FAILED: "${testName}" (with error: ${e.message})`);
-        console.error(e.stack);
-    }
-}
 
 // --- Test Helper ---
 // Regex for UUID v4: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
@@ -52,77 +26,64 @@ function isValidUUIDv4(uuid) {
 
 // --- Test Cases ---
 
-runTest('UUID.v4() returns a valid UUID v4 string', () => {
+async function testValidUUID() {
     const id = UUID.v4();
     console.log(`    Generated UUID: ${id}`);
-    if (!isValidUUIDv4(id)) {
-        console.error('    UUID.v4() did not return a valid v4 UUID.');
-        return false;
-    }
-    return true;
-});
+    await testing.assertTrue(isValidUUIDv4(id), `${id} should be a valid UUID.`);
+}
 
-runTest('UUID.v4() returns different UUIDs on subsequent calls', () => {
+async function testDifferentUUIDs() {
     const id1 = UUID.v4();
     const id2 = UUID.v4();
     console.log(`    Generated UUID 1: ${id1}`);
     console.log(`    Generated UUID 2: ${id2}`);
-    if (!isValidUUIDv4(id1) || !isValidUUIDv4(id2)) {
-        console.error('    One of the generated UUIDs is not a valid v4 UUID.');
-        return false;
-    }
-    if (id1 === id2) {
-        console.error('    UUID.v4() returned identical UUIDs on subsequent calls.');
-        return false;
-    }
-    return true;
-});
-
-// Test alias methods
-const aliasMethods = {
-    create: UUID.create,
-    new: UUID.new,
-    newInstance: UUID.newInstance,
-    next: UUID.next,
-    version4: UUID.version4,
-};
-
-for (const methodName of Object.keys(aliasMethods)) {
-    const method = aliasMethods[methodName];
-
-    runTest(`UUID.${methodName}() returns a valid UUID v4 string`, () => {
-        const id = method();
-        console.log(`    Generated UUID via ${methodName}(): ${id}`);
-        if (!isValidUUIDv4(id)) {
-            console.error(`    UUID.${methodName}() did not return a valid v4 UUID.`);
-            return false;
-        }
-        return true;
-    });
-
-    runTest(`UUID.${methodName}() returns different UUIDs on subsequent calls`, () => {
-        const id1 = method();
-        const id2 = method();
-        console.log(`    Generated UUID 1 via ${methodName}(): ${id1}`);
-        console.log(`    Generated UUID 2 via ${methodName}(): ${id2}`);
-        if (!isValidUUIDv4(id1) || !isValidUUIDv4(id2)) {
-            console.error('    One of the generated UUIDs via ${methodName}() is not a valid v4 UUID.');
-            return false;
-        }
-        if (id1 === id2) {
-            console.error(`    UUID.${methodName}() returned identical UUIDs on subsequent calls.`);
-            return false;
-        }
-        return true;
-    });
+    await testing.assertTrue(isValidUUIDv4(id1), `${id1} should be a valid UUID.`);
+    await testing.assertTrue(isValidUUIDv4(id2), `${id2} should be a valid UUID.`);
+    await testing.assertNotEqual(id1, id2, `UUID.v4() should return different UUIDs on subsequent calls.`);
 }
 
-// --- Summary ---
-console.log('\n--- Test Summary ---');
-console.log(`Total tests run: ${testsPassed + testsFailed}`);
-console.log(`Tests passed: ${testsPassed}`);
-console.log(`Tests failed: ${testsFailed}`);
-
-if (testsFailed > 0) {
-    process.exitCode = 1; // Indicate failure to shell/CI environments
+async function testAliasCreateMethod() {
+    const id = UUID.create();
+    console.log(`    Generated UUID from create(): ${id}`);
+    await testing.assertTrue(isValidUUIDv4(id), `UUID from create() (${id}) should be a valid UUID v4.`);
 }
+
+async function testAliasNewMethod() {
+    const id = UUID.new();
+    console.log(`    Generated UUID from new(): ${id}`);
+    await testing.assertTrue(isValidUUIDv4(id), `UUID from new() (${id}) should be a valid UUID v4.`);
+}
+
+async function testAliasNewInstanceMethod() {
+    const id = UUID.newInstance();
+    console.log(`    Generated UUID from newInstance(): ${id}`);
+    await testing.assertTrue(isValidUUIDv4(id), `UUID from newInstance() (${id}) should be a valid UUID v4.`);
+}
+
+async function testAliasNextMethod() {
+    const id = UUID.next();
+    console.log(`    Generated UUID from next(): ${id}`);
+    await testing.assertTrue(isValidUUIDv4(id), `UUID from next() (${id}) should be a valid UUID v4.`);
+}
+
+async function testAliasVersion4Method() {
+    const id = UUID.version4();
+    console.log(`    Generated UUID from version4(): ${id}`);
+    await testing.assertTrue(isValidUUIDv4(id), `UUID from version4() (${id}) should be a valid UUID v4.`);
+}
+
+async function runTests() {
+    console.log("Starting UUID tests...");
+
+    testing.addTest("Valid UUID", testValidUUID);
+    testing.addTest("Different UUIDs", testDifferentUUIDs);
+    testing.addTest("Alias: create()", testAliasCreateMethod);
+    testing.addTest("Alias: new()", testAliasNewMethod);
+    testing.addTest("Alias: newInstance()", testAliasNewInstanceMethod);
+    testing.addTest("Alias: next()", testAliasNextMethod);
+    testing.addTest("Alias: version4()", testAliasVersion4Method);
+    await testing.run();
+    testing.summary();
+}
+
+runTests();
